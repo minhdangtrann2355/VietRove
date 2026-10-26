@@ -1,0 +1,176 @@
+@{
+    ViewData["Title"] = "Quy Định Hội Viên & Lệ Phí - VietRove";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+<style>
+    .hero-banner-large {
+        width: 100%;
+        min-height: 380px;
+        border-radius: 10px;
+        background: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.35)), 
+                    url('https://images.unsplash.com/photo-1609412058473-c199497c3c5d?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D') center/cover no-repeat;
+        margin-bottom: 35px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .page-script-title {
+        font-family: 'Dancing Script', cursive;
+        font-size: 3.2rem;
+        color: #1e3a8a;
+        text-align: center;
+        margin-bottom: 15px;
+        position: relative;
+        padding-bottom: 12px;
+    }
+
+    .page-script-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90px;
+        height: 2px;
+        background: #2563eb;
+    }
+
+    .content-article {
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 4px;
+        color: #374151;
+        font-size: 15.5px;
+        line-height: 1.85;
+    }
+
+    .section-heading {
+        color: #1e3a8a;
+        font-weight: 800;
+        font-size: 1.25rem;
+        text-transform: uppercase;
+        margin-top: 30px;
+        margin-bottom: 16px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .section-heading:first-child {
+        margin-top: 0;
+    }
+
+    .rules-list {
+        padding-left: 0;
+        list-style: none;
+        margin-bottom: 35px;
+    }
+
+    .rules-list li {
+        margin-bottom: 16px;
+        text-align: justify;
+    }
+
+    .rules-list strong {
+        color: #1e3a8a;
+        margin-right: 6px;
+    }
+
+    .clean-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 15px;
+        margin-top: 15px;
+        margin-bottom: 25px;
+    }
+
+    .clean-table th {
+        background-color: #f8fafc;
+        color: #1e3a8a;
+        font-weight: 700;
+        padding: 12px 14px;
+        border-bottom: 2px solid #cbd5e1;
+    }
+
+    .clean-table td {
+        padding: 12px 14px;
+        border-bottom: 1px solid #e2e8f0;
+        color: #4b5563;
+    }
+
+    .source-note {
+        font-size: 13.5px;
+        color: #6b7280;
+        font-style: italic;
+        text-align: right;
+        margin-top: 40px;
+        padding-top: 15px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    @@media (max-width: 768px) {
+        .hero-banner-large {
+            min-height: 250px;
+        }
+        .page-script-title {
+            font-size: 2.3rem;
+        }
+        .content-article {
+            padding: 20px 15px;
+        }
+    }
+</style>
+
+<div class="hero-banner-large"></div>
+
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <h1 class="page-script-title">Quy Định Hội Viên & Lệ Phí</h1>
+
+            <div class="content-article">
+                
+                <div class="section-heading">I. Quy định chung đối với hội viên</div>
+
+                <ul class="rules-list">
+                    <li>
+                        <strong>1.</strong> Hội viên thường xuyên nghiên cứu thông tin, xem các thông báo trên trang [http://vietrove.vn]. Hội viên tự cập nhật thông tin trên profile cá nhân khi có thay đổi về: địa bàn hoạt động, học vấn, nghiệp vụ hướng dẫn, ngoại ngữ, quá trình hành nghề, sở trường.
+                    </li>
+                    <li>
+                        <strong>2.</strong> Thông báo bằng văn bản hoặc email cho Hội khi thay đổi email, địa chỉ liên hệ trong vòng 10 ngày.
+                    </li>
+                    <li>
+                        <strong>3.</strong> Thực hiện đầy đủ, có trách nhiệm các quy định trong hợp đồng hướng dẫn, phân công công việc của doanh nghiệp.
+                    </li>
+                    <li>
+                        <strong>4.</strong> Tích cực tham gia các chương trình đào tạo, tập huấn, sinh hoạt chuyên môn do Hội tổ chức.
+                    </li>
+                    <li>
+                        <strong>5.</strong> Có tinh thần hợp tác, hỗ trợ và chia sẻ kinh nghiệm với các hội viên khác.
+                    </li>
+                    <li>
+                        <strong>6.</strong> Tuân thủ nghiêm Luật Du lịch, không vi phạm các quy định về tài chính, mua bán hàng hóa, vận chuyển cho khách khi hành nghề.
+                    </li>
+                    <li>
+                        <strong>7.</strong> Tuân thủ quy tắc đạo đức nghề nghiệp hướng dẫn do Hội ban hành, thực hiện ứng xử văn minh.
+                    </li>
+                    <li>
+                        <strong>8.</strong> Chịu sự kiểm tra, giám sát của Ban Kiểm tra Hội trong quá trình hành nghề.
+                    </li>
+                    <li>
+                        <strong>9.</strong> Không nói xấu, lăng mạ các ủy viên Ban Chấp hành, tổ chức Hội trên không gian mạng hoặc các giao dịch điện tử.
+                    </li>
+                    <li>
+                        <strong>10.</strong> Sử dụng thành thạo ứng dụng di động (App) của Hội để nhận tin tức và thực hiện giao dịch nghiệp vụ.
+                    </li>
+                </ul>
+
+                <div class="source-note">Theo: hoihuongdanvien.vn</div>
+            </div>
+
+        </div>
+    </div>
+</div>

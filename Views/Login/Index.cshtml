@@ -1,0 +1,46 @@
+@model VietRove.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Đăng nhập hệ thống - VietRove";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0 rounded-3 p-4 bg-white">
+            <div class="text-center mb-4">
+                <h3 class="text-primary fw-bold text-uppercase">Đăng Nhập VietRove</h3>
+                <p class="text-muted small">Cổng thông tin hội viên & quản lý</p>
+            </div>
+
+            <form asp-controller="Login" asp-action="Index" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label fw-bold small">Email đăng nhập</label>
+                    <input asp-for="Email" class="form-control" placeholder="vidu@gmail.com" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label fw-bold small">Mật khẩu</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary fw-bold py-2">ĐĂNG NHẬP</button>
+                </div>
+
+                <div class="text-center mt-3">
+                    <p class="small text-muted">
+                        Chưa có tài khoản hội viên? 
+                        <a asp-controller="Register" asp-action="Index" class="text-primary fw-bold text-decoration-none">Đăng ký ngay</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,181 @@
+@{
+    ViewData["Title"] = "Hướng Dẫn Đăng Ký Hội Viên - VietRove";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+<style>
+    .hero-banner-large {
+        width: 100%;
+        min-height: 380px;
+        border-radius: 10px;
+        background: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.35)), 
+                    url('https://images.unsplash.com/photo-1504457047772-27faf1c00561?q=80&w=1247&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D') center/cover no-repeat;
+        margin-bottom: 35px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .page-script-title {
+        font-family: 'Dancing Script', cursive;
+        font-size: 3.2rem;
+        color: #1e3a8a;
+        text-align: center;
+        margin-bottom: 15px;
+        position: relative;
+        padding-bottom: 12px;
+    }
+
+    .page-script-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90px;
+        height: 2px;
+        background: #2563eb;
+    }
+
+    .content-article {
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 4px;
+        color: #374151;
+        font-size: 15.5px;
+        line-height: 1.85;
+    }
+
+    .section-heading {
+        color: #1e3a8a;
+        font-weight: 800;
+        font-size: 1.25rem;
+        text-transform: uppercase;
+        margin-top: 30px;
+        margin-bottom: 16px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .section-heading:first-child {
+        margin-top: 0;
+    }
+
+    .doc-list, .step-list {
+        padding-left: 20px;
+        margin-bottom: 30px;
+    }
+
+    .doc-list li, .step-list li {
+        margin-bottom: 14px;
+        text-align: justify;
+    }
+
+    .step-list strong {
+        color: #1e3a8a;
+    }
+
+    .btn-register-cta {
+        display: inline-block;
+        background-color: #1d4ed8;
+        color: #ffffff !important;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 12px 32px;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: background-color 0.2s;
+    }
+
+    .btn-register-cta:hover {
+        background-color: #1e40af;
+    }
+
+    .source-note {
+        font-size: 13.5px;
+        color: #6b7280;
+        font-style: italic;
+        text-align: right;
+        margin-top: 40px;
+        padding-top: 15px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    @@media (max-width: 768px) {
+        .hero-banner-large {
+            min-height: 250px;
+        }
+        .page-script-title {
+            font-size: 2.3rem;
+        }
+        .content-article {
+            padding: 20px 15px;
+        }
+    }
+</style>
+
+<div class="hero-banner-large"></div>
+
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <h1 class="page-script-title">Hướng Dẫn Đăng Ký Hội Viên</h1>
+
+            <div class="content-article">
+
+                <div class="section-heading">Các giấy tờ cần chuẩn bị khi đăng ký gia nhập Hội viên</div>
+
+                <ul class="doc-list">
+                    <li>Bản sao / Ảnh chụp Thẻ hướng dẫn viên du lịch còn hạn sử dụng.</li>
+                    <li>Bản sao / Ảnh chụp Chứng minh thư / Căn cước công dân (mặt trước và mặt sau).</li>
+                    <li>Ảnh đại diện chân dung (ảnh màu cỡ 3x4 hoặc 4x6, nền sáng, chụp rõ mặt).</li>
+                    <li>Bản scan Văn bằng / Chứng chỉ ngoại ngữ (bắt buộc đối với Hướng dẫn viên đăng ký Thẻ Quốc tế).</li>
+                </ul>
+
+                <p class="small text-muted mb-4">
+                    * Lưu ý: Các tệp giấy tờ tải lên hỗ trợ định dạng JPG, JPEG, PNG, PDF; dung lượng tối đa 10MB cho mỗi tệp.
+                </p>
+
+                <div class="section-heading">Quy trình 6 bước đăng ký gia nhập</div>
+
+                <ol class="step-list">
+                    <li>
+                        <strong>Bước 1: Khởi tạo tài khoản đăng nhập</strong><br />
+                        Truy cập vào trang Đăng ký hội viên VietRove. Điền Email đăng nhập và thiết lập Mật khẩu bảo mật (tối thiểu 8 ký tự, xác nhận mật khẩu chính xác).
+                    </li>
+                    <li>
+                        <strong>Bước 2: Cung cấp thông tin cá nhân & Ảnh đại diện</strong><br />
+                        Điền Họ và tên (chữ in hoa), Giới tính, Ngày sinh, Số điện thoại liên hệ, Địa chỉ thường trú và tải lên tệp Ảnh đại diện chân dung.
+                    </li>
+                    <li>
+                        <strong>Bước 3: Nhập thông tin CCCD / CMND</strong><br />
+                        Nhập số CCCD (chuẩn 12 chữ số), Ngày cấp, Nơi cấp. Tải lên tệp ảnh chụp CCCD mặt trước và CCCD mặt sau.
+                    </li>
+                    <li>
+                        <strong>Bước 4: Khai báo nghiệp vụ Hướng dẫn viên</strong><br />
+                        Chọn Loại thẻ (Nội địa hoặc Quốc tế), nhập Số thẻ HDV, Ngày hết hạn thẻ, Số năm kinh nghiệm, chọn Địa bàn hoạt động chính (Tỉnh/Thành phố) và tải tệp Bản scan Thẻ HDV.
+                    </li>
+                    <li>
+                        <strong>Bước 5: Bổ sung ngoại ngữ & Chứng chỉ đính kèm (đối với Thẻ Quốc tế)</strong><br />
+                        Nếu chọn Thẻ Quốc tế, hệ thống hiển thị phần chọn ngoại ngữ hướng dẫn và tải tệp chứng chỉ/văn bằng ngoại ngữ tương ứng. Có thể thêm nhiều dòng ngoại ngữ khác nhau.
+                    </li>
+                    <li>
+                        <strong>Bước 6: Nộp hồ sơ và Chờ xét duyệt</strong><br />
+                        Kiểm tra lại toàn bộ thông tin đã điền và bấm "NỘP HỒ SƠ ĐĂNG KÝ". Hồ sơ được ghi nhận vào hệ thống ở trạng thái Chờ duyệt (Status = 0). Sau khi Ban quản lý xét duyệt thành công, tài khoản sẽ chuyển sang trạng thái Đã duyệt (Active) để sử dụng đầy đủ các chức năng nghiệp vụ.
+                    </li>
+                </ol>
+
+                <div class="text-center my-4">
+                    <a asp-controller="Register" asp-action="Index" class="btn-register-cta">
+                        ĐĂNG KÝ HỘI VIÊN NGAY
+                    </a>
+                </div>
+
+                <div class="source-note">Theo: hoihuongdanvien.vn</div>
+            </div>
+
+        </div>
+    </div>
+</div>

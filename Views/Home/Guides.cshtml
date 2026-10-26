@@ -1,0 +1,93 @@
+@model List<VietRove.Entities.GuideProfile>
+@{
+    ViewData["Title"] = "Tìm kiếm Hướng Dẫn Viên";
+    string currentKeyword = ViewBag.Keyword as string ?? "";
+    string currentCardType = ViewBag.CardType as string ?? "";
+}
+
+<div class="mb-4 text-center">
+    <h2 class="fw-bold" style="color: #1e3a8a;">TÌM KIẾM HỘI VIÊN HƯỚNG DẪN VIÊN</h2>
+    <p class="text-muted small">Danh sách các hội viên chính thức đã được Hiệp hội kiểm duyệt và xác thực thông tin hành nghề</p>
+    <div style="height: 3px; width: 60px; background: #2563eb; margin: 10px auto 0;"></div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4 p-3" style="background: #ffffff; border-radius: 8px;">
+    <form method="get" asp-controller="Home" asp-action="Guides" class="row g-2 align-items-center">
+        <div class="col-md-7">
+            <input type="text" name="keyword" value="@currentKeyword" class="form-control" placeholder="Nhập họ tên hoặc địa phương cần tìm..." />
+        </div>
+        <div class="col-md-3">
+            <select name="cardType" class="form-select">
+                <option value="">-- Tất cả loại thẻ --</option>
+                <option value="Nội địa" selected="@(currentCardType == "Nội địa")">HDV Nội địa</option>
+                <option value="Quốc tế" selected="@(currentCardType == "Quốc tế")">HDV Quốc tế</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn w-100 text-white fw-bold" style="background-color: #1d4ed8;">
+                Tìm kiếm
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="row g-4">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var guide in Model)
+        {
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm text-center p-3" style="border-radius: 8px; background: #ffffff;">
+                    <div class="mb-3 mt-2">
+                        @if (!string.IsNullOrEmpty(guide.Avatar))
+                        {
+                            <img src="@Url.Action("GetAvatar", "Home", new { fileName = guide.Avatar })" class="rounded-circle shadow-sm" alt="@guide.FullName" style="width: 90px; height: 90px; object-fit: cover; border: 2px solid #e5e7eb;" />
+                        }
+                        else
+                        {
+                            <div class="rounded-circle d-inline-flex align-items-center justify-content-center text-white fw-bold" style="width: 90px; height: 90px; font-size: 28px; background: #3b82f6;">
+                                @(string.IsNullOrEmpty(guide.FullName) ? "G" : guide.FullName.Substring(0, 1).ToUpper())
+                            </div>
+                        }
+                    </div>
+
+                    <div class="card-body p-0 d-flex flex-column">
+                        <h5 class="fw-bold mb-1" style="color: #1f2937; font-size: 16px;">@guide.FullName</h5>
+                        <p class="mb-2" style="font-size: 13px; color: #2563eb; font-weight: 600;">
+                            Thẻ @guide.CardType (@guide.CardNumber)
+                        </p>
+                        <hr class="my-2" style="border-color: #f3f4f6;" />
+
+                        <div class="text-start small text-muted px-2 mb-3">
+                            <p class="mb-1"><strong>Kinh nghiệm:</strong> @guide.ExperienceYears năm</p>
+                            <p class="mb-1"><strong>Địa bàn:</strong> @(string.IsNullOrEmpty(guide.Address) ? "Đang cập nhật" : guide.Address)</p>
+                            
+                            @{
+                                string maskedPhone = guide.Phone;
+                                if (!string.IsNullOrEmpty(maskedPhone) && maskedPhone.Length >= 7)
+                                {
+                                    maskedPhone = maskedPhone.Substring(0, 4) + "***" + maskedPhone.Substring(maskedPhone.Length - 3);
+                                }
+                            }
+                            <p class="mb-0"><strong>Liên hệ:</strong> <span class="text-dark">@maskedPhone</span></p>
+                        </div>
+
+                        <div class="mt-auto">
+                            <span class="badge" style="background-color: #ecfdf5; color: #059669; font-weight: 500; font-size: 12px; padding: 6px 12px; border-radius: 20px;">
+                                ✓ Đã được kiểm duyệt
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12 text-center py-5">
+            <div class="p-4 rounded bg-white shadow-sm border" style="max-width: 500px; margin: 0 auto;">
+                <p class="text-muted mb-0">Không tìm thấy hướng dẫn viên nào phù hợp với điều kiện tìm kiếm.</p>
+            </div>
+        </div>
+    }
+</div>

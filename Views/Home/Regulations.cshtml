@@ -1,0 +1,218 @@
+@{
+    ViewData["Title"] = "Quy Chế Hoạt Động - VietRove";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+<style>
+    .hero-banner-large {
+        width: 100%;
+        min-height: 380px;
+        border-radius: 10px;
+        background: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.35)), 
+                    url('https://plus.unsplash.com/premium_photo-1719955781545-c60219441bfc?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D') center/cover no-repeat;
+        margin-bottom: 35px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .page-script-title {
+        font-family: 'Dancing Script', cursive;
+        font-size: 3.2rem;
+        color: #1e3a8a;
+        text-align: center;
+        margin-bottom: 15px;
+        position: relative;
+        padding-bottom: 12px;
+    }
+
+    .page-script-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90px;
+        height: 2px;
+        background: #2563eb;
+    }
+
+    .content-article {
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 4px;
+        color: #374151;
+        font-size: 15px;
+        line-height: 1.85;
+        text-align: justify;
+    }
+
+    .legal-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .legal-header h5 {
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #1f2937;
+        margin-bottom: 4px;
+        letter-spacing: 0.5px;
+    }
+
+    .legal-header p {
+        color: #4b5563;
+        margin-bottom: 15px;
+    }
+
+    .chapter-heading {
+        color: #1e3a8a;
+        font-weight: 800;
+        font-size: 1.25rem;
+        text-transform: uppercase;
+        margin-top: 35px;
+        margin-bottom: 16px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .article-heading {
+        color: #1e3a8a;
+        font-weight: 700;
+        font-size: 15.5px;
+        margin-top: 20px;
+        margin-bottom: 8px;
+    }
+
+    .source-note {
+        font-size: 13.5px;
+        color: #6b7280;
+        font-style: italic;
+        text-align: right;
+        margin-top: 40px;
+        padding-top: 15px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    @@media (max-width: 768px) {
+        .hero-banner-large {
+            min-height: 250px;
+        }
+        .page-script-title {
+            font-size: 2.3rem;
+        }
+        .content-article {
+            padding: 20px 15px;
+        }
+    }
+</style>
+
+<div class="hero-banner-large"></div>
+
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <h1 class="page-script-title">Quy Chế Hoạt Động</h1>
+
+            <div class="content-article">
+                <div class="legal-header">
+                    <h5>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h5>
+                    <p>Độc lập - Tự do - Hạnh phúc</p>
+                    <h4 class="fw-bold mt-3 mb-1" style="color: #1e3a8a;">QUY CHẾ HOẠT ĐỘNG</h4>
+                    <h5 class="fw-bold text-primary mb-2">HỘI HƯỚNG DẪN VIÊN DU LỊCH VIỆT NAM</h5>
+                    <p class="small text-muted mb-0">
+                        <em>(Phê duyệt theo Quyết định của Chủ tịch Hiệp hội Du lịch Việt Nam)</em>
+                    </p>
+                </div>
+
+                <div class="chapter-heading">Chương I: Những Quy Định Chung</div>
+
+                <div class="article-heading">Điều 1. Tên của Hội</div>
+                <p>Hội lấy tên: Hội Hướng dẫn viên Du lịch Việt Nam.</p>
+                <p>Tên giao dịch tiếng Anh: Vietnam Tour Guide Association.</p>
+                <p>Tên viết tắt: VTGA.</p>
+
+                <div class="article-heading">Điều 2. Tôn chỉ, mục đích của Hội</div>
+                <p>Hội Hướng dẫn viên Du lịch Việt Nam (sau đây gọi tắt là Hội) là tổ chức xã hội nghề nghiệp về hướng dẫn du lịch, bao gồm các tổ chức, công dân Việt Nam hoạt động hợp pháp trong lĩnh vực hướng dẫn du lịch.</p>
+                <p>Mục đích của Hội là bồi dưỡng cập nhật kiến thức, chuyên môn, nghiệp vụ, kỹ năng hành nghề hướng dẫn cho các hội viên để nâng cao trình độ nghiệp vụ và chất lượng dịch vụ hướng dẫn du lịch; liên kết, hợp tác phát triển đội ngũ hướng dẫn viên du lịch; bảo vệ quyền, lợi ích hợp pháp của hội viên.</p>
+
+                <div class="article-heading">Điều 3. Phạm vi hoạt động của Hội</div>
+                <p>Hội Hướng dẫn viên Du lịch Việt Nam hoạt động trong phạm vi cả nước và ở nước ngoài theo quy định của pháp luật nước Cộng hòa XHCN Việt Nam và pháp luật nơi đến du lịch, Điều lệ Hiệp hội Du lịch Việt Nam và Quy chế này.</p>
+
+                <div class="article-heading">Điều 4. Địa vị pháp lý</div>
+                <p>Hội Hướng dẫn viên Du lịch Việt Nam là một Liên chi hội của Hiệp hội Du lịch Việt Nam do Hiệp hội Du lịch Việt Nam thành lập, có biểu tượng riêng, hoạt động dưới sự chỉ đạo trực tiếp của Hiệp hội Du lịch Việt Nam.</p>
+                <p>Hiệp hội Du lịch Việt Nam giao cho Hiệp hội Lữ hành Việt Nam hỗ trợ các hoạt động nghề nghiệp, tham gia đào tạo, bồi dưỡng, cập nhật kiến thức chuyên môn, nghiệp vụ, kỹ năng hành nghề hướng dẫn cho các hội viên Hội Hướng dẫn viên Du lịch Việt Nam.</p>
+                <p>Trụ sở chính của Hội Hướng dẫn viên Du lịch Việt Nam đặt tại Hà Nội. Hội có thể mở văn phòng đại diện, chi nhánh trong nước khi có nhu cầu.</p>
+                <p>Hội Hướng dẫn viên Du lịch Việt Nam được tham gia các tổ chức quốc tế cùng nghề nghiệp, được lập văn phòng đại diện ở nước ngoài theo quy định của pháp luật.</p>
+
+                <div class="chapter-heading">Chương II: Nhiệm Vụ, Quyền Hạn Của Hội</div>
+
+                <div class="article-heading">Điều 5. Nhiệm vụ</div>
+                <p>1. Tuyên truyền giáo dục để hội viên nhận thức và thực hiện đúng đường lối, chủ trương, chính sách của Đảng và pháp luật của Nhà nước trong kinh doanh và cung cấp dịch vụ hướng dẫn du lịch; động viên các hội viên tích cực tham gia các hoạt động liên quan đến hướng dẫn du lịch, bồi dưỡng và đào tạo hướng dẫn viên du lịch.</p>
+                <p>2. Tham gia các hoạt động tuyên truyền, quảng bá hình ảnh đất nước, danh lam thắng cảnh, con người, truyền thống văn hóa và lịch sử của dân tộc Việt Nam với bạn bè quốc tế; tham gia xây dựng đường lối, chính sách phát triển Du lịch Việt Nam khi được yêu cầu.</p>
+                <p>3. Đại diện cho hội viên kiến nghị với Nhà nước về những chủ trương, chính sách, biện pháp khuyến khích, tạo điều kiện phát triển ngành Du lịch, bảo vệ quyền và lợi ích chính đáng của hội viên, giải quyết các trường hợp, vụ việc gây thiệt hại đến quyền lợi của Ngành và của hội viên theo thẩm quyền của Hội, thực hiện nghĩa vụ đối với Nhà nước theo quy định của pháp luật.</p>
+                <p>4. Động viên sự nhiệt tình và khả năng sáng tạo của hội viên, đoàn kết, hợp tác, hỗ trợ, giúp đỡ nhau trong hoạt động cung cấp dịch vụ hướng dẫn du lịch trên cơ sở nâng cao kiến thức, trao đổi, phổ biến kinh nghiệm và ứng dụng các công nghệ tiên tiến vào nghề hướng dẫn du lịch.</p>
+                <p>5. Tư vấn, hỗ trợ cho các hội viên trong phát triển chuyên môn nghiệp vụ, tìm kiếm việc làm. Có giải pháp cung cấp thông tin cho các hội viên. Vận động hội viên thực hiện nghiêm túc đạo đức nghề nghiệp, quy tắc ứng xử văn minh trong du lịch.</p>
+                <p>6. Quản lý hội viên để hội viên thực hiện đúng các quy định của Luật du lịch và quy định khác của pháp luật có liên quan.</p>
+                <p>7. Phối hợp với các tổ chức liên quan trong Hiệp hội Du lịch Việt Nam nhằm đảm bảo thực hiện tôn chỉ, mục đích của Hội, góp phần cho Hiệp hội Du lịch Việt Nam phát triển, trở thành ngôi nhà chung của các doanh nghiệp du lịch và lao động trong lĩnh vực du lịch.</p>
+
+                <div class="article-heading">Điều 6. Quyền của Hội</div>
+                <p>1. Tổ chức các hội nghị, hội thảo để trao đổi kinh nghiệm nghề nghiệp, khuyến khích hợp tác liên kết giữa các Hội viên để nâng cao chất lượng hoạt động cung cấp dịch vụ hướng dẫn du lịch.</p>
+                <p>2. Tổ chức các hoạt động đào tạo, dịch vụ, tư vấn và các hoạt động khác theo quy định của pháp luật, Điều lệ Hiệp Du lịch Việt Nam và Quy chế này.</p>
+                <p>3. Tổ chức các cuộc thi nghiệp vụ hướng dẫn, phong tặng danh hiệu hướng dẫn viên.</p>
+                <p>4. Nghiên cứu, tham gia góp ý, đề xuất kiến nghị với Chính phủ và các cơ quan Nhà nước những chính sách, luật pháp trong lĩnh vực du lịch nói chung và hướng dẫn du lịch nói riêng.</p>
+                <p>5. Phát triển hội viên, xây dựng cơ sở vật chất và phát triển các mối quan hệ của Hội với các tổ chức, cá nhân trong nước và ở nước ngoài theo quy định của pháp luật, nhằm nâng cao hiệu quả và vị thế của Hội.</p>
+                <p>6. Xuất bản tập san, các ấn phẩm và các tài liệu tuyên truyền, quảng bá về du lịch Việt Nam, trọng tâm là công tác hướng dẫn du lịch; Xây dựng hệ thống quản lý, hỗ trợ hoạt động, cung cấp thông tin, tìm kiếm việc làm cho hội viên.</p>
+                <p>7. Được gây quỹ Hội trên cơ sở hội phí của hội viên và các nguồn thu từ hoạt động, dịch vụ, được tham gia góp vốn trong các tổ chức kinh tế hoạt động theo quy định của pháp luật để tự trang trải về kinh phí hoạt động.</p>
+                <p>8. Thành lập các chi hội, câu lạc bộ chuyên ngành trong lĩnh vực hướng dẫn du lịch.</p>
+                <p>9. Thực hiện các quyền khác của Hội theo quy định của pháp luật.</p>
+
+                <div class="chapter-heading">Chương III: Hội Viên</div>
+
+                <div class="article-heading">Điều 7. Hình thức Hội viên</div>
+                <p><strong>1. Hội viên chính thức:</strong> Những người có thẻ hướng dẫn viên du lịch Việt Nam còn thời hạn, tán thành Quy chế, Quy định Hội Hướng dẫn viên Du lịch Việt Nam, tự nguyện đăng ký tham gia Hội, đóng lệ phí gia nhập và hội phí được công nhận là hội viên chính thức của Hội. Hội viên của Hội Hướng dẫn viên Du lịch Việt Nam cũng đồng thời là hội viên của Hiệp hội Du lịch Việt Nam.</p>
+                <p><strong>2. Hội viên liên kết:</strong> Các tổ chức, cá nhân hoạt động trong lĩnh vực du lịch hoặc liên quan đến du lịch, có đóng góp và hỗ trợ cho hoạt động của Hội, tự nguyện đăng ký tham gia Hội, đóng lệ phí gia nhập và hội phí được công nhận là hội viên liên kết của Hội.</p>
+                <p><strong>3. Hội viên danh dự:</strong> Công dân, các nhà quản lý, nhà khoa học có công lao đối với sự nghiệp phát triển Ngành du lịch nói chung và nghề Hướng dẫn du lịch nói riêng được BCH Hội mời làm Hội viên danh dự.</p>
+
+                <div class="article-heading">Điều 8. Điều kiện trở thành hội viên</div>
+                <p>Tổ chức và cá nhân có đơn đăng ký tham gia Hội, được Ban Thường trực Hội công nhận.</p>
+                <p>Hồ sơ hội viên chính thức gồm có: Đơn đăng ký gia nhập Hội; Phiếu thông tin hội viên; Bản sao Thẻ hướng dẫn viên du lịch; Bản sao Chứng minh thư / Căn cước công dân.</p>
+                <p>Ban Thường trực Hội ra quyết định công nhận hội viên trong vòng 15 ngày kể từ ngày nhận đủ hồ sơ hợp lệ.</p>
+
+                <div class="article-heading">Điều 9. Quyền của hội viên</div>
+                <p>Được Hội xác nhận tư cách hội viên để có đủ điều kiện hành nghề hướng dẫn du lịch; Được tham gia các hoạt động chuyên môn, phổ biến kinh nghiệm, dự hội thảo, lớp đào tạo; Được Hội hỗ trợ giới thiệu việc làm và bảo vệ quyền, lợi ích hợp pháp; Hội viên chính thức có quyền ứng cử, đề cử và bầu cử Ban Chấp hành Hội.</p>
+
+                <div class="article-heading">Điều 10. Nghĩa vụ của Hội viên</div>
+                <p>Chấp hành đúng đường lối, chính sách của Đảng, Luật Du lịch; Đeo thẻ Hội viên trong khi hành nghề; Tuân thủ quy tắc đạo đức và ứng xử nghề nghiệp; Đóng lệ phí gia nhập và hội phí đầy đủ.</p>
+
+                <div class="article-heading">Điều 11. Chấm dứt tư cách hội viên</div>
+                <p>Hội viên tự nguyện xin rút; vi phạm nghiêm trọng Luật Du lịch; không đóng hội phí 01 năm hoặc bị cơ quan chức năng thu hồi thẻ hướng dẫn viên du lịch sẽ bị chấm dứt tư cách hội viên.</p>
+
+                <div class="chapter-heading">Chương IV: Tổ Chức Hội</div>
+
+                <div class="article-heading">Điều 12 đến Điều 23. Cơ cấu tổ chức & Hoạt động</div>
+                <p>Hội Hướng dẫn viên Du lịch Việt Nam hoạt động theo nguyên tắc tự nguyện, tự quản, bình đẳng và tự chịu trách nhiệm trước pháp luật. Cơ cấu tổ chức gồm: Đại hội Đại biểu toàn quốc (nhiệm kỳ 5 năm), Ban Chấp hành, Ban Thường trực, Ban Kiểm tra, Văn phòng Hội, các Chi hội tỉnh/thành phố và Câu lạc bộ chuyên ngành theo ngôn ngữ, thị trường.</p>
+
+                <div class="chapter-heading">Chương V: Tài Chính, Tài Sản Của Hội</div>
+
+                <div class="article-heading">Điều 24 đến Điều 26. Nguồn thu và Quản lý tài chính</div>
+                <p>Nguồn thu của Hội gồm lệ phí gia nhập, hội phí thường niên, tiền duy trì phần mềm và tài trợ hợp pháp. Tài chính được sử dụng chi cho hoạt động chi hội, đào tạo, trả lương nhân viên và được kiểm tra, công bố công khai hàng năm.</p>
+
+                <div class="chapter-heading">Chương VI: Khen Thưởng, Kỷ Luật</div>
+
+                <div class="article-heading">Điều 27 & Điều 28. Khen thưởng và Kỷ luật</div>
+                <p>Hội viên có đóng góp tích cực được Hội khen thưởng hoặc đề nghị cấp trên khen thưởng. Hội viên vi phạm quy chế hoặc làm tổn hại uy tín của Hội tùy theo mức độ sẽ bị phê bình, khiển trách, cảnh cáo hoặc xóa tên khỏi danh sách hội viên.</p>
+
+                <div class="chapter-heading">Chương VII: Điều Khoản Thi Hành</div>
+
+                <div class="article-heading">Điều 29 & Điều 30. Sửa đổi quy chế và Hiệu lực</div>
+                <p>Việc sửa đổi Quy chế do Đại hội thông qua và được Hiệp hội Du lịch Việt Nam phê duyệt. Quy chế này gồm 7 chương, 30 điều, có hiệu lực thi hành kể từ ngày ký quyết định phê duyệt.</p>
+
+                <div class="source-note">Theo: hoihuongdanvien.vn</div>
+            </div>
+
+        </div>
+    </div>
+</div>

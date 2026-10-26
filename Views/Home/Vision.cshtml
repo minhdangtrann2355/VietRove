@@ -1,0 +1,140 @@
+@{
+    ViewData["Title"] = "Tầm Nhìn & Sứ Mệnh - VietRove";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+<style>
+    .hero-banner-large {
+        width: 100%;
+        min-height: 380px;
+        border-radius: 10px;
+        background: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.35)), 
+                    url('https://images.unsplash.com/photo-1526139334526-f591a54b477c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D') center/cover no-repeat;
+        margin-bottom: 35px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .page-script-title {
+        font-family: 'Dancing Script', cursive;
+        font-size: 3.2rem;
+        color: #1e3a8a;
+        text-align: center;
+        margin-bottom: 15px;
+        position: relative;
+        padding-bottom: 12px;
+    }
+
+    .page-script-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90px;
+        height: 2px;
+        background: #2563eb;
+    }
+
+    .content-article {
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 4px;
+        color: #374151;
+        font-size: 15.5px;
+        line-height: 1.85;
+    }
+
+    .vision-intro {
+        font-size: 16px;
+        font-weight: 500;
+        color: #1f2937;
+        margin-bottom: 25px;
+        text-align: justify;
+    }
+
+    .vision-list {
+        padding-left: 20px;
+        margin-bottom: 30px;
+    }
+
+    .vision-list li {
+        margin-bottom: 16px;
+        color: #374151;
+    }
+
+    .vision-list strong {
+        color: #1e3a8a;
+    }
+
+    .source-note {
+        font-size: 13.5px;
+        color: #6b7280;
+        font-style: italic;
+        text-align: right;
+        margin-top: 35px;
+        padding-top: 15px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    @@media (max-width: 768px) {
+        .hero-banner-large {
+            min-height: 250px;
+        }
+        .page-script-title {
+            font-size: 2.3rem;
+        }
+        .content-article {
+            padding: 20px 15px;
+        }
+    }
+</style>
+
+<div class="hero-banner-large"></div>
+
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <h1 class="page-script-title">Tầm Nhìn & Sứ Mệnh</h1>
+
+            <div class="content-article">
+                <p class="vision-intro">
+                    Hội Hướng dẫn viên Du lịch Việt Nam định hướng trở thành ngôi nhà chung vững chắc, nâng tầm vị thế của hướng dẫn viên Việt Nam trên trường quốc tế thông qua các mục tiêu chiến lược sau:
+                </p>
+
+                <ul class="vision-list">
+                    <li>
+                        <strong>Tập hợp lực lượng:</strong> Tập hợp đông đảo các hướng dẫn viên giỏi, nhiệt huyết trên toàn quốc.
+                    </li>
+                    <li>
+                        <strong>Hoàn thiện hành chính:</strong> Xây dựng hệ thống hành chính chuẩn mực, tạo điều kiện thuận lợi cho hoạt động và phát triển của hội viên.
+                    </li>
+                    <li>
+                        <strong>Đổi mới công nghệ & đào tạo:</strong> Xây dựng hệ thống thông tin và hệ thống đào tạo toàn diện, hiện đại.
+                    </li>
+                    <li>
+                        <strong>Xây dựng cộng đồng:</strong> Tạo sân chơi lành mạnh, đoàn kết, thân thiện cho cộng đồng hướng dẫn viên du lịch Việt Nam.
+                    </li>
+                    <li>
+                        <strong>Minh bạch hóa chất lượng:</strong> Xây dựng hệ thống Review và phản hồi khách quan từ khách du lịch và các công ty lữ hành.
+                    </li>
+                    <li>
+                        <strong>Phát hiện nhân tài:</strong> Thu hút, bồi dưỡng và đào tạo nhân tài trong lĩnh vực hướng dẫn du lịch.
+                    </li>
+                    <li>
+                        <strong>Nâng cao năng lực:</strong> Phát triển khung năng lực chuẩn hóa cho từng thành viên.
+                    </li>
+                    <li>
+                        <strong>Vươn tầm quốc tế:</strong> Đưa đội ngũ hướng dẫn viên du lịch Việt Nam tự tin hội nhập và vươn tầm quốc tế.
+                    </li>
+                </ul>
+
+                <div class="source-note">Theo: hoihuongdanvien.vn</div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -89,24 +89,23 @@ document.addEventListener('DOMContentLoaded', function () {
         cardTypeSelect.addEventListener('change', updateRequiredState);
     }
 
-    // Khi bấm thêm dòng ngoại ngữ: Chia cột col-md-5 + col-md-5 và kèm nút Xóa ở col-md-2
     if (btnAddLanguage !== null) {
         btnAddLanguage.addEventListener('click', function () {
             const newRow = document.createElement('div');
-            newRow.className = 'language-row d-flex align-items-center gap-2 mb-2';
+            newRow.className = 'language-row g-2 mb-2 align-items-center row';
 
             const selectHtml = getLanguageOptionsHtml();
             newRow.innerHTML = `
-                <div style="flex: 1; min-width: 0;">
+                <div class="col-md-5">
                     <select name="LanguageNames" class="form-select language-select" required>
                         ${selectHtml}
                     </select>
                 </div>
-                <div style="flex: 1; min-width: 0;">
+                <div class="col-md-5">
                     <input type="file" name="LanguageCertificates" class="form-control" accept=".jpg,.jpeg,.png,.pdf" required />
                 </div>
-                <div style="width: 75px; flex-shrink: 0;">
-                    <button type="button" class="btn btn-outline-danger w-100 btn-remove-lang" style="padding: 7px 0; font-size: 13px;">Xóa</button>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-danger w-100 btn-remove-lang">Xóa</button>
                 </div>
             `;
 

@@ -12,6 +12,7 @@ namespace VietRove.Data
         public DbSet<GuideProfile> GuideProfiles { get; set; } = null!;
         public DbSet<GuideCategory> GuideCategories { get; set; } = null!;
         public DbSet<Category> Categories { get; set; } = null!;
+        public DbSet<Article> Articles { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GuideCategory>()
