@@ -10,6 +10,7 @@ Dự án web ASP.NET Core MVC phục vụ quản lý, đăng ký, tra cứu thô
 - **ORM / Database:** Entity Framework Core, Microsoft SQL Server (MSSQL - VietRoveDB)
 - **Mã hóa & Bảo mật:**
   - Thư viện BCrypt.Net-Next (băm mật khẩu chuẩn với Work Factor = 12).
+  - Ghim `System.Security.Cryptography.Pkcs` phiên bản 9.0.21 để vá các advisory mức High/Moderate trong bản 9.0.11 được kéo bắc cầu bởi `Microsoft.Data.SqlClient`.
   - Kiểm tra chữ ký byte thực tế của tệp tin (Magic Byte Verification) chống giả mạo định dạng file độc hại (.jpg, .jpeg, .png, .pdf).
   - Cơ chế xử lý tệp tin an toàn (Action `GetAvatar`, `GetThumbnail`) phòng chống tấn công vượt thư mục (Path Traversal `../..`).
   - Che giấu dữ liệu cá nhân (Data Masking): Ẩn bớt số điện thoại của hội viên trên giao diện công khai để chống bot cào dữ liệu.
@@ -24,8 +25,13 @@ VietRove/
 │
 ├── Controllers/
 │   ├── HomeController.cs              <-- Quản lý Trang chủ (Hero Banner, Tin tức), Tra cứu HDV, 5 Trang Giới thiệu
-│   ├── LoginController.cs             <-- Xử lý đăng nhập hệ thống & kiểm tra tài khoản
+│   ├── LoginController.cs             <-- Xác thực BCrypt, phát hành cookie, điều hướng theo vai trò, đăng xuất
+│   ├── AdminController.cs             <-- Dashboard chỉ dành cho Admin (RoleId = 1)
+│   ├── GuideController.cs             <-- Dashboard chỉ dành cho Hội viên HDV (RoleId = 2)
 │   └── RegisterController.cs          <-- Xử lý đăng ký hội viên, kiểm tra dữ liệu, lưu file bảo mật
+│
+├── Security/
+│   └── AppRoles.cs                    <-- Ánh xạ RoleId và tên role dùng trong authorization
 │
 ├── Data/
 │   └── VietRoveDbContext.cs           <-- Cấu hình Entity Framework Core kết nối SQL Server
@@ -57,6 +63,10 @@ VietRove/
 │   │   └── Privacy.cshtml             <-- Chính sách bảo mật
 │   ├── Login/
 │   │   └── Index.cshtml               <-- Giao diện Đăng nhập hệ thống
+│   ├── Admin/
+│   │   └── Dashboard.cshtml           <-- Giao diện kiểm tra quyền Admin
+│   ├── Guide/
+│   │   └── Dashboard.cshtml           <-- Giao diện kiểm tra quyền Hội viên HDV
 │   ├── Register/
 │   │   └── Index.cshtml               <-- Giao diện Đăng ký hội viên (Dynamic fields thẻ Quốc tế)
 │   └── Shared/
@@ -105,8 +115,17 @@ VietRove/
   - Giới hạn dung lượng tối đa 10MB/tệp, xác thực Magic Bytes chống giả mạo đuôi tệp, mã hóa tên file GUID lưu vào `ProtectedUploads/`.
   - Lưu hồ sơ với trạng thái `Status = 0` (Chờ duyệt).
 - **Đăng nhập hệ thống (`LoginController` & `LoginViewModel`):**
-  - Xác thực Email và mật khẩu an toàn bằng thư viện BCrypt.
-  - Kiểm tra trạng thái tài khoản người dùng trước khi cấp quyền truy cập.
+  - Truy vấn tài khoản bằng Entity Framework Core/LINQ và xác thực mật khẩu đã băm bằng BCrypt.
+  - Chỉ cấp cookie xác thực khi mật khẩu đúng, `Status = 1` và role thuộc danh sách cho phép (`RoleId = 1` Admin, `RoleId = 2` Hội viên HDV); tài khoản chưa kích hoạt/bị khóa hoặc role không hợp lệ bị từ chối.
+  - Điều hướng Admin đến `/Admin/Dashboard`, Hội viên HDV đến `/Guide/Dashboard`; cả hai dashboard có policy authorization riêng, không chỉ dựa vào việc ẩn/hiện liên kết trên giao diện.
+  - Cookie xác thực dùng ASP.NET Core Cookie Authentication/Data Protection, `HttpOnly`, `Secure`, `SameSite=Strict`, thời hạn 30 phút và có thể trượt; middleware xác thực chạy trước authorization. Đăng xuất qua POST và xóa cookie.
+  - Các form POST được bảo vệ CSRF bằng `[ValidateAntiForgeryToken]`; thông báo sai thông tin đăng nhập không tiết lộ email hay mật khẩu nào sai.
+
+### Kiểm tra phân quyền
+- Đăng nhập bằng tài khoản `RoleId = 1`, `Status = 1` để đến `/Admin/Dashboard`; tài khoản HDV không được truy cập trang này (HTTP 403).
+- Đăng nhập bằng tài khoản `RoleId = 2`, `Status = 1` để đến `/Guide/Dashboard`; tài khoản Admin không được truy cập trang này (HTTP 403).
+- Các tài khoản có trạng thái khác `1` hoặc RoleId khác `1`/`2` không nhận cookie xác thực. Đăng ký mới tạo tài khoản `Status = 0`, vì vậy cần được duyệt/kích hoạt trước khi đăng nhập.
+- Cookie được đặt cờ `Secure`; truy cập môi trường thực tế qua HTTPS. Các dashboard hiện là giao diện test và chưa chứa nghiệp vụ quản trị/hội viên.
 
 ---
 
@@ -176,3 +195,5 @@ sequenceDiagram
    - Về chúng tôi: `https://localhost:port/Home/About`
    - Đăng ký hội viên: `https://localhost:port/Register`
    - Đăng nhập: `https://localhost:port/Login`
+   - Dashboard Admin (yêu cầu đăng nhập đúng vai trò): `https://localhost:port/Admin/Dashboard`
+   - Dashboard Hội viên HDV (yêu cầu đăng nhập đúng vai trò): `https://localhost:port/Guide/Dashboard`

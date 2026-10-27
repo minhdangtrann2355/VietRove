@@ -9,6 +9,7 @@ namespace VietRove.Data
         {
         }
         public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Role> Roles { get; set; } = null!;
         public DbSet<GuideProfile> GuideProfiles { get; set; } = null!;
         public DbSet<GuideCategory> GuideCategories { get; set; } = null!;
         public DbSet<Category> Categories { get; set; } = null!;
