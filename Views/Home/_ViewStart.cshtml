@@ -1,0 +1,23 @@
+@using VietRove.Security
+@{
+    //chon layout phu hop voi vai tro nguoi dung khi vao cac trang home
+    if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole(AppRoles.Guide))
+        {
+            Layout = "_GuideLayout";
+        }
+        else if (User.IsInRole(AppRoles.Admin))
+        {
+            Layout = "_AdminLayout";
+        }
+        else
+        {
+            Layout = "_GuestLayout";
+        }
+    }
+    else
+    {
+        Layout = "_GuestLayout";
+    }
+}

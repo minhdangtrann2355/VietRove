@@ -51,7 +51,7 @@ namespace VietRove.Controllers
                 ExpiryDate = DateTime.Today.AddYears(2) 
             };
 
-            return View(model);
+            return View("Register", model);
         }
 
         [HttpPost]

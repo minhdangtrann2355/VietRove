@@ -24,7 +24,7 @@ namespace VietRove.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View(new LoginViewModel());
+            return View("Login", new LoginViewModel());
         }
 
         [HttpPost]
@@ -33,7 +33,7 @@ namespace VietRove.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                return View(model);
+                return View("Login", model);
             }
 
             string cleanEmail = string.Empty;
@@ -46,20 +46,26 @@ namespace VietRove.Controllers
             if (user == null)
             {
                 ModelState.AddModelError("", "Email hoặc mật khẩu không chính xác.");
-                return View(model);
+                return View("Login", model);
             }
 
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(model.Password, user.Password);
             if (isPasswordValid == false)
             {
                 ModelState.AddModelError("", "Email hoặc mật khẩu không chính xác.");
-                return View(model);
+                return View("Login", model);
             }
 
-            if (user.Status != 1)
+            if (user.Status == 2)
             {
-                ModelState.AddModelError("", "Tài khoản chưa được kích hoạt hoặc đã bị khóa.");
-                return View(model);
+                ModelState.AddModelError("", "Hồ sơ của bạn đã bị từ chối.");
+                return View("Login", model);
+            }
+
+            if (user.Status == 3)
+            {
+                ModelState.AddModelError("", "Tài khoản của bạn đã bị khóa.");
+                return View("Login", model);
             }
 
             string roleName = string.Empty;
@@ -78,13 +84,57 @@ namespace VietRove.Controllers
             else
             {
                 ModelState.AddModelError("", "Tài khoản không có quyền truy cập hệ thống.");
-                return View(model);
+                return View("Login", model);
+            }
+
+            //lay thong tin ho so hoi vien de nap vao claims
+            GuideProfile? guide = null;
+            if (user.RoleId == AppRoles.GuideId)
+            {
+                guide = await _context.GuideProfiles.FirstOrDefaultAsync(g => g.UserId == user.UserId);
+            }
+
+            string fullName = string.Empty;
+            if (guide != null && string.IsNullOrWhiteSpace(guide.FullName) == false)
+            {
+                fullName = guide.FullName;
+            }
+            else
+            {
+                fullName = user.Email.Split('@')[0];
+            }
+
+            string status = string.Empty;
+            if (guide != null)
+            {
+                status = guide.Status.ToString();
+            }
+            else
+            {
+                status = user.Status.ToString();
+            }
+
+            string cardNumber = string.Empty;
+            if (guide != null && string.IsNullOrWhiteSpace(guide.CardNumber) == false)
+            {
+                cardNumber = guide.CardNumber;
+            }
+
+            string avatar = string.Empty;
+            if (guide != null && string.IsNullOrWhiteSpace(guide.Avatar) == false)
+            {
+                avatar = guide.Avatar;
             }
 
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Role, roleName)
+                new Claim(ClaimTypes.Role, roleName),
+                new Claim(ClaimTypes.Name, fullName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("Status", status),
+                new Claim("CardNumber", cardNumber),
+                new Claim("Avatar", avatar)
             };
             ClaimsIdentity identity = new ClaimsIdentity(
                 claims,
@@ -103,7 +153,7 @@ namespace VietRove.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
     }
 }

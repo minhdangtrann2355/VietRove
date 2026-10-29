@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Quản trị VietRove</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .admin-navbar {
+            background-color: #0f172a;
+            border-bottom: 1px solid #1e293b;
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-navbar py-2">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a asp-controller="Admin" asp-action="Dashboard" class="text-white text-decoration-none fw-bold fs-5">
+                VietRove Admin
+            </a>
+            <form asp-controller="Login" asp-action="Logout" method="post" class="m-0">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-sm btn-outline-light">Đăng xuất</button>
+            </form>
+        </div>
+    </header>
+
+    <main class="container py-4 flex-grow-1">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -26,7 +26,7 @@ public class HomeController : Controller
         {
             articles = await _context.Articles.OrderByDescending(a => a.CreatedAt).ToListAsync();
         }
-        return View(articles);
+        return View("Home", articles);
     }
 
     public async Task<IActionResult> Guides(string? keyword, string? cardType)

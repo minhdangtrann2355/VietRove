@@ -12,5 +12,23 @@ namespace VietRove.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult Profile()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Contract()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Settings()
+        {
+            return View();
+        }
     }
 }

@@ -1,0 +1,398 @@
+@using System.Security.Claims
+@{
+    //doc thong tin hoi vien tu claims cua phien dang nhap
+    string fullName = "Hội viên";
+    if (User.Identity != null && string.IsNullOrEmpty(User.Identity.Name) == false)
+    {
+        fullName = User.Identity.Name;
+    }
+
+    string email = "";
+    var emailClaim = User.FindFirst(ClaimTypes.Email);
+    if (emailClaim != null && string.IsNullOrEmpty(emailClaim.Value) == false)
+    {
+        email = emailClaim.Value;
+    }
+
+    string statusClaim = "0";
+    var statusClaimObj = User.FindFirst("Status");
+    if (statusClaimObj != null && string.IsNullOrEmpty(statusClaimObj.Value) == false)
+    {
+        statusClaim = statusClaimObj.Value;
+    }
+
+    int currentStatus = 0;
+    if (int.TryParse(statusClaim, out int s))
+    {
+        currentStatus = s;
+    }
+
+    string cardNumber = "";
+    var cardClaim = User.FindFirst("CardNumber");
+    if (cardClaim != null && string.IsNullOrEmpty(cardClaim.Value) == false)
+    {
+        cardNumber = cardClaim.Value;
+    }
+
+    string avatar = "";
+    var avatarClaim = User.FindFirst("Avatar");
+    if (avatarClaim != null && string.IsNullOrEmpty(avatarClaim.Value) == false)
+    {
+        avatar = avatarClaim.Value;
+    }
+
+    string avatarUrl = "";
+    if (string.IsNullOrEmpty(avatar) == false)
+    {
+        string? url = Url.Action("GetAvatar", "Home", new { fileName = avatar });
+        if (string.IsNullOrEmpty(url) == false)
+        {
+            avatarUrl = url;
+        }
+    }
+
+    string firstLetter = "U";
+    if (string.IsNullOrEmpty(fullName) == false)
+    {
+        firstLetter = fullName.Substring(0, 1);
+    }
+
+    string displayCard = "HDV-Chưa cấp";
+    if (string.IsNullOrEmpty(cardNumber) == false)
+    {
+        displayCard = cardNumber;
+    }
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - VietRove</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            color: #374151;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-custom {
+            background-color: #ffffff;
+            border-bottom: 2px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-link-custom {
+            color: #4b5563 !important;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 8px 14px !important;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-link-custom:hover, 
+        .nav-link-custom:focus {
+            color: #1d4ed8 !important;
+            background-color: #eff6ff;
+        }
+
+        .dropdown-menu-custom {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            padding: 6px;
+            min-width: 210px;
+            animation: fadeIn 0.15s ease-in-out;
+        }
+
+        .dropdown-item-custom {
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #374151;
+            padding: 9px 14px;
+            border-radius: 6px;
+            transition: all 0.15s;
+        }
+
+        .dropdown-item-custom:hover {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            font-weight: 600;
+            transform: translateX(3px);
+        }
+
+        @@media (min-width: 992px) {
+            .nav-item.dropdown:hover .dropdown-menu-custom {
+                display: block;
+                margin-top: 0;
+            }
+        }
+
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .avatar-circle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e5e7eb;
+            transition: border-color 0.2s;
+            cursor: pointer;
+        }
+
+        .avatar-circle:hover {
+            border-color: #1d4ed8;
+        }
+
+        .avatar-fallback {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: #1d4ed8;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #e5e7eb;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .no-caret::after {
+            display: none !important;
+        }
+
+        .avatar-dropdown-menu {
+            min-width: 280px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            padding: 6px;
+            animation: fadeIn 0.15s ease-in-out;
+        }
+
+        .dropdown-header-user {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 4px;
+            user-select: none;
+            cursor: default;
+        }
+
+        .status-badge-pending {
+            display: inline-block;
+            background-color: #fef3c7;
+            color: #b45309;
+            border: 1px solid #fde68a;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 4px;
+            margin-top: 3px;
+        }
+
+        footer {
+            background-color: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar-custom sticky-top">
+        <nav class="navbar navbar-expand-lg py-2">
+            <div class="container">
+                
+                <a asp-controller="Home" asp-action="Index" class="navbar-brand d-flex align-items-center text-decoration-none gap-2 me-4">
+                    <svg style="width: 32px; height: 32px; color: #1d4ed8;" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <span class="fs-4 fw-bold" style="color: #1e3a8a; letter-spacing: -0.5px;">VietRove</span>
+                </a>
+
+                <button class="navbar-toggler border-0 shadow-none p-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
+                        <li class="nav-item">
+                            <a asp-controller="Home" asp-action="Index" class="nav-link-custom text-decoration-none">
+                                Trang chủ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Home" asp-action="Guides" class="nav-link-custom text-decoration-none">
+                                Tìm kiếm Hướng Dẫn Viên
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link-custom text-decoration-none dropdown-toggle" href="#" id="dropdownIntro" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Giới thiệu
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="dropdownIntro">
+                                <li>
+                                    <a class="dropdown-item dropdown-item-custom" asp-controller="Home" asp-action="About">
+                                        • Về Chúng Tôi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item dropdown-item-custom" asp-controller="Home" asp-action="Vision">
+                                        • Tầm Nhìn & Sứ Mệnh
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item dropdown-item-custom" asp-controller="Home" asp-action="Regulations">
+                                        • Quy Chế Hoạt Động
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item dropdown-item-custom" asp-controller="Home" asp-action="Rules">
+                                        • Quy Định Hội Viên
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider my-1 text-muted opacity-25"></li>
+                                <li>
+                                    <a class="dropdown-item dropdown-item-custom text-primary" asp-controller="Home" asp-action="GuideRegister">
+                                        ➔ Hướng Dẫn Đăng Ký
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <div class="dropdown pt-2 pt-lg-0">
+                        <button class="btn p-0 border-0 bg-transparent dropdown-toggle no-caret d-flex align-items-center" 
+                                type="button" 
+                                id="avatarDropdown" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="false">
+                            @if (string.IsNullOrEmpty(avatarUrl) == false)
+                            {
+                                <img src="@avatarUrl" alt="Avatar" class="avatar-circle" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                <div class="avatar-fallback" style="display: none;">
+                                    @firstLetter
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="avatar-fallback">
+                                    @firstLetter
+                                </div>
+                            }
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end avatar-dropdown-menu" aria-labelledby="avatarDropdown">
+                            <!-- header -->
+                            <li class="dropdown-header-user">
+                                <div class="d-flex align-items-center gap-3 mb-2">
+                                    @if (string.IsNullOrEmpty(avatarUrl) == false)
+                                    {
+                                        <img src="@avatarUrl" alt="Avatar" class="rounded-circle border" style="width: 44px; height: 44px; object-fit: cover; flex-shrink: 0;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                        <div class="avatar-fallback" style="width: 44px; height: 44px; font-size: 18px; display: none; flex-shrink: 0;">
+                                            @firstLetter
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="avatar-fallback" style="width: 44px; height: 44px; font-size: 18px; flex-shrink: 0;">
+                                            @firstLetter
+                                        </div>
+                                    }
+                                    <div style="min-width: 0; flex: 1;">
+                                        <div class="d-flex align-items-center gap-1">
+                                            <span class="fw-bold text-dark text-truncate" style="font-size: 15px;" title="@fullName">@fullName</span>
+                                            @if (currentStatus == 1)
+                                            {
+                                                <span title="Tài khoản đã duyệt" class="d-inline-flex align-items-center flex-shrink-0">
+                                                    <img src="~/images/bluetick.png" alt="Verified" style="width: 17px; height: 17px;" />
+                                                </span>
+                                            }
+                                        </div>
+                                        @if (currentStatus == 0)
+                                        {
+                                            <div>
+                                                <span class="status-badge-pending">Đang chờ duyệt</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="text-muted text-truncate" style="font-size: 13px;" title="@email">@email</div>
+                                <div class="text-secondary text-truncate" style="font-size: 12.5px; margin-top: 2px;">
+                                    Mã thẻ: <strong>@displayCard</strong>
+                                </div>
+                            </li>
+
+                            <!-- menu chuc nang chinh ( an di neu chua duoc admin duyet) -->
+                            @if (currentStatus == 1)
+                            {
+                                <li>
+                                    <a class="dropdown-item dropdown-item-custom" asp-controller="Guide" asp-action="Profile">
+                                        Hồ sơ cá nhân
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item dropdown-item-custom" asp-controller="Guide" asp-action="Contract">
+                                        Tạo hợp đồng thỏa thuận
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item dropdown-item-custom" asp-controller="Guide" asp-action="Settings">
+                                        Cài đặt tài khoản / Bảo mật
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider my-1 text-muted opacity-25"></li>
+                            }
+
+                            <!-- nut dang xuat -->
+                            <li>
+                                <form asp-controller="Login" asp-action="Logout" method="post" class="m-0">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="dropdown-item dropdown-item-custom text-danger w-100 border-0 bg-transparent text-start">
+                                        Đăng xuất
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <main class="container py-4 flex-grow-1">
+        @RenderBody()
+    </main>
+
+    <footer class="py-3 text-center">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 - Hiệp hội Hướng dẫn viên Du lịch Việt Nam (VietRove). Bảo lưu mọi quyền.</p>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

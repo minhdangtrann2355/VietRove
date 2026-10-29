@@ -58,7 +58,6 @@
         box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
     }
 
-(< 768px) */
     @@media (max-width: 768px) {
         .hero-banner {
             padding: 48px 16px;
@@ -113,9 +112,25 @@
     {
         foreach (var article in Model)
         {
+            string createdAtText = "";
+            if (article.CreatedAt.HasValue)
+            {
+                createdAtText = article.CreatedAt.Value.ToString("dd/MM/yyyy HH:mm");
+            }
+
+            string displayContent = "";
+            if (string.IsNullOrEmpty(article.Content) == false)
+            {
+                displayContent = article.Content;
+                if (displayContent.Length > 120)
+                {
+                    displayContent = displayContent.Substring(0, 120) + "...";
+                }
+            }
+
             <div class="col-md-4">
                 <div class="card h-100 border-0 shadow-sm" style="border-radius: 8px; overflow: hidden; background: #ffffff;">
-                    @if (!string.IsNullOrEmpty(article.Thumbnail))
+                    @if (string.IsNullOrEmpty(article.Thumbnail) == false)
                     {
                         <img src="@Url.Action("GetThumbnail", "Home", new { fileName = article.Thumbnail })" class="card-img-top" alt="@article.Title" style="height: 200px; object-fit: cover;" />
                     }
@@ -129,16 +144,9 @@
                         <span class="badge align-self-start mb-2" style="background-color: #eff6ff; color: #1d4ed8; font-weight: 500;">Tin tức</span>
                         <h5 class="card-title fw-bold fs-6 mb-2" style="color: #1f2937; line-height: 1.4;">@article.Title</h5>
                         <p class="card-text text-muted mb-2" style="font-size: 12px;">
-                            @(article.CreatedAt?.ToString("dd/MM/yyyy HH:mm"))
+                            @createdAtText
                         </p>
                         <p class="card-text text-secondary small flex-grow-1" style="line-height: 1.5;">
-                            @{
-                                string displayContent = article.Content ?? string.Empty;
-                                if (displayContent.Length > 120)
-                                {
-                                    displayContent = displayContent.Substring(0, 120) + "...";
-                                }
-                            }
                             @displayContent
                         </p>
                     </div>
