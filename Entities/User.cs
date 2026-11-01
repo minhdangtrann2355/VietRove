@@ -23,5 +23,6 @@ namespace VietRove.Entities
         public int Status { get; set; }
 
         public DateTime CreatedAt { get; set; }
+        public string? LockReason { get; set; }
     }
 }

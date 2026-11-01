@@ -24,6 +24,21 @@ namespace VietRove.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            if (Request.Cookies.TryGetValue("SysAuthMsg", out string authMsg))
+            {
+                if (authMsg == "approved")
+                {
+                    ViewBag.SysMessage = "Tài khoản của bạn đã được duyệt, vui lòng đăng nhập lại.";
+                    ViewBag.SysMessageType = "success"; 
+                }
+                else if (authMsg == "locked")
+                {
+                    ViewBag.SysMessage = "Phiên đăng nhập đã kết thúc do tài khoản bị khóa.";
+                    ViewBag.SysMessageType = "danger"; 
+                }
+                Response.Cookies.Delete("SysAuthMsg");
+            }
+
             return View("Login", new LoginViewModel());
         }
 
@@ -56,15 +71,30 @@ namespace VietRove.Controllers
                 return View("Login", model);
             }
 
-            if (user.Status == 2)
+           if (user.Status == 2)
             {
-                ModelState.AddModelError("", "Hồ sơ của bạn đã bị từ chối.");
+                var guideProfile = await _context.GuideProfiles.FirstOrDefaultAsync(g => g.UserId == user.UserId);
+                string rejectMsg = "Hồ sơ của bạn đã bị từ chối.";
+                
+                if (guideProfile != null && !string.IsNullOrWhiteSpace(guideProfile.RejectReason))
+                {
+                    rejectMsg = $"Hồ sơ của bạn đã bị từ chối vì đã vi phạm: {guideProfile.RejectReason}";
+                }
+                
+                ModelState.AddModelError("", rejectMsg);
                 return View("Login", model);
             }
 
-            if (user.Status == 3)
+           if (user.Status == 3)
             {
-                ModelState.AddModelError("", "Tài khoản của bạn đã bị khóa.");
+                string lockMsg = "Tài khoản của bạn đã bị khóa.";
+            
+                if (!string.IsNullOrWhiteSpace(user.LockReason))
+                {
+                    lockMsg = $"Tài khoản của bạn đã bị khóa vì vi phạm: {user.LockReason}";
+                }
+                
+                ModelState.AddModelError("", lockMsg);
                 return View("Login", model);
             }
 
@@ -104,15 +134,19 @@ namespace VietRove.Controllers
                 fullName = user.Email.Split('@')[0];
             }
 
-            string status = string.Empty;
+            int finalStatus = user.Status;
             if (guide != null)
             {
-                status = guide.Status.ToString();
+                if (guide.Status == 1 || user.Status == 1)
+                {
+                    finalStatus = 1;
+                }
+                else
+                {
+                    finalStatus = guide.Status;
+                }
             }
-            else
-            {
-                status = user.Status.ToString();
-            }
+            string status = finalStatus.ToString();
 
             string cardNumber = string.Empty;
             if (guide != null && string.IsNullOrWhiteSpace(guide.CardNumber) == false)
@@ -134,7 +168,8 @@ namespace VietRove.Controllers
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim("Status", status),
                 new Claim("CardNumber", cardNumber),
-                new Claim("Avatar", avatar)
+                new Claim("Avatar", avatar),
+                new Claim("LastValidatedUtc", DateTime.UtcNow.ToString("o"))
             };
             ClaimsIdentity identity = new ClaimsIdentity(
                 claims,

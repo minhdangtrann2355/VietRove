@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using VietRove.Data;
 using VietRove.Entities;
 using VietRove.Security;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,48 @@ builder.Services
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             return Task.CompletedTask;
+        };
+
+        // auto check user status moi 30s
+        options.Events.OnValidatePrincipal = async context =>
+        {
+            var timeSinceCreated = DateTimeOffset.UtcNow - context.Properties.IssuedUtc;
+            if (timeSinceCreated > TimeSpan.FromSeconds(30))
+            {
+                var userIdClaim = context.Principal.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    var dbContext = context.HttpContext.RequestServices.GetRequiredService<VietRoveDbContext>();
+                    var user = await dbContext.Users.FindAsync(userId);
+                    var currentCookieStatus = int.Parse(context.Principal.FindFirst("Status")?.Value ?? "0");
+                    
+                    int dbStatus = user?.Status ?? 0;
+                    if (user != null && user.RoleId == AppRoles.GuideId)
+                    {
+                        var guide = await dbContext.GuideProfiles.FirstOrDefaultAsync(g => g.UserId == userId);
+                        if (guide != null)
+                        {
+                            dbStatus = (guide.Status == 1 || user.Status == 1) ? 1 : guide.Status;
+                        }
+                    }
+
+                    // neu user bi xoa hoac bi khoa thi reject principal va signout
+                    if (user == null || dbStatus != currentCookieStatus)
+                    {
+                        if (currentCookieStatus == 0 && dbStatus == 1)
+                        {
+                            context.HttpContext.Response.Cookies.Append("SysAuthMsg", "approved", new CookieOptions { Path = "/" });
+                        }
+                        else if (dbStatus == 3)
+                        {
+                            context.HttpContext.Response.Cookies.Append("SysAuthMsg", "locked", new CookieOptions { Path = "/" });
+                        }
+
+                        context.RejectPrincipal();
+                        await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                    }
+                }
+            }
         };
     });
 builder.Services.AddAuthorization(options =>
@@ -90,6 +133,7 @@ if (string.IsNullOrWhiteSpace(bootstrapAdminPassword) == false)
         }
     }
 }
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

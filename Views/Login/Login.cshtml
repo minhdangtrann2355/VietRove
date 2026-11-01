@@ -10,7 +10,12 @@
                 <h3 class="text-primary fw-bold text-uppercase">Đăng Nhập VietRove</h3>
                 <p class="text-muted small">Cổng thông tin hội viên & quản lý</p>
             </div>
-
+@if (ViewBag.SysMessage != null)
+{
+    <div class="alert alert-@ViewBag.SysMessageType text-center font-weight-bold">
+        @ViewBag.SysMessage
+    </div>
+}
             <form asp-controller="Login" asp-action="Index" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small"></div>
 
