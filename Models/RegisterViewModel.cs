@@ -1,3 +1,4 @@
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,7 +30,7 @@ namespace VietRove.Models
         [StringLength(100, ErrorMessage = "Họ tên tối đa 100 ký tự.")]
         public string FullName { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Vui lòng chọn giới tính.")]
+        [Range(1, 2, ErrorMessage = "Vui lòng chọn giới tính.")]
         public int Gender { get; set; }
 
         [Required(ErrorMessage = "Vui lòng chọn ngày sinh.")]
@@ -45,12 +46,13 @@ namespace VietRove.Models
         public string Address { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Vui lòng nhập số CCCD/CMND.")]
-        [RegularExpression(@"^(\d{12})$", ErrorMessage = "Số CCCD/CMND phải đúng 12 chữ số.")]
+        [RegularExpression(@"^\d{12}$", ErrorMessage = "Số CCCD/CMND phải đúng 12 chữ số.")]
         public string IdCard { get; set; } = string.Empty;
 
         [DataType(DataType.Date)]
         public DateTime IssueDate { get; set; }
 
+        [Required(ErrorMessage = "Vui lòng nhập nơi cấp.")]
         [StringLength(100, ErrorMessage = "Nơi cấp tối đa 100 ký tự.")]
         public string IssuePlace { get; set; } = string.Empty;
 
@@ -65,13 +67,16 @@ namespace VietRove.Models
         [DataType(DataType.Date)]
         public DateTime ExpiryDate { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập số năm kinh nghiệm.")]
         [Range(0, 40, ErrorMessage = "Số năm kinh nghiệm không hợp lệ.")]
         public int ExperienceYears { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "Vui lòng chọn tỉnh/thành phố hoạt động.")]
         public int ProvinceId { get; set; }
 
+        public List<int> LanguageIds { get; set; } = new List<int>();
+
         public List<string> LanguageNames { get; set; } = new List<string>();
+
         public List<IFormFile> LanguageCertificates { get; set; } = new List<IFormFile>();
 
         [Required(ErrorMessage = "Vui lòng tải lên ảnh đại diện.")]
@@ -86,64 +91,158 @@ namespace VietRove.Models
         [Required(ErrorMessage = "Vui lòng tải bản scan thẻ HDV.")]
         public IFormFile CardScanFile { get; set; } = null!;
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public IEnumerable<ValidationResult> Validate(
+            ValidationContext validationContext)
         {
-            if (string.IsNullOrWhiteSpace(Password))
+            // kiem tra mat khau
+            if (string.IsNullOrWhiteSpace(Password) == false)
             {
-                yield break;
-            }
-
-            if (string.IsNullOrWhiteSpace(Email) == false)
-            {
-                string cleanEmail = Email.Trim();
-
-                if (Password.Contains(cleanEmail, StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrWhiteSpace(Email) == false)
                 {
-                    yield return new ValidationResult("Mật khẩu không được phép chứa địa chỉ email.", new[] { "Password" });
-                }
-                else
-                {
-                    string[] parts = cleanEmail.Split('@');
-                    if (parts.Length > 0)
+                    string cleanEmail = Email.Trim();
+
+                    if (Password.Contains(
+                        cleanEmail,
+                        StringComparison.OrdinalIgnoreCase))
                     {
-                        string emailPrefix = parts[0];
-                        if (emailPrefix.Length >= 3)
+                        yield return new ValidationResult(
+                            "Mật khẩu không được phép chứa địa chỉ email.",
+                            new[] { nameof(Password) });
+                    }
+                    else
+                    {
+                        string[] parts = cleanEmail.Split('@');
+
+                        if (parts.Length > 0)
                         {
-                            if (Password.Contains(emailPrefix, StringComparison.OrdinalIgnoreCase))
+                            string emailPrefix = parts[0];
+
+                            if (emailPrefix.Length >= 3 &&
+                                Password.Contains(
+                                    emailPrefix,
+                                    StringComparison.OrdinalIgnoreCase))
                             {
-                                yield return new ValidationResult("Mật khẩu không được phép chứa phần tên định danh của email.", new[] { "Password" });
+                                yield return new ValidationResult(
+                                    "Mật khẩu không được phép chứa phần tên định danh của email.",
+                                    new[] { nameof(Password) });
                             }
                         }
                     }
                 }
-            }
 
-            if (string.IsNullOrWhiteSpace(FullName) == false)
-            {
-                string[] names = FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                foreach (string part in names)
+                if (string.IsNullOrWhiteSpace(FullName) == false)
                 {
-                    if (part.Length >= 3)
+                    string[] names = FullName.Split(
+                        ' ',
+                        StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (string part in names)
                     {
-                        if (Password.Contains(part, StringComparison.OrdinalIgnoreCase))
+                        if (part.Length >= 3 &&
+                            Password.Contains(
+                                part,
+                                StringComparison.OrdinalIgnoreCase))
                         {
-                            yield return new ValidationResult("Mật khẩu không được chứa thông tin họ tên của bạn.", new[] { "Password" });
+                            yield return new ValidationResult(
+                                "Mật khẩu không được chứa thông tin họ tên của bạn.",
+                                new[] { nameof(Password) });
+
                             break;
                         }
                     }
                 }
             }
 
-            if (!string.IsNullOrEmpty(CardType) && CardType.Equals("Quốc tế", StringComparison.OrdinalIgnoreCase))
+            // kiem tra ngay sinh
+            if (DateOfBirth == default ||
+                DateOfBirth.Date >= DateTime.Today)
             {
-                if (LanguageNames == null || LanguageNames.Count == 0 || LanguageNames.All(string.IsNullOrWhiteSpace))
+                yield return new ValidationResult(
+                    "Ngày sinh không hợp lệ.",
+                    new[] { nameof(DateOfBirth) });
+            }
+
+            // kiem tra ngay cap the
+            if (IssueDate == default ||
+                IssueDate.Date > DateTime.Today)
+            {
+                yield return new ValidationResult(
+                    "Ngày cấp thẻ không được lớn hơn ngày hiện tại.",
+                    new[] { nameof(IssueDate) });
+            }
+
+            // kiem tra ngay het han
+            if (ExpiryDate == default ||
+                ExpiryDate.Date <= DateTime.Today ||
+                (IssueDate != default && ExpiryDate.Date <= IssueDate.Date))
+            {
+                yield return new ValidationResult(
+                    "Ngày hết hạn phải sau ngày hiện tại và ngày cấp thẻ.",
+                    new[] { nameof(ExpiryDate) });
+            }
+
+            // kiem tra ngoai ngu va chung chi
+            bool isInternationalCard = false;
+
+            if (string.IsNullOrWhiteSpace(CardType) == false)
+            {
+                string cleanCard = CardType.Trim().ToLowerInvariant();
+
+                if (cleanCard.Contains("quoc te") ||
+                    cleanCard.Contains("quốc tế") ||
+                    cleanCard.Contains("qu?c t?") ||
+                    string.Equals(cleanCard, "hướng dẫn viên quốc tế", StringComparison.OrdinalIgnoreCase))
                 {
-                    yield return new ValidationResult("Vui lòng nhập Ngoại ngữ hướng dẫn đối với Thẻ Quốc tế.", new[] { nameof(LanguageNames) });
+                    isInternationalCard = true;
+                }
+            }
+
+            if (isInternationalCard)
+            {
+                if (LanguageIds == null || LanguageIds.Count == 0)
+                {
+                    yield return new ValidationResult(
+                        "Vui lòng chọn ít nhất một ngoại ngữ.",
+                        new[] { nameof(LanguageIds) });
+                }
+                else
+                {
+                    if (LanguageIds.Any(id => id <= 0))
+                    {
+                        yield return new ValidationResult(
+                            "Vui lòng chọn đầy đủ ngoại ngữ.",
+                            new[] { nameof(LanguageIds) });
+                    }
+
+                    if (LanguageIds.Distinct().Count() != LanguageIds.Count)
+                    {
+                        yield return new ValidationResult(
+                            "Không được chọn trùng ngoại ngữ.",
+                            new[] { nameof(LanguageIds) });
+                    }
                 }
 
-                if (LanguageCertificates == null || LanguageCertificates.Count == 0 || LanguageCertificates.All(f => f == null || f.Length == 0))
+                if (LanguageCertificates == null ||
+                    LanguageIds == null ||
+                    LanguageCertificates.Count != LanguageIds.Count)
                 {
-                    yield return new ValidationResult("Vui lòng tải lên Văn bằng/Chứng chỉ ngoại ngữ đối với Thẻ Quốc tế.", new[] { nameof(LanguageCertificates) });
+                    yield return new ValidationResult(
+                        "Thông tin ngoại ngữ và chứng chỉ không khớp.",
+                        new[] { nameof(LanguageCertificates) });
+                }
+                else
+                {
+                    for (int i = 0; i < LanguageIds.Count; i++)
+                    {
+                        IFormFile certificate = LanguageCertificates[i];
+
+                        if (certificate == null || certificate.Length == 0)
+                        {
+                            yield return new ValidationResult(
+                                "Vui lòng tải chứng chỉ cho từng ngoại ngữ đã chọn.",
+                                new[] { nameof(LanguageCertificates) });
+                        }
+                    }
                 }
             }
         }

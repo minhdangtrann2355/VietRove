@@ -12,6 +12,35 @@
     {
         currentCardType = ViewBag.CardType.ToString();
     }
+
+    int currentProvinceId = 0;
+    if (ViewBag.ProvinceId != null)
+    {
+        currentProvinceId = (int)ViewBag.ProvinceId;
+    }
+
+    int currentLanguageId = 0;
+    if (ViewBag.LanguageId != null)
+    {
+        currentLanguageId = (int)ViewBag.LanguageId;
+    }
+
+    List<VietRove.Entities.Category> provinces = new List<VietRove.Entities.Category>();
+    if (ViewBag.Provinces != null)
+    {
+        provinces = ViewBag.Provinces;
+    }
+
+    List<VietRove.Entities.Category> languages = new List<VietRove.Entities.Category>();
+    if (ViewBag.Languages != null)
+    {
+        languages = ViewBag.Languages;
+    }
+    Dictionary<int, string> activityProvinces = new Dictionary<int, string>();
+    if (ViewBag.ActivityProvinces != null)
+    {
+        activityProvinces = ViewBag.ActivityProvinces;
+    }
 }
 
 <div class="mb-4 text-center">
@@ -22,10 +51,10 @@
 
 <div class="card border-0 shadow-sm mb-4 p-3" style="background: #ffffff; border-radius: 8px;">
     <form method="get" asp-controller="Home" asp-action="Guides" class="row g-2 align-items-center">
-        <div class="col-md-7">
-            <input type="text" name="keyword" value="@currentKeyword" class="form-control" placeholder="Nhập họ tên hoặc địa phương cần tìm..." />
+        <div class="col-md-5">
+            <input type="text" name="keyword" value="@currentKeyword" class="form-control" placeholder="Tên, địa phương hoặc mã thẻ..." />
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <select name="cardType" class="form-select">
                 <option value="">-- Tất cả loại thẻ --</option>
                 @if (currentCardType == "Nội địa")
@@ -43,6 +72,38 @@
                 else
                 {
                     <option value="Quốc tế">HDV Quốc tế</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="provinceId" class="form-select">
+                <option value="0">-- Tỉnh/thành --</option>
+                @foreach (var province in provinces)
+                {
+                    if (province.CategoryId == currentProvinceId)
+                    {
+                        <option value="@province.CategoryId" selected>@province.CategoryName</option>
+                    }
+                    else
+                    {
+                        <option value="@province.CategoryId">@province.CategoryName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="languageId" class="form-select">
+                <option value="0">-- Ngoại ngữ --</option>
+                @foreach (var language in languages)
+                {
+                    if (language.CategoryId == currentLanguageId)
+                    {
+                        <option value="@language.CategoryId" selected>@language.CategoryName</option>
+                    }
+                    else
+                    {
+                        <option value="@language.CategoryId">@language.CategoryName</option>
+                    }
                 }
             </select>
         </div>
@@ -95,19 +156,27 @@
 
                         <div class="text-start small text-muted px-2 mb-3">
                             <p class="mb-1"><strong>Kinh nghiệm:</strong> @guide.ExperienceYears năm</p>
-                            <p class="mb-1"><strong>Địa bàn:</strong> @displayAddress</p>
+                            @{
+                                string activityProvince = "Đang cập nhật";
+                                if (activityProvinces.ContainsKey(guide.GuideId))
+                                {
+                                    activityProvince = activityProvinces[guide.GuideId];
+                                }
+                            }
+                            <p class="mb-1"><strong>Tỉnh thành hoạt động:</strong> @activityProvince</p>
                             
                            @{
                                 string displayEmail = "Đang cập nhật";
-                                if (!string.IsNullOrEmpty(guide.Email))
+                                if (!string.IsNullOrEmpty(guide.ContactEmail))
                                 {
-                                    displayEmail = guide.Email;
+                                    displayEmail = guide.ContactEmail;
                                 }
                             }
                             <p class="mb-0"><strong>Liên hệ:</strong> <span class="text-dark">@displayEmail</span></p>
                         </div>
 
                         <div class="mt-auto">
+                            <a asp-controller="Home" asp-action="GuideProfile" asp-route-id="@guide.GuideId" class="btn btn-sm btn-outline-primary mb-2 w-100">Xem hồ sơ</a>
                             <span class="badge" style="background-color: #ecfdf5; color: #059669; font-weight: 500; font-size: 12px; padding: 6px 12px; border-radius: 20px;">
                                 ✓ Đã được kiểm duyệt
                             </span>

@@ -153,6 +153,50 @@
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
         padding: 6px;
         animation: fadeIn 0.15s ease-in-out;
+        z-index: 1060;
+    }
+
+    .navbar-custom .navbar > .container {
+        position: relative;
+    }
+
+    @@media (max-width: 991.98px) {
+        .navbar-custom .navbar > .container {
+            flex-wrap: wrap;
+        }
+
+        .navbar-custom .navbar-collapse {
+            order: 3;
+            flex-basis: 100%;
+        }
+
+        .navbar-custom .navbar-auth-actions,
+        .navbar-custom .navbar-avatar-actions {
+            order: 2;
+            margin-left: auto;
+        }
+
+        .navbar-custom .navbar-brand {
+            order: 1;
+        }
+
+        .navbar-custom .navbar-toggler {
+            order: 1;
+        }
+
+        .navbar-custom .avatar-dropdown-menu {
+            position: absolute;
+            right: 0;
+            left: auto;
+            max-width: calc(100vw - 24px);
+        }
+    }
+
+    @@media (min-width: 992px) {
+        .navbar-custom .navbar-auth-actions,
+        .navbar-custom .navbar-avatar-actions {
+            order: 2;
+        }
     }
 
     .dropdown-header-user {

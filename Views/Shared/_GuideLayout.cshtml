@@ -44,9 +44,9 @@
     string avatarUrl = "";
     if (string.IsNullOrEmpty(avatar) == false)
     {
-        string url = Url.Action("GetAvatar", "Home", new { fileName = avatar });
-        if (url == null) { url = ""; }
-        if (string.IsNullOrEmpty(url) == false)
+        string? url = Url.Action("GetAvatar", "Home", new { fileName = avatar });
+
+        if (url != null && string.IsNullOrEmpty(url) == false)
         {
             avatarUrl = url;
         }
@@ -76,7 +76,7 @@
             <div class="container">
                 <partial name="_HeaderPartial" />
 
-                <div class="dropdown pt-2 pt-lg-0">
+                <div class="dropdown pt-2 pt-lg-0 navbar-avatar-actions">
                     <button class="btn p-0 border-0 bg-transparent dropdown-toggle no-caret d-flex align-items-center"
                             type="button"
                             id="avatarDropdown"

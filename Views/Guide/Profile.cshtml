@@ -1,9 +1,245 @@
+@model VietRove.Models.GuideProfileViewModel
 @{
     ViewData["Title"] = "Hồ sơ cá nhân";
 }
 
-<main class="container py-5">
-    <div class="p-4 bg-white rounded border">
-        <h2>Đây là giao diện Hồ sơ cá nhân</h2>
+<div class="profile-page">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1" style="color: #1e3a8a;">HỒ SƠ HỘI VIÊN</h2>
+            <p class="text-muted mb-0">Thông tin hồ sơ và năng lực hành nghề của bạn.</p>
+        </div>
+        <a asp-controller="Guide" asp-action="EditProfile" class="btn text-white fw-bold" style="background-color: #1d4ed8;">Chỉnh sửa hồ sơ</a>
     </div>
-</main>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm p-4 text-center h-100">
+                @if (string.IsNullOrWhiteSpace(Model.Profile.Avatar) == false)
+                {
+                    <img src="@Url.Action("GetAvatar", "Home", new { fileName = Model.Profile.Avatar })" alt="@Model.Profile.FullName" class="rounded-circle mx-auto mb-3 profile-avatar" />
+                }
+                else
+                {
+                    string firstChar = "H";
+                    if (string.IsNullOrEmpty(Model.Profile.FullName) == false)
+                    {
+                        firstChar = Model.Profile.FullName.Substring(0, 1);
+                    }
+                    <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center text-white fw-bold profile-avatar-fallback">
+                        @firstChar
+                    </div>
+                }
+                <h4 class="fw-bold mb-1">@Model.Profile.FullName</h4>
+                @if (Model.IsApproved)
+                {
+                    <span class="badge rounded-pill mb-3 profile-approved">✓ Đã xác thực</span>
+                }
+                else
+                {
+                    <span class="badge rounded-pill bg-warning text-dark mb-3">@Model.StatusText</span>
+                }
+                <p class="mb-1"><strong>Mã thẻ:</strong> @Model.Profile.CardNumber</p>
+                <p class="mb-1"><strong>Loại thẻ:</strong> @Model.Profile.CardType</p>
+                <p class="mb-0"><strong>Kinh nghiệm:</strong> @Model.Profile.ExperienceYears năm</p>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm p-4 mb-4">
+                <h5 class="fw-bold profile-heading">Thông tin liên hệ</h5>
+                <div class="row g-3">
+                    <div class="col-md-6"><strong>Email:</strong><br />@Model.Profile.ContactEmail</div>
+                    <div class="col-md-6"><strong>Số điện thoại:</strong><br />@Model.Profile.ContactPhone</div>
+                    <div class="col-12"><strong>Địa chỉ:</strong><br />@Model.Profile.Address</div>
+                    <div class="col-12"><strong>Tỉnh thành hoạt động:</strong><br />@Model.ActivityProvinceName</div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm p-4 mb-4">
+                <h5 class="fw-bold profile-heading">Ngoại ngữ và minh chứng</h5>
+                @if (Model.GuideLanguages.Count > 0)
+                {
+                    <div class="row g-3">
+                        @foreach (var language in Model.GuideLanguages)
+                        {
+                            <div class="col-md-6">
+                                <div class="border rounded p-3 h-100">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <strong class="fs-6">@language.Language.CategoryName</strong>
+                                        @if (language.VerificationStatus == 1)
+                                        {
+                                            <span class="badge bg-success">Đã xác minh</span>
+                                        }
+                                        else if (language.VerificationStatus == 2)
+                                        {
+                                            <span class="badge bg-danger">Từ chối</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">Đang chờ duyệt</span>
+                                        }
+                                    </div>
+                                    <div class="small text-muted">
+                                        Thêm lúc: @language.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                    </div>
+                                    <div class="small text-muted mt-1">
+                                        @if (string.IsNullOrWhiteSpace(language.CertificateFile) == false)
+                                        {
+                                            <span class="text-success">✓ Đã nộp minh chứng</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">Chưa có minh chứng</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">Chưa cập nhật ngoại ngữ.</p>
+                }
+            </div>
+
+            <div class="card border-0 shadow-sm p-4 mb-4">
+                <h5 class="fw-bold profile-heading">Kinh nghiệm hành nghề</h5>
+                @if (Model.GuideExperiences.Count > 0)
+                {
+                    foreach (var experience in Model.GuideExperiences)
+                    {
+                        <div class="border-bottom py-3">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h6 class="fw-bold mb-0">@experience.Title</h6>
+                                @if (experience.VerificationStatus == 1)
+                                {
+                                    <span class="badge bg-success">Đã xác minh</span>
+                                }
+                                else if (experience.VerificationStatus == 2)
+                                {
+                                    <span class="badge bg-danger">Từ chối</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Đang chờ duyệt</span>
+                                }
+                            </div>
+                            <div class="small text-muted mb-2">
+                                Thêm lúc: @experience.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                @if (experience.StartDate.HasValue || experience.EndDate.HasValue)
+                                {
+                                    string sText = "";
+                                    if (experience.StartDate.HasValue)
+                                    {
+                                        sText = experience.StartDate.Value.ToString("dd/MM/yyyy");
+                                    }
+                                    string eText = "Hiện tại";
+                                    if (experience.EndDate.HasValue)
+                                    {
+                                        eText = experience.EndDate.Value.ToString("dd/MM/yyyy");
+                                    }
+                                    <span> | Thời gian: @sText - @eText</span>
+                                }
+                            </div>
+                            <p class="small mb-1">@experience.Description</p>
+                            @if (string.IsNullOrWhiteSpace(experience.EvidenceFile) == false)
+                            {
+                                <span class="small text-success">✓ Đã nộp minh chứng</span>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted mb-0">Chưa cập nhật kinh nghiệm chi tiết.</p>
+                }
+            </div>
+
+            <div class="card border-0 shadow-sm p-4">
+                <h5 class="fw-bold profile-heading">Thông tin pháp lý</h5>
+                <div class="row g-3 small">
+                    <div class="col-md-6">
+                        <strong>Họ tên:</strong> @Model.Profile.FullName
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Ngày sinh:</strong>
+                        @if (Model.Profile.DateOfBirth.HasValue)
+                        {
+                            @Model.Profile.DateOfBirth.Value.ToString("dd/MM/yyyy")
+                        }
+                        else
+                        {
+                            <span>Chưa cập nhật</span>
+                        }
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Số CCCD:</strong> @Model.Profile.IdentityNumber
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Ngày hết hạn thẻ:</strong>
+                        @if (Model.Profile.ExpiryDate.HasValue)
+                        {
+                            @Model.Profile.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                        }
+                        else
+                        {
+                            <span>Chưa cập nhật</span>
+                        }
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Ngày cấp:</strong>
+                        @if (Model.Profile.IssueDate.HasValue)
+                        {
+                            @Model.Profile.IssueDate.Value.ToString("dd/MM/yyyy")
+                        }
+                        else
+                        {
+                            <span>Chưa cập nhật</span>
+                        }
+                    </div>
+                </div>
+                <p class="text-muted small mt-3 mb-0">Thông tin pháp lý chỉ được thay đổi qua quy trình xét duyệt.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-avatar, .profile-avatar-fallback {
+        width: 130px;
+        height: 130px;
+        object-fit: cover;
+    }
+    .profile-avatar-fallback {
+        font-size: 42px;
+        background: #2563eb;
+    }
+    .profile-approved {
+        background-color: #ecfdf5;
+        color: #059669;
+    }
+    .profile-heading {
+        color: #1e3a8a;
+        margin-bottom: 1rem;
+    }
+    @@media (max-width: 576px) {
+        .profile-page .card {
+            padding: 1rem !important;
+        }
+    }
+</style>

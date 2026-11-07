@@ -1,4 +1,6 @@
+﻿
 @model VietRove.Models.RegisterViewModel
+
 @{
     Layout = null;
 }
@@ -9,6 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng ký hội viên - VietRove</title>
+
     <style>
         * {
             box-sizing: border-box;
@@ -58,6 +61,7 @@
             padding: 20px;
             margin-bottom: 22px;
             background: #fafafa;
+            min-width: 0;
         }
 
         legend {
@@ -70,15 +74,36 @@
             border-radius: 4px;
         }
 
-        .row {
+        .form-row {
             display: flex;
             flex-wrap: wrap;
             gap: 16px;
         }
 
-        .col-12 { flex: 1 1 100%; }
-        .col-6 { flex: 1 1 calc(50% - 8px); }
-        .col-4 { flex: 1 1 calc(33.333% - 11px); }
+        .col-12 {
+            flex: 1 1 100%;
+            min-width: 0;
+        }
+
+        .col-6 {
+            flex: 1 1 calc(50% - 8px);
+            min-width: 0;
+        }
+
+        .col-4 {
+            flex: 1 1 calc(33.333% - 11px);
+            min-width: 0;
+        }
+
+        .col-md-2 {
+            flex: 1 1 calc(16.666% - 14px);
+            min-width: 0;
+        }
+
+        .col-md-4 {
+            flex: 1 1 calc(33.333% - 11px);
+            min-width: 0;
+        }
 
         .form-group {
             margin-bottom: 14px;
@@ -92,13 +117,16 @@
             margin-bottom: 5px;
         }
 
-        .required { color: #dc2626; }
+        .required {
+            color: #dc2626;
+        }
 
         input[type="text"],
         input[type="email"],
         input[type="password"],
         input[type="date"],
         input[type="number"],
+        input[type="file"],
         select,
         textarea {
             width: 100%;
@@ -112,9 +140,15 @@
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus,
+        select:focus,
+        textarea:focus {
             border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        textarea {
+            resize: vertical;
         }
 
         .text-danger {
@@ -139,7 +173,6 @@
 
         .upload-card input[type="file"] {
             font-size: 13px;
-            width: 100%;
         }
 
         .hint {
@@ -147,6 +180,72 @@
             font-size: 11px;
             color: #64748b;
             margin-top: 4px;
+        }
+
+        .activity-label {
+            white-space: normal;
+        }
+
+        .language-section {
+            display: none;
+            flex: 1 1 100%;
+            margin-top: 12px;
+            padding: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background-color: #f8fafc;
+        }
+
+        .language-title {
+            color: #1d4ed8;
+            font-weight: 700;
+        }
+
+        .language-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .language-field {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .language-action {
+            width: 75px;
+            flex-shrink: 0;
+        }
+
+        .btn-add-language {
+            margin-top: 5px;
+            padding: 7px 12px;
+            border: 1px solid #2563eb;
+            border-radius: 5px;
+            background: #ffffff;
+            color: #2563eb;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .btn-add-language:hover {
+            background: #eff6ff;
+        }
+
+        .btn-remove-language {
+            width: 100%;
+            padding: 9px 5px;
+            border: 1px solid #dc2626;
+            border-radius: 5px;
+            background: #ffffff;
+            color: #dc2626;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-remove-language:hover {
+            background: #fef2f2;
         }
 
         .btn-group {
@@ -167,7 +266,9 @@
             cursor: pointer;
         }
 
-        .btn-submit:hover { background-color: #1e40af; }
+        .btn-submit:hover {
+            background-color: #1e40af;
+        }
 
         .btn-cancel {
             flex: 1;
@@ -180,9 +281,12 @@
             font-size: 14px;
             font-weight: 600;
             border-radius: 6px;
+            padding: 12px;
         }
 
-        .btn-cancel:hover { background-color: #cbd5e1; }
+        .btn-cancel:hover {
+            background-color: #cbd5e1;
+        }
 
         .login-link {
             text-align: center;
@@ -197,209 +301,334 @@
             text-decoration: none;
         }
 
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
         @@media (max-width: 640px) {
-            .col-6, .col-4 { flex: 1 1 100%; }
-            .form-container { padding: 20px 15px; }
+            body {
+                padding: 15px 10px;
+            }
+
+            .form-container {
+                padding: 20px 15px;
+            }
+
+            .form-header h2 {
+                font-size: 20px;
+            }
+
+            .col-6,
+            .col-4,
+            .col-md-2,
+            .col-md-4 {
+                flex: 1 1 100%;
+            }
+
+            fieldset {
+                padding: 15px 12px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn-submit,
+            .btn-cancel {
+                flex: 1;
+                min-height: 44px;
+            }
+
+            .language-row {
+                flex-wrap: wrap;
+            }
+
+            .language-field {
+                flex: 1 1 100%;
+            }
+
+            .language-action {
+                width: 100%;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<div class="form-container">
-    <div class="form-header">
-        <h2>Đăng Ký Hội Viên Hướng Dẫn Viên</h2>
-        <p>Hiệp hội Hướng dẫn viên Du lịch Việt Nam (VietRove)</p>
+    <div class="form-container">
+
+        <div class="form-header">
+            <h2>Đăng Ký Hội Viên Hướng Dẫn Viên</h2>
+            <p>Hiệp hội Hướng dẫn viên Du lịch Việt Nam (VietRove)</p>
+        </div>
+
+        <form id="registerForm"
+              asp-controller="Register"
+              asp-action="Index"
+              method="post"
+              enctype="multipart/form-data"
+              novalidate>
+
+            <div style="display: none;" aria-hidden="true">
+                <input asp-for="Website" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <fieldset>
+                <legend>1. Tài khoản đăng nhập</legend>
+
+                <div class="form-row">
+
+                    <div class="col-12 form-group">
+                        <label asp-for="Email">Email đăng nhập <span class="required">*</span></label>
+                        <input asp-for="Email" type="email" placeholder="vidu@gmail.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-6 form-group">
+                        <label asp-for="Password">Mật khẩu <span class="required">*</span></label>
+                        <input asp-for="Password" type="password" placeholder="Tối thiểu 8 ký tự" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-6 form-group">
+                        <label asp-for="ConfirmPassword">Xác nhận mật khẩu <span class="required">*</span></label>
+                        <input asp-for="ConfirmPassword" type="password" placeholder="Nhập lại mật khẩu" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>2. Thông tin cá nhân & Ảnh đại diện</legend>
+
+                <div class="form-row">
+
+                    <div class="col-6 form-group">
+                        <label asp-for="FullName">Họ và tên <span class="required">*</span></label>
+                        <input asp-for="FullName" type="text" placeholder="NGUYỄN VĂN A" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-6 form-group">
+                        <label asp-for="Gender">Giới tính <span class="required">*</span></label>
+                        <select asp-for="Gender">
+                            <option value="0">-- Chọn giới tính --</option>
+                            <option value="1">Nam</option>
+                            <option value="2">Nữ</option>
+                        </select>
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-6 form-group">
+                        <label asp-for="DateOfBirth">Ngày sinh <span class="required">*</span></label>
+                        <input asp-for="DateOfBirth" type="date" />
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-6 form-group">
+                        <label asp-for="Phone">Số điện thoại liên hệ <span class="required">*</span></label>
+                        <input asp-for="Phone" type="text" placeholder="VD: 0912345678" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 form-group upload-card">
+                        <label asp-for="AvatarFile">Ảnh đại diện chân dung (Avatar) <span class="required">*</span></label>
+                        <input asp-for="AvatarFile" type="file" accept=".jpg,.jpeg,.png" />
+                        <span class="hint">Ảnh màu cỡ 3x4 hoặc 4x6 nền sáng. Tối đa 10MB.</span>
+                        <span asp-validation-for="AvatarFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 form-group">
+                        <label asp-for="Address">Địa chỉ thường trú <span class="required">*</span></label>
+                        <textarea asp-for="Address" rows="2" placeholder="Số nhà, đường/thôn, xã/phường..."></textarea>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>3. Giấy tờ tùy thân (CMND / CCCD)</legend>
+
+                <div class="form-row">
+
+                    <div class="col-4 form-group">
+                        <label asp-for="IdCard">Số CCCD / CMND <span class="required">*</span></label>
+                        <input asp-for="IdCard" type="text" placeholder="12 số" />
+                        <span asp-validation-for="IdCard" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-4 form-group">
+                        <label asp-for="IssueDate">Ngày cấp</label>
+                        <input asp-for="IssueDate" type="date" />
+                        <span asp-validation-for="IssueDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-4 form-group">
+                        <label asp-for="IssuePlace">Nơi cấp <span class="required">*</span></label>
+                        <input asp-for="IssuePlace" type="text" placeholder="Cục CS QLHC về TTXH" />
+                        <span asp-validation-for="IssuePlace" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-6 form-group upload-card">
+                        <label asp-for="IdCardFrontFile">Ảnh CCCD mặt trước <span class="required">*</span></label>
+                        <input asp-for="IdCardFrontFile" type="file" accept=".jpg,.jpeg,.png,.pdf" />
+                        <span class="hint">Định dạng JPG, PNG, PDF. Tối đa 10MB.</span>
+                        <span asp-validation-for="IdCardFrontFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-6 form-group upload-card">
+                        <label asp-for="IdCardBackFile">Ảnh CCCD mặt sau <span class="required">*</span></label>
+                        <input asp-for="IdCardBackFile" type="file" accept=".jpg,.jpeg,.png,.pdf" />
+                        <span class="hint">Định dạng JPG, PNG, PDF. Tối đa 10MB.</span>
+                        <span asp-validation-for="IdCardBackFile" class="text-danger"></span>
+                    </div>
+
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>4. Nghiệp vụ Hướng dẫn viên & Văn bằng</legend>
+
+                <div class="form-row">
+
+                    <div class="col-4 form-group">
+                        <label asp-for="CardType">Loại thẻ HDV <span class="required">*</span></label>
+                        <select asp-for="CardType" id="CardType">
+                            <option value="">-- Chọn loại thẻ --</option>
+                            @if (ViewBag.CardTypes != null)
+                            {
+                                foreach (var item in (List<VietRove.Entities.Category>)ViewBag.CardTypes)
+                                {
+                                    <option value="@item.CategoryName">@item.CategoryName</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="CardType" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-4 form-group">
+                        <label asp-for="CardNumber">Số thẻ HDV <span class="required">*</span></label>
+                        <input asp-for="CardNumber" type="text" />
+                        <span asp-validation-for="CardNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-4 form-group">
+                        <label asp-for="ExpiryDate">Ngày hết hạn thẻ <span class="required">*</span></label>
+                        <input asp-for="ExpiryDate" type="date" />
+                        <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-2 form-group">
+                        <label asp-for="ExperienceYears">Số năm kinh nghiệm <span class="required">*</span></label>
+                        <input asp-for="ExperienceYears" type="number" min="0" />
+                        <span asp-validation-for="ExperienceYears" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 form-group">
+                        <label asp-for="ProvinceId" class="activity-label">
+                            Địa bàn hoạt động chính <span class="required">*</span>
+                        </label>
+
+                        <select asp-for="ProvinceId">
+                            <option value="0">-- Chọn Tỉnh / Thành phố --</option>
+
+                            @if (ViewBag.Provinces != null)
+                            {
+                                foreach (var item in (List<VietRove.Entities.Category>)ViewBag.Provinces)
+                                {
+                                    <option value="@item.CategoryId">@item.CategoryName</option>
+                                }
+                            }
+                        </select>
+
+                        <span asp-validation-for="ProvinceId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-6 form-group upload-card">
+                        <label asp-for="CardScanFile">Bản scan Thẻ HDV <span class="required">*</span></label>
+                        <input asp-for="CardScanFile" type="file" accept=".jpg,.jpeg,.png,.pdf" />
+                        <span class="hint">Định dạng JPG, PNG, PDF. Tối đa 10MB.</span>
+                        <span asp-validation-for="CardScanFile" class="text-danger"></span>
+                    </div>
+
+                    <div id="language-section" class="language-section">
+
+                        <label class="language-title">
+                            Ngoại ngữ
+                            <span id="languageAsterisk" class="required">*</span>
+                        </label>
+
+                        <div class="hint">
+                            Thẻ Quốc tế bắt buộc chọn ngoại ngữ và tải minh chứng tương ứng.
+                            Thẻ Nội địa không bắt buộc.
+                        </div>
+
+                        <div id="languageContainer">
+
+                            <div class="language-row">
+
+                                <div class="language-field">
+                                    <select name="LanguageIds" class="language-select">
+                                        <option value="0">-- Chọn Ngoại ngữ --</option>
+
+                                        @if (ViewBag.Languages != null)
+                                        {
+                                            foreach (var lang in (List<VietRove.Entities.Category>)ViewBag.Languages)
+                                            {
+                                                <option value="@lang.CategoryId">@lang.CategoryName</option>
+                                            }
+                                        }
+                                    </select>
+
+                                    <span class="text-danger" data-valmsg-for="LanguageIds"></span>
+                                </div>
+
+                                <div class="language-field">
+                                    <input type="file"
+                                           name="LanguageCertificates"
+                                           accept=".jpg,.jpeg,.png,.pdf" />
+
+                                    <span class="text-danger" data-valmsg-for="LanguageCertificates"></span>
+                                </div>
+
+                                <div class="language-action"></div>
+
+                            </div>
+
+                        </div>
+
+                        <button type="button" id="btnAddLanguage" class="btn-add-language">
+                            + Thêm ngoại ngữ khác
+                        </button>
+
+                    </div>
+
+                </div>
+            </fieldset>
+
+            <div class="btn-group">
+                <button type="submit" class="btn-submit" id="btnSubmit">
+                    NỘP HỒ SƠ ĐĂNG KÝ
+                </button>
+
+                <a href="/" class="btn-cancel">
+                    Hủy (Về trang chủ)
+                </a>
+            </div>
+
+            <div class="login-link">
+                Đã có tài khoản hội viên?
+                <a asp-controller="Login" asp-action="Index">Đăng nhập ngay</a>
+            </div>
+
+        </form>
+
     </div>
 
-    <form id="registerForm" asp-controller="Register" asp-action="Index" method="post" enctype="multipart/form-data">
-
-        <fieldset>
-            <legend>1. Tài khoản đăng nhập</legend>
-            <div class="row">
-                <div class="col-12 form-group">
-                    <label asp-for="Email">Email đăng nhập <span class="required">*</span></label>
-                    <input asp-for="Email" placeholder="vidu@gmail.com" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="col-6 form-group">
-                    <label asp-for="Password">Mật khẩu <span class="required">*</span></label>
-                    <input asp-for="Password" placeholder="Tối thiểu 6 ký tự" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-                <div class="col-6 form-group">
-                    <label asp-for="ConfirmPassword">Xác nhận mật khẩu <span class="required">*</span></label>
-                    <input asp-for="ConfirmPassword" placeholder="Nhập lại mật khẩu" />
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                </div>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>2. Thông tin cá nhân & Ảnh đại diện</legend>
-            <div class="row">
-                <div class="col-6 form-group">
-                    <label asp-for="FullName">Họ và tên <span class="required">*</span></label>
-                    <input asp-for="FullName" placeholder="NGUYỄN VĂN A" />
-                    <span asp-validation-for="FullName" class="text-danger"></span>
-                </div>
-                <div class="col-6 form-group">
-                    <label asp-for="Gender">Giới tính <span class="required">*</span></label>
-                    <select asp-for="Gender">
-                        <option value="">-- Chọn giới tính --</option>
-                        <option value="1">Nam</option>
-                        <option value="2">Nữ</option>
-                    </select>
-                    <span asp-validation-for="Gender" class="text-danger"></span>
-                </div>
-                <div class="col-6 form-group">
-                    <label asp-for="DateOfBirth">Ngày sinh <span class="required">*</span></label>
-                    <input asp-for="DateOfBirth" type="date" />
-                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-                </div>
-                <div class="col-6 form-group">
-                    <label asp-for="Phone">Số điện thoại liên hệ <span class="required">*</span></label>
-                    <input asp-for="Phone" placeholder="VD: 0912345678" />
-                    <span asp-validation-for="Phone" class="text-danger"></span>
-                </div>
-                <div class="col-12 form-group upload-card">
-                    <label asp-for="AvatarFile">Ảnh đại diện chân dung (Avatar) <span class="required">*</span></label>
-                    <input asp-for="AvatarFile" type="file" accept=".jpg, .jpeg, .png" />
-                    <span class="hint">Ảnh màu cỡ 3x4 hoặc 4x6 nền sáng. Tối đa 10MB.</span>
-                    <span asp-validation-for="AvatarFile" class="text-danger"></span>
-                </div>
-                <div class="col-12 form-group">
-                    <label asp-for="Address">Địa chỉ thường trú <span class="required">*</span></label>
-                    <textarea asp-for="Address" rows="2" placeholder="Số nhà, đường/thôn, xã/phường..."></textarea>
-                    <span asp-validation-for="Address" class="text-danger"></span>
-                </div>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>3. Giấy tờ tùy thân (CMND / CCCD)</legend>
-            <div class="row">
-                <div class="col-4 form-group">
-                    <label asp-for="IdCard">Số CCCD / CMND <span class="required">*</span></label>
-                    <input asp-for="IdCard" placeholder="12 số" />
-                    <span asp-validation-for="IdCard" class="text-danger"></span>
-                </div>
-                <div class="col-4 form-group">
-                    <label asp-for="IssueDate">Ngày cấp</label>
-                    <input asp-for="IssueDate" type="date" />
-                    <span asp-validation-for="IssueDate" class="text-danger"></span>
-                </div>
-                <div class="col-4 form-group">
-                    <label asp-for="IssuePlace">Nơi cấp</label>
-                    <input asp-for="IssuePlace" placeholder="Cục CS QLHC về TTXH" />
-                    <span asp-validation-for="IssuePlace" class="text-danger"></span>
-                </div>
-                <div class="col-6 form-group upload-card">
-                    <label asp-for="IdCardFrontFile">Ảnh CCCD mặt trước <span class="required">*</span></label>
-                    <input asp-for="IdCardFrontFile" type="file" accept=".jpg, .jpeg, .png, .pdf" />
-                    <span class="hint">Định dạng JPG, PNG, PDF. Tối đa 10MB.</span>
-                    <span asp-validation-for="IdCardFrontFile" class="text-danger"></span>
-                </div>
-                <div class="col-6 form-group upload-card">
-                    <label asp-for="IdCardBackFile">Ảnh CCCD mặt sau <span class="required">*</span></label>
-                    <input asp-for="IdCardBackFile" type="file" accept=".jpg, .jpeg, .png, .pdf" />
-                    <span class="hint">Định dạng JPG, PNG, PDF. Tối đa 10MB.</span>
-                    <span asp-validation-for="IdCardBackFile" class="text-danger"></span>
-                </div>
-            </div>
-        </fieldset>
-
-       <fieldset>
-            <legend>4. Nghiệp vụ Hướng dẫn viên & Văn bằng</legend>
-           <div class="row">
-                <div class="col-4 form-group">
-                    <label asp-for="CardType">Loại thẻ HDV <span class="required">*</span></label>
-                    <select asp-for="CardType" id="CardType" class="form-select">
-                        <option value="">-- Chọn loại thẻ --</option>
-                        <option value="Quốc tế">HDV Quốc tế</option>
-                        <option value="Nội địa">HDV Nội địa</option>
-                    </select>
-                    <span asp-validation-for="CardType" class="text-danger"></span>
-                </div>
-                <div class="col-4 form-group">
-                    <label asp-for="CardNumber">Số thẻ HDV <span class="required">*</span></label>
-                    <input asp-for="CardNumber" class="form-control" />
-                    <span asp-validation-for="CardNumber" class="text-danger"></span>
-                </div>
-                <div class="col-4 form-group">
-                    <label asp-for="ExpiryDate">Ngày hết hạn thẻ <span class="required">*</span></label>
-                    <input asp-for="ExpiryDate" type="date" class="form-control" />
-                    <span asp-validation-for="ExpiryDate" class="text-danger"></span>
-                </div>
-                <div class="col-4 form-group">
-                    <label asp-for="ExperienceYears">Số năm kinh nghiệm <span class="required">*</span></label>
-                    <input asp-for="ExperienceYears" type="number" min="0" class="form-control" />
-                    <span asp-validation-for="ExperienceYears" class="text-danger"></span>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold d-flex align-items-center gap-1">
-                        Địa bàn hoạt động chính <span class="text-danger">*</span>
-                    </label>
-                    <select asp-for="ProvinceId" class="form-select" required>
-                        <option value="">-- Chọn Tỉnh / Thành phố --</option>
-                        @if (ViewBag.Provinces != null)
-                        {
-                            foreach (var item in (List<VietRove.Entities.Category>)ViewBag.Provinces)
-                            {
-                                <option value="@item.CategoryId">@item.CategoryName</option>
-                            }
-                        }
-                    </select>
-                </div>
-                <div class="col-6 form-group upload-card">
-                    <label asp-for="CardScanFile">Bản scan Thẻ HDV  <span class="required">*</span></label>
-                    <input asp-for="CardScanFile" type="file" accept=".jpg, .jpeg, .png, .pdf" class="form-control" />
-                    <span class="hint">Định dạng JPG, PNG, PDF. Tối đa 10MB.</span>
-                    <span asp-validation-for="CardScanFile" class="text-danger"></span>
-                </div>
-
-                <div id="language-section" class="col-12 mt-3 p-3 border rounded bg-light" style="display: none;">
-                    <label class="form-label fw-bold text-primary">Ngoại ngữ hướng dẫn & Chứng chỉ đính kèm <span id="languageAsterisk" class="text-danger">*</span>
-                    </label>
-                    <div id="languageContainer">
-                        <div class="language-row d-flex align-items-center gap-2 mb-2">
-                            <div style="flex: 1; min-width: 0;">
-                                <select name="LanguageNames" class="form-select language-select">
-                                    <option value="">-- Chọn Ngoại ngữ --</option>
-                                    @if (ViewBag.Languages != null)
-                                    {
-                                        foreach (var lang in (List<VietRove.Entities.Category>)ViewBag.Languages)
-                                        {
-                                            <option value="@lang.CategoryName">@lang.CategoryName</option>
-                                        }
-                                    }
-                                </select>
-                            </div>
-                            <div style="flex: 1; min-width: 0;">
-                                <input type="file" name="LanguageCertificates" class="form-control" accept=".jpg,.jpeg,.png,.pdf" />
-                            </div>
-                            <div style="width: 75px; flex-shrink: 0;">
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" id="btnAddLanguage" class="btn btn-sm btn-outline-primary mt-2">+ Thêm ngoại ngữ khác</button>
-                </div>
-            </div>
-        </fieldset>
-
-        <div class="btn-group">
-            <button type="submit" class="btn-submit" id="btnSubmit">NỘP HỒ SƠ ĐĂNG KÝ</button>
-            <a href="/" class="btn-cancel">Hủy (Về trang chủ)</a>
-        </div>
-
-        <div class="login-link">
-            Đã có tài khoản hội viên? <a href="/Account/Login">Đăng nhập ngay</a>
-        </div>
-
-    </form>
-</div>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
     <script src="~/js/register.js" asp-append-version="true"></script>
-}
+
 </body>
 </html>

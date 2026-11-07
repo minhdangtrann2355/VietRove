@@ -1,36 +1,37 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace VietRove.Entities
+namespace VietRove.Entities;
+
+[Table("tblViolationReports")]
+public class ViolationReport
 {
-    [Table("tblViolationReports")]
-    public class ViolationReport
-    {
-        [Key]
-        public int ReportId { get; set; }
+    [Key]
+    public int ReportId { get; set; }
 
-        public int GuideId { get; set; }
+    public int GuideId { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string ReporterName { get; set; } = string.Empty;
+    [Required, MaxLength(150)]
+    public string ReporterName { get; set; } = string.Empty;
 
-        [Required]
-        [MaxLength(20)]
-        public string ReporterPhone { get; set; } = string.Empty;
+    [MaxLength(20)]
+    public string? ReporterPhone { get; set; }
 
-        [Required]
-        public string Description { get; set; } = string.Empty;
+    [Required]
+    public string Description { get; set; } = string.Empty;
 
-        [MaxLength(255)]
-        public string? EvidenceFile { get; set; }
+    public int Status { get; set; } = 0;
 
-        public int? Status { get; set; } = 0;
+    public DateTime CreatedAt { get; set; }
 
-        public DateTime? CreatedAt { get; set; } = DateTime.Now;
+    public DateTime? ResolvedAt { get; set; }
 
-        [ForeignKey("GuideId")]
-        public virtual GuideProfile GuideProfile { get; set; } = null!;
-    }
+    [ForeignKey(nameof(GuideId))]
+    public virtual GuideProfile GuideProfile { get; set; } = null!;
+
+    public virtual ICollection<ViolationReportEvidence> Evidence { get; set; } = new List<ViolationReportEvidence>();
+
+    public virtual ICollection<ViolationReportAction> Actions { get; set; } = new List<ViolationReportAction>();
 }

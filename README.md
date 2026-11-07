@@ -1,207 +1,321 @@
-# VietRove - Hệ Thống Quản Lý Hội Viên Hướng Dẫn Viên Du Lịch
+# VietRove – Hệ Thống Quản Lý Hội Viên Hướng Dẫn Viên Du Lịch
 
-Dự án web ASP.NET Core MVC phục vụ quản lý, đăng ký, tra cứu thông tin hội viên và điều hành hoạt động của Hiệp hội Hướng dẫn viên Du lịch Việt Nam.
-
----
+VietRove là dự án website được xây dựng bằng **ASP.NET Core MVC**, phục vụ việc đăng ký, quản lý hội viên, tra cứu thông tin hướng dẫn viên du lịch và hỗ trợ công tác quản lý của Hiệp hội Hướng dẫn viên Du lịch Việt Nam.
 
 ## 1. Công nghệ sử dụng
 
-- Framework: ASP.NET Core 10.0 (MVC)
-- Database: Microsoft SQL Server, truy vấn qua Entity Framework Core
-- Mã hóa mật khẩu: BCrypt.Net-Next (Work Factor = 12)
-- Xác thực phiên: Cookie Authentication (HttpOnly, SecurePolicy Always, SameSite Strict, trượt hạn 30 phút)
-- Frontend: Razor Views (.cshtml), Bootstrap 5, CSS tùy chỉnh, Google Fonts (Dancing Script), JavaScript Fetch API
+| Thành phần | Công nghệ |
+|---|---|
+| Framework | ASP.NET Core 10.0 (MVC) |
+| Ngôn ngữ | C# |
+| Database | Microsoft SQL Server |
+| ORM | Entity Framework Core |
+| Kiến trúc | Controllers – Services – Data |
+| Mã hóa mật khẩu | BCrypt.Net-Next (Work Factor = 12) |
+| Xác thực | Cookie Authentication |
+| Frontend | Razor Views (.cshtml), Bootstrap 5 |
+| JavaScript | Vanilla JavaScript, Fetch API |
+| Lưu trữ file | Local File Storage, GUID File Naming |
 
----
+### Cấu hình bảo mật chính
+
+- Cookie sử dụng `HttpOnly`, `SecurePolicy.Always`, `SameSite.Strict`.
+- Thời hạn cookie 30 phút và bật Sliding Expiration.
+- Kiểm tra trạng thái tài khoản định kỳ thông qua `OnValidatePrincipal`.
+- Sử dụng `ValidateAntiForgeryToken` để phòng chống CSRF.
+- Kiểm tra định dạng file bằng phần mở rộng và Magic Bytes.
+- File tải lên được đổi tên bằng GUID và lưu ngoài thư mục `wwwroot`.
 
 ## 2. Cấu trúc thư mục
 
-```
+```text
 VietRove/
 ├── Controllers/
-│   ├── HomeController.cs         trang chủ, tra cứu HDV, 5 trang giới thiệu
-│   ├── LoginController.cs        xác thực, nạp Claims, xử lý thông báo duyệt/khóa
-│   ├── RegisterController.cs     đăng ký hội viên, kiểm tra dữ liệu, upload file
-│   ├── GuideController.cs        các trang của hội viên HDV (Profile, Contract, Settings)
-│   └── AdminController.cs        dashboard quản trị viên
+│   ├── HomeController.cs
+│   ├── LoginController.cs
+│   ├── RegisterController.cs
+│   ├── GuideController.cs
+│   └── AdminController.cs
+│
+├── Services/
+│   ├── CategoryService.cs
+│   ├── FileStorageService.cs
+│   ├── GuideProfileService.cs
+│   ├── RegisterService.cs
+│   └── Interfaces/
+│       ├── ICategoryService.cs
+│       ├── IFileStorageService.cs
+│       ├── IGuideProfileService.cs
+│       └── IRegisterService.cs
 │
 ├── Security/
-│   └── AppRoles.cs               hằng số RoleId (Admin = 1, Guide = 2)
+│   ├── AppRoles.cs
+│   └── ProfileStatus.cs
 │
 ├── Data/
-│   └── VietRoveDbContext.cs       cấu hình kết nối SQL Server
+│   └── VietRoveDbContext.cs
 │
-├── Entities/                      các thực thể ánh xạ với CSDL
-│   ├── User.cs                   (tblUsers, có trường LockReason)
-│   ├── Role.cs                   (tblRoles)
-│   ├── GuideProfile.cs           (tblGuideProfiles)
-│   ├── Category.cs               (tblCategories)
-│   ├── GuideCategory.cs          (tblGuideCategories)
-│   ├── Contract.cs               (tblContracts)
-│   ├── ViolationReport.cs        (tblViolationReports)
-│   └── Article.cs                (tblArticles)
+├── Entities/
+│   ├── User.cs
+│   ├── Role.cs
+│   ├── LoginHistory.cs
+│   ├── Category.cs
+│   ├── GuideProfile.cs
+│   ├── GuideProvince.cs
+│   ├── GuideLanguage.cs
+│   ├── GuideExperience.cs
+│   ├── GuideDocument.cs
+│   ├── Contract.cs
+│   ├── ViolationReport.cs
+│   ├── ViolationReportEvidence.cs
+│   ├── ViolationReportAction.cs
+│   └── Article.cs
 │
 ├── Models/
+│   ├── ErrorViewModel.cs
 │   ├── LoginViewModel.cs
 │   ├── RegisterViewModel.cs
-│   └── ErrorViewModel.cs
+│   └── GuideProfileViewModel.cs
 │
 ├── Views/
-│   ├── _ViewStart.cshtml          layout mặc định toàn ứng dụng (_GuestLayout)
+│   ├── _ViewStart.cshtml
 │   ├── Home/
-│   │   ├── _ViewStart.cshtml      tự chọn layout theo vai trò (Guide hoặc Guest)
-│   │   ├── Home.cshtml            trang chủ: hero banner và tin tức
-│   │   ├── Guides.cshtml          tìm kiếm và lọc hội viên HDV công khai
-│   │   ├── About.cshtml           về chúng tôi
-│   │   ├── Vision.cshtml          tầm nhìn và sứ mệnh
-│   │   ├── Regulations.cshtml     quy chế hoạt động
-│   │   ├── Rules.cshtml           quy định hội viên và bảng lệ phí
-│   │   └── GuideRegister.cshtml   hướng dẫn đăng ký hội viên
 │   ├── Login/
-│   │   └── Login.cshtml           đăng nhập, hiển thị banner thông báo duyệt/khóa
 │   ├── Register/
-│   │   └── Register.cshtml        đăng ký hội viên
 │   ├── Guide/
-│   │   ├── _ViewStart.cshtml      áp dụng _GuideLayout cho tất cả trang hội viên
-│   │   ├── Dashboard.cshtml
-│   │   ├── Profile.cshtml
-│   │   ├── Contract.cshtml
-│   │   └── Settings.cshtml
 │   ├── Admin/
-│   │   ├── _ViewStart.cshtml      áp dụng _AdminLayout cho tất cả trang admin
-│   │   └── Dashboard.cshtml
 │   └── Shared/
-│       ├── _GuestLayout.cshtml    layout khách vãng lai
-│       ├── _GuideLayout.cshtml    layout hội viên HDV (avatar dropdown)
-│       ├── _AdminLayout.cshtml    layout quản trị viên
-│       ├── _HeadPartial.cshtml    thẻ head và toàn bộ CSS dùng chung
-│       ├── _HeaderPartial.cshtml  logo, nút toggler, menu điều hướng chính
-│       ├── _FooterPartial.cshtml  footer copyright
-│       └── _ScriptsPartial.cshtml Bootstrap JS bundle
+│       ├── _GuestLayout.cshtml
+│       ├── _GuideLayout.cshtml
+│       ├── _AdminLayout.cshtml
+│       ├── _HeadPartial.cshtml
+│       ├── _HeaderPartial.cshtml
+│       ├── _FooterPartial.cshtml
+│       └── _ScriptsPartial.cshtml
 │
 ├── wwwroot/
-│   ├── images/bluetick.png        huy hiệu tích xanh tài khoản đã duyệt
-│   ├── js/register.js             thêm/xóa dòng ngoại ngữ động, validate form client
-│   └── ProtectedUploads/          thư mục lưu file upload (đổi tên GUID, không truy cập trực tiếp)
+│   ├── css/
+│   ├── images/
+│   ├── js/
+│   │   └── register.js
+│   └── lib/
 │
-├── VietRoveDB.sql                 script tạo toàn bộ CSDL và dữ liệu mẫu
-└── appsettings.json               chuỗi kết nối Database
+├── ProtectedUploads/
+├── VietRoveDB.sql
+├── appsettings.json
+└── Program.cs
 ```
 
----
+**Vai trò các thư mục chính:**
 
-## 3. Các chức năng đã hoàn thiện
+- `Controllers`: Tiếp nhận request, kiểm tra dữ liệu đầu vào và điều phối nghiệp vụ.
+- `Services`: Xử lý nghiệp vụ, truy vấn và cập nhật dữ liệu.
+- `Services/Interfaces`: Khai báo các hợp đồng dịch vụ.
+- `Entities`: Các thực thể ánh xạ với bảng trong SQL Server.
+- `Models`: ViewModel phục vụ truyền dữ liệu giữa View và Controller.
+- `Security`: Khai báo vai trò và trạng thái hồ sơ.
+- `Views`: Giao diện Razor theo từng nhóm người dùng.
+- `wwwroot`: Chứa CSS, JavaScript, hình ảnh và thư viện frontend.
+- `ProtectedUploads`: Lưu trữ file tải lên, không cho phép truy cập trực tiếp từ trình duyệt.
+
+## 3. Các chức năng đã triển khai
 
 ### 3.1. Giao diện khách vãng lai (Guest)
 
-- Thanh điều hướng Bootstrap với dropdown menu "Giới thiệu" gồm 5 trang con: Về Chúng Tôi, Tầm Nhìn & Sứ Mệnh, Quy Chế Hoạt Động, Quy Định Hội Viên, Hướng Dẫn Đăng Ký.
-- Nút Đăng nhập và Đăng ký hội viên ở góc phải navbar.
-- Trang chủ: hero banner lớn với ảnh phong cảnh Việt Nam, phủ overlay gradient, tiêu đề dùng font chữ viết tay nghệ thuật Dancing Script.
-- Tin tức: danh sách bài viết từ bảng `tblArticles`.
-- Tìm kiếm hội viên: lọc theo họ tên, địa phương, loại thẻ; chỉ hiển thị tài khoản đã duyệt (Status = 1); che 3 số giữa số điện thoại (Data Masking) để bảo vệ thông tin cá nhân.
-- 5 trang thông tin giới thiệu: nội dung dựa theo hoihuongdanvien.vn, gồm cơ sở pháp lý, 8 mục tiêu chiến lược, toàn văn quy chế 7 chương 30 điều, bảng lệ phí hội phí, và 6 bước đăng ký trực tuyến.
+- Trang chủ với hero banner, hình ảnh phong cảnh Việt Nam và khu vực tin tức.
+- Thanh điều hướng Bootstrap với các trang giới thiệu:
+  - Về chúng tôi.
+  - Tầm nhìn và sứ mệnh.
+  - Quy chế hoạt động.
+  - Quy định hội viên.
+  - Hướng dẫn đăng ký.
+- Hỗ trợ đăng nhập và đăng ký hội viên.
+- Tra cứu hướng dẫn viên theo họ tên, địa phương và loại thẻ.
+- Chỉ hiển thị hồ sơ hướng dẫn viên đã được duyệt.
+- Che một phần số điện thoại khi hiển thị thông tin công khai.
+- Tin tức được truy vấn từ bảng `tblArticles`.
 
-### 3.2. Giao diện hội viên HDV (Guide)
+### 3.2. Đăng ký hội viên
 
-Thư mục `Views/Home` dùng chung cho cả Guest lẫn Guide. File `Views/Home/_ViewStart.cshtml` tự động chọn layout theo vai trò: nếu người dùng đã đăng nhập là Guide thì dùng `_GuideLayout`, còn lại dùng `_GuestLayout`. Nhờ vậy mọi trang trong Home không cần viết lại, chỉ thay đổi phần navbar.
+- Đăng ký tài khoản bằng email và mật khẩu.
+- Kiểm tra dữ liệu đầu vào bằng Data Annotations và IValidatableObject.
+- Kiểm tra email đã tồn tại.
+- Mã hóa mật khẩu bằng BCrypt.
+- Nhập thông tin cá nhân, thông tin thẻ hướng dẫn viên và khu vực hoạt động.
+- Tải lên ảnh đại diện, giấy tờ tùy thân và thẻ hướng dẫn viên.
+- Đăng ký ngoại ngữ kèm chứng chỉ minh chứng.
+- Kiểm tra dung lượng, phần mở rộng và chữ ký file trước khi lưu.
+- Tài khoản được tạo với trạng thái hoạt động; hồ sơ hướng dẫn viên ban đầu ở trạng thái chờ duyệt.
 
-Layout hội viên thay nút Đăng nhập / Đăng ký bằng avatar hình tròn. Nhấn vào avatar mở dropdown 3 phần:
+### 3.3. Quản lý hồ sơ hội viên HDV
 
-**Phần 1 - Thông tin cá nhân (chỉ xem, không click):**
-- Avatar nhỏ bo tròn và họ tên in đậm.
-- Trạng thái: nếu Status = 1 hiện tích xanh xác thực; nếu Status = 0 hiện nhãn vàng "Đang chờ duyệt".
-- Email tài khoản.
-- Mã thẻ HDV (hoặc "HDV-Chưa cấp" nếu chưa có).
+Hội viên sau khi đăng nhập có thể truy cập khu vực quản lý cá nhân thông qua `GuideController`.
 
-**Phần 2 - Menu chức năng (ẩn hoàn toàn nếu Status = 0):**
-- Hồ sơ cá nhân (Guide/Profile)
-- Tạo hợp đồng thỏa thuận (Guide/Contract)
-- Cài đặt tài khoản / Bảo mật (Guide/Settings)
+**Thông tin hồ sơ và liên hệ**
 
-**Phần 3 - Đăng xuất:**
-- Nút đăng xuất gửi POST đến Login/Logout, có AntiForgeryToken chống CSRF.
+- Xem thông tin hồ sơ cá nhân.
+- Cập nhật số điện thoại, email liên hệ và địa chỉ.
+- Cập nhật ảnh đại diện.
+- Quản lý tỉnh thành hoạt động.
 
-### 3.3. Xác thực và đồng bộ phiên
+**Quản lý ngoại ngữ**
 
-**Đăng ký:**
-- Form nhập đầy đủ thông tin cá nhân, CCCD 12 số, loại thẻ HDV.
-- Nếu chọn thẻ Quốc tế, form tự động mở phần nhập ngoại ngữ và chứng chỉ bằng JavaScript.
-- Upload file: giới hạn 10MB/tệp, kiểm tra Magic Bytes (byte thực tế của file) để chống giả mạo đuôi file, lưu bằng tên GUID vào `ProtectedUploads/`.
-- Tài khoản mới tạo luôn có Status = 0 (chờ duyệt).
+- Xem danh sách ngoại ngữ đã đăng ký.
+- Hiển thị trạng thái xác minh: Chờ duyệt, Đã xác minh hoặc Từ chối.
+- Thêm ngoại ngữ mới kèm chứng chỉ minh chứng.
+- Xóa ngoại ngữ đã đăng ký.
 
-**Đăng nhập và Claims:**
-- Lúc đăng nhập, `LoginController` truy vấn database một lần duy nhất, nạp các thông tin cần thiết vào Claims của Cookie: NameIdentifier, Role, Name, Email, Status, CardNumber, Avatar, LastValidatedUtc.
-- `_GuideLayout.cshtml` đọc trực tiếp từ Claims, không truy vấn database mỗi lần render.
+**Quản lý kinh nghiệm**
 
-**Tự động đồng bộ trạng thái (OnValidatePrincipal trong Program.cs):**
-- Cứ mỗi 30 giây, hệ thống kiểm tra lại trạng thái tài khoản trong database so với Claims đang lưu trong Cookie.
-- Nếu Admin duyệt tài khoản (Status đổi từ 0 lên 1): hệ thống gắn cookie thông báo `SysAuthMsg = approved`, kết thúc phiên, yêu cầu đăng nhập lại. Trang đăng nhập hiện banner xanh: "Tài khoản của bạn đã được duyệt, vui lòng đăng nhập lại."
-- Nếu Admin khóa tài khoản (Status = 3): hệ thống gắn cookie `SysAuthMsg = locked`, đăng xuất tức thì. Trang đăng nhập hiện banner đỏ: "Phiên đăng nhập đã kết thúc do tài khoản bị khóa."
+- Xem danh sách kinh nghiệm hành nghề.
+- Hiển thị thời gian dẫn tour và trạng thái xác minh.
+- Thêm kinh nghiệm mới kèm file minh chứng.
+- Xóa kinh nghiệm đã khai báo.
 
-**Xử lý lý do từ chối và khóa:**
-- Status = 2 (Từ chối): trang đăng nhập hiện "Hồ sơ của bạn đã bị từ chối vì: {RejectReason}".
-- Status = 3 (Khóa): trang đăng nhập hiện "Tài khoản của bạn đã bị khóa vì: {LockReason}".
+Ngoại ngữ và kinh nghiệm mới được lưu ở trạng thái chờ xác minh để phục vụ quy trình kiểm duyệt của Admin.
 
-### 3.4. Bảo mật
+### 3.4. Đăng nhập và bảo mật
 
-- Mật khẩu băm bằng BCrypt Work Factor 12.
-- Cookie: HttpOnly, SecurePolicy Always, SameSite Strict, trượt hạn 30 phút.
-- CSRF: ValidateAntiForgeryToken trên mọi form POST.
-- File upload: kiểm tra Magic Bytes, đổi tên GUID, lưu ngoài wwwroot.
-- Phục vụ file an toàn qua action `GetAvatar` / `GetThumbnail`, chống Path Traversal.
-- Data Masking: che 3 số giữa số điện thoại trên trang tìm kiếm công khai.
+- Xác thực tài khoản bằng email và mật khẩu.
+- Kiểm tra trạng thái hoạt động của tài khoản trước khi đăng nhập.
+- Phân quyền bằng Cookie Authentication với hai vai trò `Admin` và `Guide`.
+- Sử dụng Claims để lưu thông tin cần thiết như UserId, Role, Email và trạng thái hồ sơ.
+- Kiểm tra trạng thái tài khoản và vai trò từ database định kỳ.
+- Tự động từ chối cookie khi tài khoản bị khóa hoặc thông tin phân quyền không còn hợp lệ.
+- Xử lý đăng xuất và xóa cookie xác thực.
 
-### 3.5. Cấu trúc code và layout
+### 3.5. Quản lý file tải lên
 
-- 3 file Layout tách biệt: `_GuestLayout`, `_GuideLayout`, `_AdminLayout`.
-- 4 phần dùng chung tách thành Partial Views: `_HeadPartial`, `_HeaderPartial`, `_FooterPartial`, `_ScriptsPartial` — giảm trùng lặp HTML giữa các layout.
-- `_ViewStart.cshtml` phân cấp: Global (mặc định Guest), Home (tự chọn theo vai trò), Guide (luôn dùng GuideLayout), Admin (luôn dùng AdminLayout).
-- Không dùng toán tử `??`, `?.`, `? :` — thay bằng `if - else` tường minh toàn bộ.
-- Tên file View đặt trùng với chức năng: `Home.cshtml`, `Login.cshtml`, `Register.cshtml` (không dùng `Index.cshtml`).
+Nghiệp vụ xử lý file được tách riêng trong `FileStorageService`.
 
----
+- Kiểm tra file rỗng và dung lượng tối đa 10 MB.
+- Kiểm tra phần mở rộng được cho phép.
+- Kiểm tra Magic Bytes của các định dạng JPG, JPEG, PNG và PDF.
+- Đổi tên file bằng GUID để tránh trùng tên.
+- Lưu file trong `ProtectedUploads`, bên ngoài `wwwroot`.
+- Xóa file theo tên an toàn, hạn chế Path Traversal.
+- Ghi nhận lỗi khi lưu hoặc xóa file.
 
-## 4. Trạng thái tài khoản (Status)
+### 3.6. Tổ chức kiến trúc Services
 
-| Giá trị | Tên | Ý nghĩa |
-|---------|-----|---------|
-| 0 | Chờ duyệt | Hồ sơ mới đăng ký, chờ admin xét duyệt. Menu chức năng bị ẩn. |
-| 1 | Đã duyệt | Hồ sơ hợp lệ, hiện tích xanh, mở toàn bộ chức năng, xuất hiện trên trang tìm kiếm. |
-| 2 | Từ chối | Hồ sơ không đạt, có lý do từ chối (RejectReason). |
-| 3 | Bị khóa | Tài khoản bị vô hiệu hóa, có lý do khóa (LockReason), bị đăng xuất tức thì. |
+Dự án áp dụng mô hình phân lớp để tách biệt nghiệp vụ khỏi Controller.
 
----
+| Service | Trách nhiệm |
+|---|---|
+| `RegisterService` | Xử lý nghiệp vụ đăng ký tài khoản và hồ sơ HDV |
+| `CategoryService` | Truy vấn danh mục tỉnh thành, ngoại ngữ và loại thẻ |
+| `GuideProfileService` | Quản lý hồ sơ, liên hệ, ngoại ngữ và kinh nghiệm |
+| `FileStorageService` | Kiểm tra, lưu trữ và xóa file |
 
-## 5. Cài đặt và chạy dự án
+Các Service được khai báo thông qua Interface và đăng ký Dependency Injection trong `Program.cs`.
 
-**Yêu cầu:**
-- .NET 10.0 SDK
-- Microsoft SQL Server (SQLEXPRESS hoặc Standard/Developer)
+## 4. Cơ sở dữ liệu
 
-**Các bước:**
+Database sử dụng Microsoft SQL Server, được truy vấn thông qua Entity Framework Core.
 
-1. Mở SQL Server Management Studio, mở file `VietRoveDB.sql` và chạy (F5) để tạo database `VietRoveDB`.
+Dự án hiện có 14 bảng:
 
-2. Mở `appsettings.json`, sửa chuỗi kết nối cho đúng tên server của bạn:
-```json
-"ConnectionStrings": {
-  "DefaultConnection": "Server=TEN_SERVER\\SQLEXPRESS;Database=VietRoveDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
-}
+| STT | Bảng | Chức năng |
+|---:|---|---|
+| 1 | `tblRoles` | Quản lý vai trò |
+| 2 | `tblUsers` | Quản lý tài khoản |
+| 3 | `tblLoginHistory` | Lưu lịch sử đăng nhập |
+| 4 | `tblCategories` | Danh mục tỉnh thành, ngoại ngữ và loại thẻ |
+| 5 | `tblGuideProfiles` | Thông tin hồ sơ hướng dẫn viên |
+| 6 | `tblGuideProvinces` | Khu vực hoạt động của hướng dẫn viên |
+| 7 | `tblGuideLanguages` | Ngoại ngữ và chứng chỉ |
+| 8 | `tblGuideExperiences` | Kinh nghiệm hành nghề |
+| 9 | `tblGuideDocuments` | Giấy tờ của hướng dẫn viên |
+| 10 | `tblContracts` | Quản lý hợp đồng |
+| 11 | `tblViolationReports` | Báo cáo vi phạm |
+| 12 | `tblViolationReportEvidence` | Minh chứng vi phạm |
+| 13 | `tblViolationReportActions` | Lịch sử xử lý vi phạm |
+| 14 | `tblArticles` | Quản lý bài viết |
+
+### Quy ước trạng thái chính
+
+**Trạng thái hồ sơ hướng dẫn viên (`GuideProfile.Status`):**
+
+| Giá trị | Ý nghĩa |
+|---:|---|
+| 0 | Chờ duyệt |
+| 1 | Đã duyệt |
+| 2 | Từ chối |
+| 3 | Khóa |
+| 4 | Yêu cầu chỉnh sửa |
+
+**Trạng thái xác minh ngoại ngữ và giấy tờ:**
+
+| Giá trị | Ý nghĩa |
+|---:|---|
+| 0 | Chờ duyệt |
+| 1 | Đã xác minh |
+| 2 | Từ chối |
+
+## 5. Quy ước lập trình
+
+- Sử dụng C# và ASP.NET Core MVC.
+- Tách biệt Controller, Service, Interface và Entity.
+- Sử dụng Dependency Injection để quản lý các Service.
+- Sử dụng Entity Framework Core cho thao tác dữ liệu.
+- Sử dụng ViewModel để truyền dữ liệu giữa Controller và View.
+- JavaScript sử dụng Vanilla JavaScript và Fetch API.
+- Hạn chế viết nghiệp vụ xử lý dữ liệu trực tiếp trong Controller.
+- Comment trong code sử dụng dạng `// noi dung cmt`, viết tiếng Việt không dấu.
+
+## 6. Hướng dẫn cài đặt và chạy dự án
+
+### Yêu cầu môi trường
+
+- .NET 10 SDK.
+- Microsoft SQL Server.
+- SQL Server Management Studio (SSMS).
+- Visual Studio hoặc Visual Studio Code.
+
+### Bước 1: Tạo database
+
+Mở SQL Server Management Studio và chạy file:
+
+```text
+VietRoveDB.sql
 ```
 
-3. Chạy dự án:
+Script sẽ tạo database `VietRoveDB`, các bảng, quan hệ, index và dữ liệu danh mục khởi tạo.
+
+### Bước 2: Cấu hình kết nối
+
+Mở `appsettings.json` và cập nhật chuỗi kết nối SQL Server phù hợp với máy đang sử dụng.
+
+Không chia sẻ chuỗi kết nối chứa thông tin đăng nhập thực tế khi công khai mã nguồn.
+
+### Bước 3: Khôi phục package
+
+Mở Terminal tại thư mục chứa file `.csproj` và chạy:
+
 ```bash
 dotnet restore
+```
+
+### Bước 4: Chạy dự án
+
+```bash
 dotnet run
 ```
 
-**Các địa chỉ chính sau khi chạy:**
+Mở địa chỉ localhost được hiển thị trong Terminal để truy cập website.
 
-| Trang | Đường dẫn |
-|-------|-----------|
-| Trang chủ | `https://localhost:port/` |
-| Tìm kiếm hội viên | `https://localhost:port/Home/Guides` |
-| Đăng ký hội viên | `https://localhost:port/Register` |
-| Đăng nhập | `https://localhost:port/Login` |
-| Dashboard hội viên | `https://localhost:port/Guide/Dashboard` |
-| Dashboard admin | `https://localhost:port/Admin/Dashboard` |
+## 7. Định hướng phát triển
+
+Các chức năng quản trị có thể tiếp tục được hoàn thiện:
+
+- Dashboard thống kê hội viên và tình trạng hồ sơ.
+- Kiểm duyệt hồ sơ đăng ký hội viên.
+- Xác minh ngoại ngữ, chứng chỉ và kinh nghiệm.
+- Quản lý tài khoản và trạng thái hội viên.
+- Quản lý hợp đồng.
+- Tiếp nhận và xử lý báo cáo vi phạm.
+- Quản lý bài viết và tin tức.
+
+---
+
+**VietRove – Hệ thống quản lý hội viên hướng dẫn viên du lịch.**

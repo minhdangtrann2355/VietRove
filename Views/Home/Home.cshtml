@@ -112,11 +112,7 @@
     {
         foreach (var article in Model)
         {
-            string createdAtText = "";
-            if (article.CreatedAt.HasValue)
-            {
-                createdAtText = article.CreatedAt.Value.ToString("dd/MM/yyyy HH:mm");
-            }
+            string createdAtText = article.CreatedAt.ToString("dd/MM/yyyy HH:mm");
 
             string displayContent = "";
             if (string.IsNullOrEmpty(article.Content) == false)
