@@ -74,14 +74,15 @@ namespace VietRove.Services.Authentication.Login
             string roleName = string.Empty;
             string dashboardController = string.Empty;
 
-            if (user.RoleId == AppRoles.AdminId)
+// Dùng số 1 cho Admin và số 2 cho Guide (hoặc đổi theo đúng RoleId trong DB của bạn)
+            if (user.RoleId == 1) 
             {
-                roleName = AppRoles.Admin;
+                roleName = "Admin";
                 dashboardController = "Admin";
             }
-            else if (user.RoleId == AppRoles.GuideId)
+            else if (user.RoleId == 2)
             {
-                roleName = AppRoles.Guide;
+                roleName = "Guide";
                 dashboardController = "Home";
             }
             else
@@ -89,10 +90,9 @@ namespace VietRove.Services.Authentication.Login
                 return new AuthenticationResult
                 {
                     Success = false,
-                    Message = "Tài khoản không có quyền truy cập hệ thống."
+                    Message = $"Tài khoản không có quyền truy cập hệ thống. (RoleId trong DB hiện là: {user.RoleId})"
                 };
             }
-
             GuideProfile? guide = null;
 
             if (user.RoleId == AppRoles.GuideId)
