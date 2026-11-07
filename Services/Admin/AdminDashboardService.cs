@@ -43,8 +43,8 @@ namespace VietRove.Services.Admin
                 .Take(5)
                 .Select(history => new AdminDashboardRecentLoginViewModel
                 {
-                    Email = history.User.Email,
-                    RoleName = history.User.Role.RoleName,
+                    Email = history.User != null ? history.User.Email : string.Empty,
+                    RoleName = history.User != null && history.User.Role != null ? history.User.Role.RoleName : string.Empty,
                     LoginTime = history.LoginTime
                 })
                 .ToListAsync();
