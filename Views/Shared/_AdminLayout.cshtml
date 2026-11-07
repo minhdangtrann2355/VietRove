@@ -1,46 +1,190 @@
+
+@{
+    if (ViewData["Title"] == null)
+    {
+        ViewData["Title"] = "Quản trị VietRove";
+    }
+
+    string adminName = "Quản trị viên";
+
+    if (User.Identity != null && string.IsNullOrWhiteSpace(User.Identity.Name) == false)
+    {
+        adminName = User.Identity.Name;
+    }
+
+    string currentController = "";
+    string currentAction = "";
+
+    object controllerValue = ViewContext.RouteData.Values["controller"];
+    object actionValue = ViewContext.RouteData.Values["action"];
+
+    if (controllerValue != null)
+    {
+        currentController = controllerValue.ToString();
+    }
+
+    if (actionValue != null)
+    {
+        currentAction = actionValue.ToString();
+    }
+
+    string dashboardActive = "";
+    string loginHistoryActive = "";
+
+    if (currentController == "Admin" && currentAction == "Dashboard")
+    {
+        dashboardActive = "active";
+    }
+
+    if (currentController == "AdminLoginHistory" && currentAction == "Index")
+    {
+        loginHistoryActive = "active";
+    }
+}
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Quản trị VietRove</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-        }
-        body {
-            background-color: #f8fafc;
-            color: #1e293b;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .admin-navbar {
-            background-color: #0f172a;
-            border-bottom: 1px solid #1e293b;
-        }
-    </style>
-</head>
-<body>
-    <header class="admin-navbar py-2">
-        <div class="container d-flex align-items-center justify-content-between">
-            <a asp-controller="Admin" asp-action="Dashboard" class="text-white text-decoration-none fw-bold fs-5">
-                VietRove Admin
-            </a>
-            <form asp-controller="Login" asp-action="Logout" method="post" class="m-0">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-sm btn-outline-light">Đăng xuất</button>
-            </form>
-        </div>
-    </header>
+    <title>@ViewData["Title"] - VietRove Admin</title>
 
-    <main class="container py-4 flex-grow-1">
-        @RenderBody()
-    </main>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+
+<body>
+    <div class="admin-wrapper d-flex">
+
+        <aside class="admin-sidebar" id="adminSidebar">
+            <a asp-controller="Admin"
+               asp-action="Dashboard"
+               class="admin-brand">
+                <div>
+                    <span class="admin-brand-name">VietRove</span>
+                    <span class="admin-brand-subtitle">ADMINISTRATION</span>
+                </div>
+            </a>
+
+            <div class="admin-sidebar-content">
+                <div class="admin-menu-label">Tổng quan</div>
+
+                <a asp-controller="Admin"
+                   asp-action="Dashboard"
+                   class="admin-menu-link @dashboardActive">
+                    <span>Bảng điều khiển</span>
+                </a>
+
+                <div class="admin-menu-label">Quản lý hệ thống</div>
+
+                <div class="admin-menu-disabled"
+                     title="Chức năng đang được xây dựng">
+                    <span>Xét duyệt hồ sơ HDV</span>
+                </div>
+
+                <div class="admin-menu-disabled"
+                     title="Chức năng đang được xây dựng">
+                    <span>Xét duyệt năng lực</span>
+                </div>
+
+                <div class="admin-menu-disabled"
+                     title="Chức năng đang được xây dựng">
+                    <span>Quản lý hướng dẫn viên</span>
+                </div>
+
+                <div class="admin-menu-disabled"
+                     title="Chức năng đang được xây dựng">
+                    <span>Báo cáo vi phạm</span>
+                </div>
+
+                <div class="admin-menu-label">Theo dõi hoạt động</div>
+
+                <a asp-controller="AdminLoginHistory"
+                   asp-action="Index"
+                   class="admin-menu-link @loginHistoryActive">
+                    <span>Lịch sử đăng nhập</span>
+                </a>
+
+                <div class="admin-menu-label">Nội dung</div>
+
+                <div class="admin-menu-disabled"
+                     title="Chức năng đang được xây dựng">
+                    <span>Quản lý bài viết</span>
+                </div>
+
+                <div class="admin-menu-disabled"
+                     title="Chức năng đang được xây dựng">
+                    <span>Quản lý danh mục</span>
+                </div>
+            </div>
+
+            <div class="admin-sidebar-footer">
+                VietRove Administration<br />
+                Phiên bản quản trị hệ thống
+            </div>
+        </aside>
+
+        <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
+
+        <div class="admin-main">
+            <header class="admin-header">
+                <div class="d-flex align-items-center gap-3">
+                    <button type="button"
+                            class="admin-mobile-toggle"
+                            id="adminMobileToggle"
+                            aria-label="Mở menu"
+                            aria-controls="adminSidebar"
+                            aria-expanded="false">
+                        Menu
+                    </button>
+
+                    <div>
+                        <h1 class="admin-header-title">@ViewData["Title"]</h1>
+                        <div class="admin-header-subtitle">
+                            Hệ thống quản trị VietRove
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-user-info">
+                    <div class="text-end d-none d-sm-block">
+                        <div class="admin-user-name">@adminName</div>
+                        <div class="admin-user-role">Quản trị viên</div>
+                    </div>
+
+                    <form asp-controller="Login"
+                          asp-action="Logout"
+                          method="post"
+                          class="m-0">
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit" class="admin-logout-btn">
+                            Đăng xuất
+                        </button>
+                    </form>
+                </div>
+            </header>
+
+            <main class="admin-content">
+                @RenderBody()
+            </main>
+
+            <footer class="admin-footer">
+                © @DateTime.Now.Year VietRove. Hệ thống quản trị.
+            </footer>
+        </div>
+    </div>
+
+    <form id="adminAntiForgeryForm" class="d-none">
+        @Html.AntiForgeryToken()
+    </form>
 
     <partial name="_ScriptsPartial" />
+
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

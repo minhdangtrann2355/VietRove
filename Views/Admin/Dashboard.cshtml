@@ -1,7 +1,274 @@
+@model VietRove.Models.AdminDashboardViewModel
+
 @{
     ViewData["Title"] = "Bảng điều khiển Admin";
+
+    int pendingCompetencies =
+        Model.PendingGuideLanguages + Model.PendingGuideExperiences;
 }
 
-<main class="container py-5">
-    <h1>Đây là giao diện admin</h1>
-</main>
+<div class="admin-dashboard">
+
+    <div class="dashboard-welcome mb-4">
+        <div>
+            <h2>Chào mừng đến với VietRove Admin</h2>
+            <p>
+                Theo dõi tình hình hoạt động và quản lý hệ thống
+                hướng dẫn viên du lịch.
+            </p>
+        </div>
+
+        <div class="dashboard-date">
+            <span>Ngày truy cập</span>
+            <strong>@DateTime.Now.ToString("dd/MM/yyyy")</strong>
+        </div>
+    </div>
+
+    <div class="dashboard-section mb-4">
+        <div class="dashboard-section-heading">
+            <div>
+                <h5>Tổng quan hệ thống</h5>
+                <p>Các số liệu tổng hợp của VietRove.</p>
+            </div>
+        </div>
+
+        <div class="row g-3">
+
+            <div class="col-6 col-xl-3">
+                <div class="dashboard-stat-card">
+                    <span class="dashboard-stat-label">Tổng tài khoản</span>
+                    <strong class="dashboard-stat-value">
+                        @Model.TotalUsers
+                    </strong>
+                    <span class="dashboard-stat-note">
+                        Tài khoản trong hệ thống
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-6 col-xl-3">
+                <div class="dashboard-stat-card">
+                    <span class="dashboard-stat-label">Hướng dẫn viên</span>
+                    <strong class="dashboard-stat-value">
+                        @Model.TotalGuides
+                    </strong>
+                    <span class="dashboard-stat-note">
+                        Tài khoản hướng dẫn viên
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-6 col-xl-3">
+                <div class="dashboard-stat-card">
+                    <span class="dashboard-stat-label">Hồ sơ chờ xét duyệt</span>
+                    <strong class="dashboard-stat-value">
+                        @Model.PendingGuideProfiles
+                    </strong>
+                    <span class="dashboard-stat-note">
+                        Hồ sơ đăng ký hướng dẫn viên
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-6 col-xl-3">
+                <div class="dashboard-stat-card">
+                    <span class="dashboard-stat-label">Báo cáo chưa xử lý</span>
+                    <strong class="dashboard-stat-value">
+                        @Model.PendingViolationReports
+                    </strong>
+                    <span class="dashboard-stat-note">
+                        Báo cáo vi phạm đang chờ
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm dashboard-panel h-100">
+                <div class="card-body p-4">
+
+                    <div class="dashboard-section-heading">
+                        <div>
+                            <h5>Công việc cần xử lý</h5>
+                            <p>
+                                Những nghiệp vụ đang chờ Admin giải quyết.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-task-list">
+
+                        <div class="dashboard-task">
+                            <div>
+                                <strong>Xét duyệt hồ sơ hướng dẫn viên</strong>
+                                <p>
+                                    Kiểm tra thông tin và giấy tờ đăng ký.
+                                </p>
+                            </div>
+
+                            <span class="dashboard-task-count">
+                                @Model.PendingGuideProfiles
+                            </span>
+                        </div>
+
+                        <div class="dashboard-task">
+                            <div>
+                                <strong>Xét duyệt năng lực bổ sung</strong>
+                                <p>
+                                    Ngoại ngữ: @Model.PendingGuideLanguages;
+                                    Kinh nghiệm: @Model.PendingGuideExperiences
+                                </p>
+                            </div>
+
+                            <span class="dashboard-task-count">
+                                @pendingCompetencies
+                            </span>
+                        </div>
+
+                        <div class="dashboard-task">
+                            <div>
+                                <strong>Xử lý báo cáo vi phạm</strong>
+                                <p>
+                                    Các báo cáo đang chờ Admin xem xét.
+                                </p>
+                            </div>
+
+                            <span class="dashboard-task-count">
+                                @Model.PendingViolationReports
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm dashboard-panel h-100">
+                <div class="card-body p-4">
+
+                    <div class="dashboard-section-heading">
+                        <div>
+                            <h5>Thông tin hệ thống</h5>
+                            <p>Tình trạng hoạt động của VietRove.</p>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-system-info">
+
+                        <div class="dashboard-system-row">
+                            <span>Tên hệ thống</span>
+                            <strong>VietRove</strong>
+                        </div>
+
+                        <div class="dashboard-system-row">
+                            <span>Vai trò hiện tại</span>
+                            <strong>Admin</strong>
+                        </div>
+
+                        <div class="dashboard-system-row">
+                            <span>Trạng thái</span>
+                            <strong class="dashboard-system-status">
+                                Đang hoạt động
+                            </strong>
+                        </div>
+
+                        <div class="dashboard-system-row">
+                            <span>Ngày truy cập</span>
+                            <strong>
+                                @DateTime.Now.ToString("dd/MM/yyyy")
+                            </strong>
+                        </div>
+
+                    </div>
+
+                    <div class="dashboard-system-note mt-4">
+                        <strong>Lưu ý quản trị</strong>
+                        <p>
+                            Admin cần kiểm tra thông tin và thực hiện
+                            các thao tác quản lý theo đúng quyền hạn
+                            và quy trình của hệ thống.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card border-0 shadow-sm dashboard-panel">
+                <div class="card-body p-4">
+
+                    <div class="dashboard-section-heading">
+                        <div>
+                            <h5>Đăng nhập gần đây</h5>
+                            <p>
+                                5 lượt đăng nhập mới nhất trong hệ thống.
+                            </p>
+                        </div>
+
+                        <a asp-controller="AdminLoginHistory"
+                           asp-action="Index"
+                           class="dashboard-view-all">
+                            Xem tất cả
+                        </a>
+                    </div>
+
+                    @if (Model.RecentLogins.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Email</th>
+                                        <th>Vai trò</th>
+                                        <th>Thời gian đăng nhập</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var login in Model.RecentLogins)
+                                    {
+                                        <tr>
+                                            <td>@login.Email</td>
+                                            <td>
+                                                <span class="role-badge">
+                                                    @login.RoleName
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @login.LoginTime.ToString("dd/MM/yyyy HH:mm:ss")
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="dashboard-activity-empty">
+                            <strong>Chưa có lượt đăng nhập</strong>
+                            <p>
+                                Lịch sử đăng nhập sẽ được hiển thị tại đây.
+                            </p>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/admin-dashboard.css"
+          asp-append-version="true" />
+}

@@ -264,6 +264,10 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IGuideProfileService, GuideProfileService>();
+builder.Services.AddScoped<
+    IAdminLoginHistoryService,
+    AdminLoginHistoryService>();
+builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 
 // bootstrap admin password
 string bootstrapAdminPassword = string.Empty;
