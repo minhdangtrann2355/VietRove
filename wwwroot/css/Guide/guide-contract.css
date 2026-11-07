@@ -1,0 +1,73 @@
+
+.contract-page {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.contract-heading {
+    margin-bottom: 24px;
+}
+
+.contract-heading h2 {
+    font-size: 25px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.contract-heading p {
+    color: #64748b;
+    margin-bottom: 0;
+}
+
+.contract-section {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.contract-section h3 {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 22px;
+    color: #1e293b;
+}
+
+.contract-section h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 18px 0;
+    color: #334155;
+}
+
+.contract-section label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 7px;
+    color: #334155;
+}
+
+.contract-section .form-control {
+    border-radius: 6px;
+}
+
+.contract-section .btn-primary {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+.contract-section .btn-primary:hover {
+    background: #1e40af;
+    border-color: #1e40af;
+}
+
+@media (max-width: 576px) {
+    .contract-section {
+        padding: 16px;
+    }
+
+    .contract-heading h2 {
+        font-size: 21px;
+    }
+}

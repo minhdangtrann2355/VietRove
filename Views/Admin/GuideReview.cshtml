@@ -1,5 +1,5 @@
-
-@model List<VietRove.Models.AdminGuideReviewListItemViewModel>
+﻿
+@model List<VietRove.Models.Admin.AdminGuideReviewListItemViewModel>
 
 @{
     ViewData["Title"] = "Xét duyệt hồ sơ HDV";
@@ -7,7 +7,7 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/admin-guide-review.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Admin/admin-guide-review.css" asp-append-version="true" />
 }
 
 <div class="admin-review-page">
@@ -51,10 +51,10 @@
                             <td>@item.Provinces</td>
                             <td>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>
-                                <a asp-controller="Admin"
-                                   asp-action="GuideReviewDetail"
-                                   asp-route-guideId="@item.GuideId"
-                                   class="btn admin-review-detail-btn">
+                                <a asp-controller="AdminGuideReview"
+                                asp-action="Detail"
+                                asp-route-guideId="@item.GuideId"
+                                class="btn admin-review-detail-btn">
                                     Xem hồ sơ
                                 </a>
                             </td>

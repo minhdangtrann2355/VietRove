@@ -1,5 +1,5 @@
-
-@model VietRove.Models.AdminGuideReviewDetailViewModel
+﻿
+@model VietRove.Models.Admin.AdminGuideReviewDetailViewModel
 
 @{
     ViewData["Title"] = "Chi tiết hồ sơ HDV";
@@ -7,7 +7,7 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/admin-guide-review.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Admin/admin-guide-review.css" asp-append-version="true" />
 }
 
 <div class="admin-review-page">
@@ -16,7 +16,9 @@
             <h2>Chi tiết hồ sơ HDV</h2>
             <p>Kiểm tra thông tin cá nhân và giấy tờ trước khi xét duyệt.</p>
         </div>
-        <a asp-controller="Admin" asp-action="GuideReview" class="btn admin-review-back-btn">
+        <a asp-controller="AdminGuideReview"
+        asp-action="Index"
+        class="btn admin-review-back-btn">
             Quay lại
         </a>
     </div>
@@ -170,14 +172,14 @@
                             <strong>@documentName</strong>
                             <span>@document.OriginalFileName</span>
                         </div>
-                        <a asp-controller="Admin"
-                           asp-action="GuideDocument"
-                           asp-route-guideId="@Model.GuideId"
-                           asp-route-documentId="@document.DocumentId"
-                           target="_blank"
-                           rel="noopener noreferrer">
-                            Xem tài liệu
-                        </a>
+                        <a asp-controller="AdminGuideReview"
+                            asp-action="GuideDocument"
+                            asp-route-guideId="@Model.GuideId"
+                            asp-route-documentId="@document.DocumentId"
+                            target="_blank"
+                            rel="noopener noreferrer">
+                                Xem tài liệu
+                        </a>    
                     </div>
                 }
             </div>
@@ -213,13 +215,13 @@
 
                         @if (!string.IsNullOrWhiteSpace(language.CertificateFile))
                         {
-                            <a asp-controller="Admin"
-                               asp-action="GuideLanguageCertificate"
-                               asp-route-guideId="@Model.GuideId"
-                               asp-route-guideLanguageId="@language.GuideLanguageId"
-                               target="_blank"
-                               rel="noopener noreferrer">
-                                Xem chứng chỉ
+                            <a asp-controller="AdminGuideReview"
+                                asp-action="GuideLanguageCertificate"
+                                asp-route-guideId="@Model.GuideId"
+                                asp-route-guideLanguageId="@language.GuideLanguageId"
+                                target="_blank"
+                                rel="noopener noreferrer">
+                                    Xem chứng chỉ
                             </a>
                         }
                     </div>
@@ -257,5 +259,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/admin-guide-review.js" asp-append-version="true"></script>
+    <script src="~/js/Admin/admin-guide-review.js" asp-append-version="true"></script>
 }

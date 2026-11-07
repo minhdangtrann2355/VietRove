@@ -1,0 +1,189 @@
+.competency-review-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.competency-section {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.competency-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.competency-section-header h2 {
+    margin: 0 0 6px;
+    color: #1f2937;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.competency-section-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.competency-count {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 700;
+}
+
+.competency-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.competency-table {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: collapse;
+}
+
+.competency-table th,
+.competency-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 13px;
+}
+
+.competency-table th {
+    background: #f9fafb;
+    color: #4b5563;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.competency-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.competency-guide-name {
+    color: #1f2937;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.competency-guide-email {
+    color: #6b7280;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.competency-experience-title {
+    color: #1f2937;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.competency-description {
+    color: #6b7280;
+    max-width: 260px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.competency-file-link {
+    color: #1d4ed8;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.competency-file-link:hover {
+    color: #1e40af;
+    text-decoration: underline;
+}
+
+.competency-missing-file {
+    color: #dc2626;
+    font-size: 12px;
+}
+
+.competency-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+}
+
+.competency-btn {
+    min-height: 34px;
+    padding: 7px 11px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.competency-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.competency-btn-approve {
+    background: #1d4ed8;
+    color: #fff;
+}
+
+.competency-btn-approve:hover:not(:disabled) {
+    background: #1e40af;
+}
+
+.competency-btn-reject {
+    background: #fff;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.competency-btn-reject:hover:not(:disabled) {
+    background: #fef2f2;
+}
+
+.competency-empty {
+    padding: 28px 16px;
+    border: 1px dashed #d1d5db;
+    border-radius: 8px;
+    color: #6b7280;
+    text-align: center;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .competency-section {
+        padding: 16px;
+    }
+
+    .competency-section-header {
+        align-items: flex-start;
+    }
+
+    .competency-section-header h2 {
+        font-size: 17px;
+    }
+
+    .competency-section-header p {
+        font-size: 13px;
+    }
+}

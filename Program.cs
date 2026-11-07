@@ -1,4 +1,6 @@
-
+﻿using QuestPDF.Drawing;
+using QuestPDF.Infrastructure;
+using System.IO;
 using System.Globalization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
@@ -7,10 +9,37 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using VietRove.Data;
 using VietRove.Entities;
 using VietRove.Security;
-using VietRove.Services;
-using VietRove.Services.Interfaces;
+using VietRove.Services.Admin;
+using VietRove.Services.Authentication.Login;
+using VietRove.Services.Authentication.Register;
+using VietRove.Services.Category;
+using VietRove.Services.FileStorage;
+using VietRove.Services.Guide.Contract;
+using VietRove.Services.Guide.Profile;
+using VietRove.Services.Interfaces.Admin;
+using VietRove.Services.Interfaces.Authentication.Login;
+using VietRove.Services.Interfaces.Authentication.Register;
+using VietRove.Services.Interfaces.Category;
+using VietRove.Services.Interfaces.FileStorage;
+using VietRove.Services.Interfaces.Guide.Contract;
+using VietRove.Services.Interfaces.Guide.Profile;
 
+
+QuestPDF.Settings.License = LicenseType.Community;
 var builder = WebApplication.CreateBuilder(args);
+
+string fontDirectory = Path.Combine(
+    builder.Environment.ContentRootPath,
+    "Resources",
+    "Fonts"
+);
+
+if (Directory.Exists(fontDirectory) == false)
+{
+    throw new DirectoryNotFoundException("Khong tim thay thu muc font: " + fontDirectory);
+}
+
+FontManager.RegisterFontsFromDirectory(fontDirectory);
 
 // add services to the container
 builder.Services.AddControllersWithViews();
@@ -264,11 +293,11 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IGuideProfileService, GuideProfileService>();
-builder.Services.AddScoped<
-    IAdminLoginHistoryService,
-    AdminLoginHistoryService>();
+builder.Services.AddScoped<IAdminLoginHistoryService,AdminLoginHistoryService>();
 builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 builder.Services.AddScoped<IAdminGuideReviewService, AdminGuideReviewService>();
+builder.Services.AddScoped<IContractService, ContractService>();
+builder.Services.AddScoped<IAdminCompetencyReviewService, AdminCompetencyReviewService>();
 
 
 // bootstrap admin password

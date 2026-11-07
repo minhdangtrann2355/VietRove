@@ -1,0 +1,212 @@
+
+@model VietRove.Models.Admin.AdminCompetencyReviewViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Xét duyệt năng lực";
+}
+
+<link rel="stylesheet" href="~/css/Admin/admin-competency-review.css" asp-append-version="true" />
+
+<div class="competency-review-page">
+    <section class="competency-section">
+        <div class="competency-section-header">
+            <div>
+                <h2>Ngôn ngữ</h2>
+                <p>Danh sách ngôn ngữ HDV đang chờ xét duyệt chứng chỉ.</p>
+            </div>
+            <span class="competency-count">@Model.Languages.Count</span>
+        </div>
+
+        @if (Model.Languages.Count == 0)
+        {
+            <div class="competency-empty">
+                Không có ngôn ngữ nào đang chờ xét duyệt.
+            </div>
+        }
+        else
+        {
+            <div class="competency-table-wrapper">
+                <table class="competency-table">
+                    <thead>
+                        <tr>
+                            <th>Hướng dẫn viên</th>
+                            <th>Ngôn ngữ</th>
+                            <th>Ngày đăng ký</th>
+                            <th>Chứng chỉ</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Languages)
+                        {
+                            <tr id="language-row-@item.GuideLanguageId">
+                                <td>
+                                    <div class="competency-guide-name">@item.GuideName</div>
+                                    <div class="competency-guide-email">@item.GuideEmail</div>
+                                </td>
+                                <td>@item.LanguageName</td>
+                                <td>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    @if (string.IsNullOrWhiteSpace(item.CertificateFile) == false)
+                                    {
+                                        <a asp-action="LanguageCertificate"
+                                           asp-route-guideLanguageId="@item.GuideLanguageId"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           class="competency-file-link">
+                                            Xem chứng chỉ
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="competency-missing-file">Chưa có chứng chỉ</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="competency-actions">
+                                        <button type="button"
+                                                class="competency-btn competency-btn-approve"
+                                                data-type="language"
+                                                data-id="@item.GuideLanguageId">
+                                            Phê duyệt
+                                        </button>
+                                        <button type="button"
+                                                class="competency-btn competency-btn-reject"
+                                                data-type="language"
+                                                data-id="@item.GuideLanguageId">
+                                            Từ chối
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+
+    <section class="competency-section">
+        <div class="competency-section-header">
+            <div>
+                <h2>Kinh nghiệm</h2>
+                <p>Danh sách kinh nghiệm hướng dẫn đang chờ xét duyệt minh chứng.</p>
+            </div>
+            <span class="competency-count">@Model.Experiences.Count</span>
+        </div>
+
+        @if (Model.Experiences.Count == 0)
+        {
+            <div class="competency-empty">
+                Không có kinh nghiệm nào đang chờ xét duyệt.
+            </div>
+        }
+        else
+        {
+            <div class="competency-table-wrapper">
+                <table class="competency-table">
+                    <thead>
+                        <tr>
+                            <th>Hướng dẫn viên</th>
+                            <th>Kinh nghiệm</th>
+                            <th>Thời gian</th>
+                            <th>Minh chứng</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Experiences)
+                        {
+                            <tr id="experience-row-@item.ExperienceId">
+                                <td>
+                                    <div class="competency-guide-name">@item.GuideName</div>
+                                    <div class="competency-guide-email">@item.GuideEmail</div>
+                                </td>
+                                <td>
+                                    <div class="competency-experience-title">@item.Title</div>
+                                    @if (string.IsNullOrWhiteSpace(item.Description) == false)
+                                    {
+                                        <div class="competency-description">@item.Description</div>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.StartDate.HasValue || item.EndDate.HasValue)
+                                    {
+                                        <span>
+                                            @if (item.StartDate.HasValue)
+                                            {
+                                                @item.StartDate.Value.ToString("dd/MM/yyyy")
+                                            }
+                                            else
+                                            {
+                                                <text>Chưa xác định</text>
+                                            }
+                                            -
+                                            @if (item.EndDate.HasValue)
+                                            {
+                                                @item.EndDate.Value.ToString("dd/MM/yyyy")
+                                            }
+                                            else
+                                            {
+                                                <text>Chưa xác định</text>
+                                            }
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>Chưa cung cấp</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (string.IsNullOrWhiteSpace(item.EvidenceFile) == false)
+                                    {
+                                        <a asp-action="ExperienceEvidence"
+                                           asp-route-experienceId="@item.ExperienceId"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           class="competency-file-link">
+                                            Xem minh chứng
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="competency-missing-file">Chưa có minh chứng</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="competency-actions">
+                                        <button type="button"
+                                                class="competency-btn competency-btn-approve"
+                                                data-type="experience"
+                                                data-id="@item.ExperienceId">
+                                            Phê duyệt
+                                        </button>
+                                        <button type="button"
+                                                class="competency-btn competency-btn-reject"
+                                                data-type="experience"
+                                                data-id="@item.ExperienceId">
+                                            Từ chối
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+</div>
+
+<form id="competencyAntiForgeryForm">
+    @Html.AntiForgeryToken()
+</form>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Admin/admin-competency-review.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/Admin/admin-competency-review.js" asp-append-version="true"></script>
+}

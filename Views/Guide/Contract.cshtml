@@ -1,9 +1,256 @@
+﻿
+@model VietRove.Models.Guide.ContractViewModel
+@using VietRove.Entities
+
 @{
-    ViewData["Title"] = "Tạo hợp đồng thỏa thuận";
+    ViewData["Title"] = "Hợp đồng thỏa thuận";
+
+    List<Contract> contracts = ViewBag.Contracts as List<Contract>;
+
+    if (contracts == null)
+    {
+        contracts = new List<Contract>();
+    }
 }
 
-<main class="container py-5">
-    <div class="p-4 bg-white rounded border">
-        <h2>Đây là giao diện Tạo hợp đồng thỏa thuận</h2>
+<main class="container py-4">
+    <div class="contract-page">
+        <div class="contract-heading">
+            <h2>Hợp đồng thỏa thuận dịch vụ hướng dẫn du lịch</h2>
+            <p>Tạo hợp đồng, tải bản PDF và gửi bản đã ký để Admin xét duyệt.</p>
+        </div>
+
+        @if (TempData["ContractMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["ContractMessage"]
+            </div>
+        }
+
+        @if (TempData["ContractError"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ContractError"]
+            </div>
+        }
+
+        <section class="contract-section">
+            <h3>Tạo hợp đồng mới</h3>
+
+            <form asp-controller="Guide"
+                  asp-action="CreateContract"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <h4>Thông tin công ty lữ hành</h4>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="CustomerName">Tên công ty</label>
+                        <input asp-for="CustomerName" class="form-control" />
+                        <span asp-validation-for="CustomerName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="TaxCode">Mã số thuế</label>
+                        <input asp-for="TaxCode" class="form-control" />
+                        <span asp-validation-for="TaxCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label asp-for="CompanyAddress">Địa chỉ công ty</label>
+                        <input asp-for="CompanyAddress" class="form-control" />
+                        <span asp-validation-for="CompanyAddress" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="RepresentativeName">Người đại diện</label>
+                        <input asp-for="RepresentativeName" class="form-control" />
+                        <span asp-validation-for="RepresentativeName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="RepresentativePosition">Chức vụ</label>
+                        <input asp-for="RepresentativePosition" class="form-control" />
+                        <span asp-validation-for="RepresentativePosition" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="CustomerPhone">Số điện thoại</label>
+                        <input asp-for="CustomerPhone" class="form-control" />
+                        <span asp-validation-for="CustomerPhone" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="CompanyEmail">Email</label>
+                        <input asp-for="CompanyEmail" class="form-control" />
+                        <span asp-validation-for="CompanyEmail" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <h4>Thông tin dịch vụ</h4>
+
+                <div class="mb-3">
+                    <label asp-for="Itinerary">Lịch trình</label>
+                    <textarea asp-for="Itinerary"
+                              class="form-control"
+                              rows="4"></textarea>
+                    <span asp-validation-for="Itinerary" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="StartDate">Ngày bắt đầu</label>
+                        <input asp-for="StartDate"
+                               type="date"
+                               class="form-control" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="EndDate">Ngày kết thúc</label>
+                        <input asp-for="EndDate"
+                               type="date"
+                               class="form-control" />
+                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Fee">Chi phí (VNĐ)</label>
+                        <input asp-for="Fee"
+                               type="number"
+                               min="0.01"
+                               step="0.01"
+                               class="form-control" />
+                        <span asp-validation-for="Fee" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Tạo hợp đồng PDF
+                </button>
+            </form>
+        </section>
+
+        <section class="contract-section">
+            <h3>Danh sách hợp đồng</h3>
+
+            @if (contracts.Count == 0)
+            {
+                <p class="text-muted">Bạn chưa có hợp đồng nào.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead>
+                            <tr>
+                                <th>Mã hợp đồng</th>
+                                <th>Công ty</th>
+                                <th>Thời gian</th>
+                                <th>Chi phí</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (Contract contract in contracts)
+                            {
+                                <tr>
+                                    <td>@contract.ContractId</td>
+                                    <td>@contract.CustomerName</td>
+                                    <td>
+                                        @contract.StartDate.ToString("dd/MM/yyyy")
+                                        -
+                                        @contract.EndDate.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>@contract.Fee.ToString("N0") VNĐ</td>
+                                    <td>
+                                        @if (contract.Status == 0)
+                                        {
+                                            <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                        }
+                                        else if (contract.Status == 1)
+                                        {
+                                            <span class="badge bg-success">Đã duyệt</span>
+                                        }
+                                        else if (contract.Status == 2)
+                                        {
+                                            <span class="badge bg-danger">Từ chối</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(contract.PdfFile))
+                                        {
+                                            <a asp-action="DownloadContractPdf"
+                                               asp-route-id="@contract.ContractId"
+                                               class="btn btn-sm btn-primary">
+                                                Tải PDF
+                                            </a>
+                                        }
+
+                                        @if (contract.Status == 0)
+                                        {
+                                            <form asp-action="UploadSignedContract"
+                                                  asp-route-id="@contract.ContractId"
+                                                  method="post"
+                                                  enctype="multipart/form-data"
+                                                  class="mt-2">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <input type="file"
+                                                       name="signedPdf"
+                                                       accept=".pdf,application/pdf"
+                                                       class="form-control form-control-sm mb-2"
+                                                       required />
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-primary">
+                                                    Gửi bản đã ký
+                                                </button>
+                                            </form>
+                                        }
+
+                                        @if (!string.IsNullOrWhiteSpace(contract.SignedFile))
+                                        {
+                                            <span class="text-success d-block mt-2">
+                                                Đã tải lên bản ký
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+
+                                @if (contract.Status == 2 &&
+                                     !string.IsNullOrWhiteSpace(contract.RejectReason))
+                                {
+                                    <tr>
+                                        <td colspan="6">
+                                            <strong>Lý do từ chối:</strong>
+                                            @contract.RejectReason
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
     </div>
 </main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Guide/guide-contract.css"
+          asp-append-version="true" />
+}

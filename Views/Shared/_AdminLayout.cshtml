@@ -40,12 +40,21 @@
     {
         loginHistoryActive = "active";
     }
+
     string guideReviewActive = "";
 
-    if (currentController == "Admin" &&
-        (currentAction == "GuideReview" || currentAction == "GuideReviewDetail"))
+    if (currentController == "AdminGuideReview" &&
+        (currentAction == "Index" || currentAction == "Detail"))
     {
         guideReviewActive = "active";
+    }
+
+    string competencyReviewActive = "";
+
+    if (currentController == "AdminCompetencyReview" &&
+        (currentAction == "Index" || currentAction == "Review"))
+    {
+        competencyReviewActive = "active";
     }
 }
 
@@ -57,7 +66,7 @@
     <title>@ViewData["Title"] - VietRove Admin</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Admin/admin.css" asp-append-version="true" />
 
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -86,16 +95,17 @@
 
                 <div class="admin-menu-label">Quản lý hệ thống</div>
 
-                <a asp-controller="Admin"
-                asp-action="GuideReview"
-                class="admin-menu-link @guideReviewActive">
-                    <span>Xét duyệt hồ sơ HDV</span>
+               <a asp-controller="AdminGuideReview"
+                    asp-action="Index"
+                    class="admin-menu-link @guideReviewActive">
+                        <span>Xét duyệt hồ sơ HDV</span>
                 </a>
 
-                <div class="admin-menu-disabled"
-                     title="Chức năng đang được xây dựng">
-                    <span>Xét duyệt năng lực</span>
-                </div>
+                <a asp-controller="AdminCompetencyReview"
+                    asp-action="Index"
+                    class="admin-menu-link @competencyReviewActive">
+                        <span>Xét duyệt năng lực</span>
+                </a>
 
                 <div class="admin-menu-disabled"
                      title="Chức năng đang được xây dựng">

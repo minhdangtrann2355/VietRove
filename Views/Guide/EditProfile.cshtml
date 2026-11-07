@@ -1,7 +1,11 @@
-@model VietRove.Models.GuideProfileViewModel
+﻿
+@model VietRove.Models.Guide.GuideProfileViewModel
+
 @{
     ViewData["Title"] = "Chỉnh sửa hồ sơ";
+
     int currentProvinceId = 0;
+
     foreach (var category in Model.SelectedCategories)
     {
         if (category.CategoryType == "Province")
@@ -17,6 +21,7 @@
             <h2 class="fw-bold mb-1" style="color: #1e3a8a;">CHỈNH SỬA HỒ SƠ</h2>
             <p class="text-muted mb-0">Cập nhật thông tin liên hệ và bổ sung năng lực hành nghề.</p>
         </div>
+
         <a asp-controller="Guide" asp-action="Profile" class="btn btn-light border">Quay lại hồ sơ</a>
     </div>
 
@@ -24,6 +29,7 @@
     {
         <div class="alert alert-success">@TempData["SuccessMessage"]</div>
     }
+
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
@@ -34,25 +40,32 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="fw-bold profile-heading mb-0">Thông tin liên hệ</h5>
         </div>
+
         <form asp-controller="Guide" asp-action="UpdateContact" method="post" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
+
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
                     <input name="Phone" value="@Model.Profile.ContactPhone" class="form-control" required />
                 </div>
+
                 <div class="col-md-6">
                     <label class="form-label">Email liên hệ <span class="text-danger">*</span></label>
                     <input name="Email" type="email" value="@Model.Profile.ContactEmail" class="form-control" required />
                 </div>
+
                 <div class="col-12">
                     <label class="form-label">Địa chỉ <span class="text-danger">*</span></label>
                     <input name="Address" value="@Model.Profile.Address" class="form-control" required />
                 </div>
+
                 <div class="col-md-6">
                     <label class="form-label">Tỉnh thành hoạt động <span class="text-danger">*</span></label>
+
                     <select name="ProvinceId" class="form-select">
                         <option value="0">-- Chọn tỉnh/thành --</option>
+
                         @foreach (var province in Model.Provinces)
                         {
                             if (province.CategoryId == currentProvinceId)
@@ -66,10 +79,12 @@
                         }
                     </select>
                 </div>
+
                 <div class="col-md-6">
                     <label class="form-label">Thay đổi ảnh đại diện (nếu muốn)</label>
                     <input name="AvatarFile" type="file" accept=".jpg,.jpeg,.png" class="form-control" />
                 </div>
+
                 <div class="col-12 mt-3">
                     <button type="submit" class="btn text-white fw-bold" style="background-color: #1d4ed8;">Lưu thông tin liên hệ</button>
                 </div>
@@ -87,6 +102,7 @@
         {
             <div class="mb-4">
                 <label class="form-label fw-bold text-secondary">Danh sách ngoại ngữ hiện tại</label>
+
                 <div class="row g-2">
                     @foreach (var language in Model.GuideLanguages)
                     {
@@ -94,6 +110,7 @@
                             <div class="border rounded p-3 d-flex flex-wrap justify-content-between align-items-center gap-2 bg-light">
                                 <div>
                                     <strong class="fs-6 me-2">@language.Language.CategoryName</strong>
+
                                     @if (language.VerificationStatus == 1)
                                     {
                                         <span class="badge bg-success">Đã xác minh</span>
@@ -106,15 +123,33 @@
                                     {
                                         <span class="badge bg-warning text-dark">Đang chờ duyệt</span>
                                     }
+
                                     <div class="small text-muted mt-1">
                                         Thời gian: @language.CreatedAt.ToString("dd/MM/yyyy HH:mm")
                                     </div>
                                 </div>
+
                                 <form asp-controller="Guide" asp-action="DeleteLanguage" asp-route-id="@language.GuideLanguageId" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc muốn xóa ngoại ngữ này?');">
                                     @Html.AntiForgeryToken()
                                     <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
                                 </form>
                             </div>
+
+                            @if (language.VerificationStatus == 2)
+                            {
+                                <div class="alert alert-danger py-2 px-3 mt-2 mb-0 small">
+                                    <strong>Lý do từ chối:</strong>
+
+                                    @if (string.IsNullOrWhiteSpace(language.VerificationReason) == false)
+                                    {
+                                        @language.VerificationReason
+                                    }
+                                    else
+                                    {
+                                        <span>Chưa có thông tin lý do từ chối.</span>
+                                    }
+                                </div>
+                            }
                         </div>
                     }
                 </div>
@@ -128,14 +163,17 @@
         <!-- form them ngoai ngu moi -->
         <div class="border rounded p-3 bg-white">
             <h6 class="fw-bold mb-3 text-primary">+ Thêm ngoại ngữ mới</h6>
+
             <form asp-controller="Guide" asp-action="AddLanguage" method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
 
                 <div class="row g-3 align-items-end">
                     <div class="col-md-5">
                         <label class="form-label">Chọn thứ tiếng <span class="text-danger">*</span></label>
+
                         <select name="LanguageId" class="form-select" required>
                             <option value="0">-- Chọn ngoại ngữ --</option>
+
                             @foreach (var language in Model.Languages)
                             {
                                 <option value="@language.CategoryId">@language.CategoryName</option>
@@ -166,6 +204,7 @@
         {
             <div class="mb-4">
                 <label class="form-label fw-bold text-secondary">Danh sách kinh nghiệm đã khai báo</label>
+
                 <div class="row g-2">
                     @foreach (var experience in Model.GuideExperiences)
                     {
@@ -174,6 +213,7 @@
                                 <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-1">
                                     <div>
                                         <strong class="fs-6 me-2">@experience.Title</strong>
+
                                         @if (experience.VerificationStatus == 1)
                                         {
                                             <span class="badge bg-success">Đã xác minh</span>
@@ -187,33 +227,57 @@
                                             <span class="badge bg-warning text-dark">Đang chờ duyệt</span>
                                         }
                                     </div>
+
                                     <form asp-controller="Guide" asp-action="DeleteExperience" asp-route-id="@experience.ExperienceId" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc muốn xóa kinh nghiệm này?');">
                                         @Html.AntiForgeryToken()
                                         <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
                                     </form>
                                 </div>
+
                                 <div class="small text-muted mb-1">
                                     Thời gian thêm: @experience.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+
                                     @if (experience.StartDate.HasValue || experience.EndDate.HasValue)
                                     {
                                         string sText = "";
+
                                         if (experience.StartDate.HasValue)
                                         {
                                             sText = experience.StartDate.Value.ToString("dd/MM/yyyy");
                                         }
+
                                         string eText = "Hiện tại";
+
                                         if (experience.EndDate.HasValue)
                                         {
                                             eText = experience.EndDate.Value.ToString("dd/MM/yyyy");
                                         }
+
                                         <span> | Hành nghề: @sText - @eText</span>
                                     }
                                 </div>
+
                                 @if (string.IsNullOrWhiteSpace(experience.Description) == false)
                                 {
                                     <div class="small text-secondary">@experience.Description</div>
                                 }
                             </div>
+
+                            @if (experience.VerificationStatus == 2)
+                            {
+                                <div class="alert alert-danger py-2 px-3 mt-2 mb-0 small">
+                                    <strong>Lý do từ chối:</strong>
+
+                                    @if (string.IsNullOrWhiteSpace(experience.VerificationReason) == false)
+                                    {
+                                        @experience.VerificationReason
+                                    }
+                                    else
+                                    {
+                                        <span>Chưa có thông tin lý do từ chối.</span>
+                                    }
+                                </div>
+                            }
                         </div>
                     }
                 </div>
@@ -227,29 +291,36 @@
         <!-- form them kinh nghiem moi -->
         <div class="border rounded p-3 bg-white">
             <h6 class="fw-bold mb-3 text-primary">+ Thêm kinh nghiệm mới</h6>
+
             <form asp-controller="Guide" asp-action="AddExperience" method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
+
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Tên kinh nghiệm / Đơn vị dẫn tour <span class="text-danger">*</span></label>
                         <input name="Title" class="form-control" placeholder="Ví dụ: Hướng dẫn viên đoàn xuyên Việt - Saigontourist" required />
                     </div>
+
                     <div class="col-md-6">
                         <label class="form-label">Tệp minh chứng (hợp đồng / xác nhận) <span class="text-danger">*</span></label>
                         <input name="EvidenceFile" type="file" accept=".jpg,.jpeg,.png,.pdf" class="form-control" required />
                     </div>
+
                     <div class="col-md-6">
                         <label class="form-label">Từ ngày</label>
                         <input name="StartDate" type="date" class="form-control" />
                     </div>
+
                     <div class="col-md-6">
                         <label class="form-label">Đến ngày</label>
                         <input name="EndDate" type="date" class="form-control" />
                     </div>
+
                     <div class="col-12">
                         <label class="form-label">Mô tả chi tiết</label>
                         <textarea name="Description" class="form-control" rows="2" placeholder="Tuyến điểm, thị trường khách, vị trí phụ trách..."></textarea>
                     </div>
+
                     <div class="col-12">
                         <button type="submit" class="btn btn-outline-primary fw-bold">Thêm kinh nghiệm</button>
                     </div>
