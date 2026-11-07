@@ -111,6 +111,7 @@ public class HomeController : Controller
     public async Task<IActionResult> GuideProfile(int id)
     {
         GuideProfile? profile = await _context.GuideProfiles
+            .Include(g => g.CardType)
             .FirstOrDefaultAsync(g =>
                 g.GuideId == id &&
                 g.Status == (int)ProfileStatus.Approved);

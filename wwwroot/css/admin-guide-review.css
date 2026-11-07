@@ -1,0 +1,252 @@
+
+.admin-review-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.admin-review-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.admin-review-heading h2 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.admin-review-heading p {
+    margin: 0;
+    color: #6b7280;
+}
+
+.admin-review-count {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.admin-review-table-wrapper,
+.admin-review-section {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.admin-review-table {
+    margin: 0;
+    vertical-align: middle;
+}
+
+.admin-review-table thead th {
+    padding: 14px 16px;
+    background: #f9fafb;
+    color: #374151;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.admin-review-table tbody td {
+    padding: 14px 16px;
+    color: #4b5563;
+}
+
+.admin-review-name {
+    color: #111827 !important;
+    font-weight: 600;
+}
+
+.admin-review-empty {
+    padding: 32px !important;
+    text-align: center;
+    color: #6b7280 !important;
+}
+
+.admin-review-detail-btn,
+.admin-review-back-btn {
+    padding: 7px 12px;
+    border: 1px solid #1d4ed8;
+    border-radius: 6px;
+    background: #1d4ed8;
+    color: #ffffff;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.admin-review-detail-btn:hover,
+.admin-review-back-btn:hover {
+    background: #1d4ed8;
+    color: #ffffff;
+}
+
+.admin-review-section {
+    padding: 22px;
+}
+
+.admin-review-section h3 {
+    margin: 0 0 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #1f2937;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.admin-review-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 28px;
+}
+
+.admin-review-info-grid label,
+.admin-review-reject label {
+    display: block;
+    margin-bottom: 6px;
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.admin-review-info-grid p {
+    margin: 0;
+    color: #111827;
+    overflow-wrap: anywhere;
+}
+
+.admin-review-full-width {
+    grid-column: 1 / -1;
+}
+
+.admin-review-file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-review-file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.admin-review-file-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.admin-review-file-item strong {
+    color: #1f2937;
+}
+
+.admin-review-file-item span {
+    color: #6b7280;
+    overflow-wrap: anywhere;
+}
+
+.admin-review-file-item a {
+    color: #1d4ed8;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.admin-review-file-item a:hover {
+    text-decoration: underline;
+}
+
+.admin-review-muted {
+    margin: 0;
+    color: #6b7280;
+}
+
+.admin-review-actions {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.admin-review-reject {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-review-reject textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    resize: vertical;
+}
+
+.admin-review-reject textarea:focus {
+    border-color: #1d4ed8;
+    outline: 2px solid rgba(29, 78, 216, 0.12);
+}
+
+.admin-review-approve-btn,
+.admin-review-reject-btn {
+    padding: 9px 16px;
+    border: 1px solid #1d4ed8;
+    border-radius: 6px;
+    background: #1d4ed8;
+    color: #ffffff;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.admin-review-approve-btn:hover,
+.admin-review-reject-btn:hover {
+    border-color: #1d4ed8;
+    background: #1d4ed8;
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .admin-review-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-review-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .admin-review-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-review-full-width {
+        grid-column: auto;
+    }
+
+    .admin-review-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-review-file-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

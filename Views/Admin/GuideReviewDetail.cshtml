@@ -1,0 +1,261 @@
+
+@model VietRove.Models.AdminGuideReviewDetailViewModel
+
+@{
+    ViewData["Title"] = "Chi tiết hồ sơ HDV";
+    Layout = "_AdminLayout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-guide-review.css" asp-append-version="true" />
+}
+
+<div class="admin-review-page">
+    <div class="admin-review-heading">
+        <div>
+            <h2>Chi tiết hồ sơ HDV</h2>
+            <p>Kiểm tra thông tin cá nhân và giấy tờ trước khi xét duyệt.</p>
+        </div>
+        <a asp-controller="Admin" asp-action="GuideReview" class="btn admin-review-back-btn">
+            Quay lại
+        </a>
+    </div>
+
+    <div class="admin-review-section">
+        <h3>Thông tin tài khoản</h3>
+        <div class="admin-review-info-grid">
+            <div>
+                <label>Họ và tên</label>
+                <p>@Model.FullName</p>
+            </div>
+            <div>
+                <label>Email đăng ký</label>
+                <p>@Model.Email</p>
+            </div>
+            <div>
+                <label>Giới tính</label>
+                <p>@(string.IsNullOrWhiteSpace(Model.Gender) ? "Chưa cập nhật" : Model.Gender)</p>
+            </div>
+            <div>
+                <label>Ngày sinh</label>
+                <p>
+                    @if (Model.DateOfBirth.HasValue)
+                    {
+                        @Model.DateOfBirth.Value.ToString("dd/MM/yyyy")
+                    }
+                    else
+                    {
+                        <text>Chưa cập nhật</text>
+                    }
+                </p>
+            </div>
+            <div>
+                <label>Số điện thoại</label>
+                <p>@(string.IsNullOrWhiteSpace(Model.ContactPhone) ? "Chưa cập nhật" : Model.ContactPhone)</p>
+            </div>
+            <div>
+                <label>Email liên hệ</label>
+                <p>@(string.IsNullOrWhiteSpace(Model.ContactEmail) ? "Chưa cập nhật" : Model.ContactEmail)</p>
+            </div>
+            <div>
+                <label>Địa chỉ</label>
+                <p>@(string.IsNullOrWhiteSpace(Model.Address) ? "Chưa cập nhật" : Model.Address)</p>
+            </div>
+            <div>
+                <label>Số năm kinh nghiệm</label>
+                <p>
+                    @if (Model.ExperienceYears.HasValue)
+                    {
+                        @Model.ExperienceYears.Value
+                    }
+                    else
+                    {
+                        <text>Chưa cập nhật</text>
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-review-section">
+        <h3>Thông tin thẻ hướng dẫn viên</h3>
+        <div class="admin-review-info-grid">
+            <div>
+                <label>Loại thẻ</label>
+                <p>@Model.CardType</p>
+            </div>
+            <div>
+                <label>Số thẻ</label>
+                <p>@(string.IsNullOrWhiteSpace(Model.CardNumber) ? "Chưa cập nhật" : Model.CardNumber)</p>
+            </div>
+            <div>
+                <label>Số CCCD</label>
+                <p>@(string.IsNullOrWhiteSpace(Model.IdentityNumber) ? "Chưa cập nhật" : Model.IdentityNumber)</p>
+            </div>
+            <div>
+                <label>Ngày cấp thẻ</label>
+                <p>
+                    @if (Model.IssueDate.HasValue)
+                    {
+                        @Model.IssueDate.Value.ToString("dd/MM/yyyy")
+                    }
+                    else
+                    {
+                        <text>Chưa cập nhật</text>
+                    }
+                </p>
+            </div>
+            <div>
+                <label>Ngày hết hạn</label>
+                <p>
+                    @if (Model.ExpiryDate.HasValue)
+                    {
+                        @Model.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                    }
+                    else
+                    {
+                        <text>Chưa cập nhật</text>
+                    }
+                </p>
+            </div>
+            <div>
+                <label>Ngày đăng ký</label>
+                <p>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+            </div>
+            <div class="admin-review-full-width">
+                <label>Khu vực hoạt động</label>
+                <p>
+                    @if (Model.Provinces.Count > 0)
+                    {
+                        @string.Join(", ", Model.Provinces)
+                    }
+                    else
+                    {
+                        <text>Chưa đăng ký khu vực</text>
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-review-section">
+        <h3>Giấy tờ xác minh</h3>
+
+        @if (Model.Documents.Count == 0)
+        {
+            <p class="admin-review-muted">Không có giấy tờ được tải lên.</p>
+        }
+        else
+        {
+            <div class="admin-review-file-list">
+                @foreach (var document in Model.Documents)
+                {
+                    string documentName = "Tài liệu";
+
+                    if (document.DocumentType == 1)
+                    {
+                        documentName = "CCCD mặt trước";
+                    }
+                    else if (document.DocumentType == 2)
+                    {
+                        documentName = "CCCD mặt sau";
+                    }
+                    else if (document.DocumentType == 3)
+                    {
+                        documentName = "Thẻ hướng dẫn viên";
+                    }
+
+                    <div class="admin-review-file-item">
+                        <div>
+                            <strong>@documentName</strong>
+                            <span>@document.OriginalFileName</span>
+                        </div>
+                        <a asp-controller="Admin"
+                           asp-action="GuideDocument"
+                           asp-route-guideId="@Model.GuideId"
+                           asp-route-documentId="@document.DocumentId"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            Xem tài liệu
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="admin-review-section">
+        <h3>Ngôn ngữ đăng ký</h3>
+
+        @if (Model.Languages.Count == 0)
+        {
+            <p class="admin-review-muted">Không có ngôn ngữ đăng ký kèm chứng chỉ.</p>
+        }
+        else
+        {
+            <div class="admin-review-file-list">
+                @foreach (var language in Model.Languages)
+                {
+                    <div class="admin-review-file-item">
+                        <div>
+                            <strong>@language.LanguageName</strong>
+                            <span>
+                                @if (!string.IsNullOrWhiteSpace(language.CertificateFile))
+                                {
+                                    @language.CertificateFile
+                                }
+                                else
+                                {
+                                    <text>Không có chứng chỉ đính kèm</text>
+                                }
+                            </span>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(language.CertificateFile))
+                        {
+                            <a asp-controller="Admin"
+                               asp-action="GuideLanguageCertificate"
+                               asp-route-guideId="@Model.GuideId"
+                               asp-route-guideLanguageId="@language.GuideLanguageId"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                Xem chứng chỉ
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="admin-review-actions">
+        <form id="admin-review-antiforgery">
+            @Html.AntiForgeryToken()
+        </form>
+
+        <div class="admin-review-reject">
+            <label for="rejectReason">Lý do từ chối hồ sơ</label>
+            <textarea id="rejectReason"
+                      maxlength="1000"
+                      rows="3"
+                      placeholder="Nhập lý do từ chối nếu hồ sơ không hợp lệ..."></textarea>
+            <button type="button"
+                    id="btnRejectGuide"
+                    class="btn admin-review-reject-btn"
+                    data-guide-id="@Model.GuideId">
+                Từ chối hồ sơ
+            </button>
+        </div>
+
+        <button type="button"
+                id="btnApproveGuide"
+                class="btn admin-review-approve-btn"
+                data-guide-id="@Model.GuideId">
+            Duyệt hồ sơ
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/admin-guide-review.js" asp-append-version="true"></script>
+}

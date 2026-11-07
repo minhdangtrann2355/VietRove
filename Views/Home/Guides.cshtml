@@ -150,7 +150,16 @@
                     <div class="card-body p-0 d-flex flex-column">
                         <h5 class="fw-bold mb-1" style="color: #1f2937; font-size: 16px;">@guide.FullName</h5>
                         <p class="mb-2" style="font-size: 13px; color: #2563eb; font-weight: 600;">
-                            Thẻ @guide.CardType (@guide.CardNumber)
+                            Thẻ
+                            @if (guide.CardType != null)
+                            {
+                                @guide.CardType.CategoryName
+                            }
+                            else
+                            {
+                                <span>Chưa cập nhật</span>
+                            }
+                            (@guide.CardNumber)
                         </p>
                         <hr class="my-2" style="border-color: #f3f4f6;" />
 

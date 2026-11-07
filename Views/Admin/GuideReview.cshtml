@@ -1,0 +1,67 @@
+
+@model List<VietRove.Models.AdminGuideReviewListItemViewModel>
+
+@{
+    ViewData["Title"] = "Xét duyệt hồ sơ HDV";
+    Layout = "_AdminLayout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-guide-review.css" asp-append-version="true" />
+}
+
+<div class="admin-review-page">
+    <div class="admin-review-heading">
+        <div>
+            <h2>Xét duyệt hồ sơ HDV</h2>
+            <p>Danh sách hướng dẫn viên đang chờ xét duyệt hồ sơ đăng ký.</p>
+        </div>
+        <span class="admin-review-count">@Model.Count hồ sơ</span>
+    </div>
+
+    <div class="admin-review-table-wrapper">
+        <table class="table admin-review-table">
+            <thead>
+                <tr>
+                    <th>Họ và tên</th>
+                    <th>Email</th>
+                    <th>Loại thẻ</th>
+                    <th>Khu vực hoạt động</th>
+                    <th>Ngày đăng ký</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6" class="admin-review-empty">
+                            Không có hồ sơ nào đang chờ xét duyệt.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="admin-review-name">@item.FullName</td>
+                            <td>@item.Email</td>
+                            <td>@item.CardType</td>
+                            <td>@item.Provinces</td>
+                            <td>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                <a asp-controller="Admin"
+                                   asp-action="GuideReviewDetail"
+                                   asp-route-guideId="@item.GuideId"
+                                   class="btn admin-review-detail-btn">
+                                    Xem hồ sơ
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

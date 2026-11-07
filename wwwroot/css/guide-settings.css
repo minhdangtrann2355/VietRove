@@ -1,0 +1,42 @@
+
+.guide-settings {
+    max-width: 1000px;
+}
+
+.guide-settings .settings-heading {
+    color: #1d4ed8;
+}
+
+.guide-settings .form-control {
+    min-height: 42px;
+}
+
+.guide-settings .form-control:focus {
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 0.2rem rgba(29, 78, 216, 0.12);
+}
+
+.guide-settings .btn-primary {
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+.guide-settings .btn-primary:hover {
+    background-color: #1e40af;
+    border-color: #1e40af;
+}
+
+@media (max-width: 576px) {
+    .guide-settings {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .guide-settings .card-body {
+        padding: 20px !important;
+    }
+
+    .guide-settings button {
+        width: 100%;
+    }
+}

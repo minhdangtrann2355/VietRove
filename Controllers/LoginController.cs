@@ -75,14 +75,17 @@ namespace VietRove.Controllers
             }
 
             string dashboardController = string.Empty;
+            string dashboardAction = string.Empty;
 
             if (result.RoleName == AppRoles.Admin)
             {
                 dashboardController = "Admin";
+                dashboardAction = "Dashboard";
             }
             else if (result.RoleName == AppRoles.Guide)
             {
-                dashboardController = "Guide";
+                dashboardController = "Home";
+                dashboardAction = "Index";
             }
             else
             {
@@ -178,7 +181,7 @@ namespace VietRove.Controllers
                 authProperties);
 
             return RedirectToAction(
-                "Dashboard",
+                dashboardAction,
                 dashboardController);
         }
 

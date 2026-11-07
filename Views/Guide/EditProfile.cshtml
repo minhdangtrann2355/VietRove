@@ -130,10 +130,11 @@
             <h6 class="fw-bold mb-3 text-primary">+ Thêm ngoại ngữ mới</h6>
             <form asp-controller="Guide" asp-action="AddLanguage" method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
+
                 <div class="row g-3 align-items-end">
                     <div class="col-md-5">
                         <label class="form-label">Chọn thứ tiếng <span class="text-danger">*</span></label>
-                        <select name="CategoryId" class="form-select" required>
+                        <select name="LanguageId" class="form-select" required>
                             <option value="0">-- Chọn ngoại ngữ --</option>
                             @foreach (var language in Model.Languages)
                             {
@@ -141,10 +142,12 @@
                             }
                         </select>
                     </div>
+
                     <div class="col-md-5">
                         <label class="form-label">Tải tệp minh chứng (chứng chỉ) <span class="text-danger">*</span></label>
                         <input name="CertificateFile" type="file" accept=".jpg,.jpeg,.png,.pdf" class="form-control" required />
                     </div>
+
                     <div class="col-md-2">
                         <button type="submit" class="btn btn-outline-primary w-100 fw-bold">Thêm</button>
                     </div>

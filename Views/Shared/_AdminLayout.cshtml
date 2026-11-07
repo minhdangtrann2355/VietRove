@@ -40,6 +40,13 @@
     {
         loginHistoryActive = "active";
     }
+    string guideReviewActive = "";
+
+    if (currentController == "Admin" &&
+        (currentAction == "GuideReview" || currentAction == "GuideReviewDetail"))
+    {
+        guideReviewActive = "active";
+    }
 }
 
 <!DOCTYPE html>
@@ -79,10 +86,11 @@
 
                 <div class="admin-menu-label">Quản lý hệ thống</div>
 
-                <div class="admin-menu-disabled"
-                     title="Chức năng đang được xây dựng">
+                <a asp-controller="Admin"
+                asp-action="GuideReview"
+                class="admin-menu-link @guideReviewActive">
                     <span>Xét duyệt hồ sơ HDV</span>
-                </div>
+                </a>
 
                 <div class="admin-menu-disabled"
                      title="Chức năng đang được xây dựng">

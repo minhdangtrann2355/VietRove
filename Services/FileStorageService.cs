@@ -255,5 +255,55 @@ namespace VietRove.Services
                 _environment.ContentRootPath,
                 "ProtectedUploads");
         }
+        public Task<Stream?> OpenReadAsync(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return Task.FromResult<Stream?>(null);
+            }
+
+            string safeFileName = Path.GetFileName(fileName);
+
+            if (safeFileName != fileName)
+            {
+                return Task.FromResult<Stream?>(null);
+            }
+
+            string extension = Path.GetExtension(safeFileName).ToLowerInvariant();
+
+            if (extension != ".jpg" &&
+                extension != ".jpeg" &&
+                extension != ".png" &&
+                extension != ".pdf")
+            {
+                return Task.FromResult<Stream?>(null);
+            }
+
+            string nameWithoutExtension = Path.GetFileNameWithoutExtension(safeFileName);
+
+            if (!Guid.TryParseExact(nameWithoutExtension, "N", out _))
+            {
+                return Task.FromResult<Stream?>(null);
+            }
+
+            string filePath = Path.Combine(
+                GetUploadDirectory(),
+                safeFileName
+            );
+
+            if (!File.Exists(filePath))
+            {
+                return Task.FromResult<Stream?>(null);
+            }
+
+            Stream stream = new FileStream(
+                filePath,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read
+            );
+
+            return Task.FromResult<Stream?>(stream);
+        }
     }
 }

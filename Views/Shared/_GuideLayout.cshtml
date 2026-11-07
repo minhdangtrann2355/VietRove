@@ -1,5 +1,7 @@
 @using System.Security.Claims
+@using VietRove.Security
 @{
+    bool isGuide = User.IsInRole(AppRoles.Guide);
     //doc thong tin hoi vien tu claims cua phien dang nhap
     string fullName = "Hội viên";
     if (User.Identity != null && string.IsNullOrEmpty(User.Identity.Name) == false)
@@ -15,8 +17,10 @@
     }
 
     string statusClaim = "0";
-    var statusClaimObj = User.FindFirst("Status");
-    if (statusClaimObj != null && string.IsNullOrEmpty(statusClaimObj.Value) == false)
+    var statusClaimObj = User.FindFirst("ProfileStatus");
+
+    if (statusClaimObj != null &&
+        string.IsNullOrEmpty(statusClaimObj.Value) == false)
     {
         statusClaim = statusClaimObj.Value;
     }
@@ -116,7 +120,7 @@
                                 <div style="min-width: 0; flex: 1;">
                                     <div class="d-flex align-items-center gap-1">
                                         <span class="fw-bold text-dark text-truncate" style="font-size: 15px;" title="@fullName">@fullName</span>
-                                        @if (currentStatus == 1)
+                                        @if (isGuide && currentStatus == 1)@if (currentStatus == 1)
                                         {
                                             <span title="Tài khoản đã duyệt" class="d-inline-flex align-items-center flex-shrink-0">
                                                 <img src="~/images/bluetick.png" alt="Verified" style="width: 17px; height: 17px;" />

@@ -268,6 +268,8 @@ builder.Services.AddScoped<
     IAdminLoginHistoryService,
     AdminLoginHistoryService>();
 builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+builder.Services.AddScoped<IAdminGuideReviewService, AdminGuideReviewService>();
+
 
 // bootstrap admin password
 string bootstrapAdminPassword = string.Empty;

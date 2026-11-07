@@ -1,4 +1,32 @@
 @model VietRove.Models.GuideProfileViewModel
+<style>
+    .profile-avatar, .profile-avatar-fallback {
+        width: 130px;
+        height: 130px;
+        object-fit: cover;
+    }
+
+    .profile-avatar-fallback {
+        font-size: 42px;
+        background: #2563eb;
+    }
+
+    .profile-approved {
+        background-color: #ecfdf5;
+        color: #059669;
+    }
+
+    .profile-heading {
+        color: #1e3a8a;
+        margin-bottom: 1rem;
+    }
+
+    @@media (max-width: 576px) {
+        .profile-page .card {
+            padding: 1rem !important;
+        }
+    }
+</style>
 @{
     ViewData["Title"] = "Hồ sơ cá nhân";
 }
@@ -49,7 +77,17 @@
                     <span class="badge rounded-pill bg-warning text-dark mb-3">@Model.StatusText</span>
                 }
                 <p class="mb-1"><strong>Mã thẻ:</strong> @Model.Profile.CardNumber</p>
-                <p class="mb-1"><strong>Loại thẻ:</strong> @Model.Profile.CardType</p>
+                <p class="mb-1">
+                    <strong>Loại thẻ:</strong>
+                    @if (Model.Profile.CardType != null)
+                    {
+                        @Model.Profile.CardType.CategoryName
+                    }
+                    else
+                    {
+                        <span>Chưa cập nhật</span>
+                    }
+                </p>
                 <p class="mb-0"><strong>Kinh nghiệm:</strong> @Model.Profile.ExperienceYears năm</p>
             </div>
         </div>
@@ -190,18 +228,6 @@
                     </div>
 
                     <div class="col-md-6">
-                        <strong>Ngày hết hạn thẻ:</strong>
-                        @if (Model.Profile.ExpiryDate.HasValue)
-                        {
-                            @Model.Profile.ExpiryDate.Value.ToString("dd/MM/yyyy")
-                        }
-                        else
-                        {
-                            <span>Chưa cập nhật</span>
-                        }
-                    </div>
-
-                    <div class="col-md-6">
                         <strong>Ngày cấp:</strong>
                         @if (Model.Profile.IssueDate.HasValue)
                         {
@@ -219,27 +245,4 @@
     </div>
 </div>
 
-<style>
-    .profile-avatar, .profile-avatar-fallback {
-        width: 130px;
-        height: 130px;
-        object-fit: cover;
-    }
-    .profile-avatar-fallback {
-        font-size: 42px;
-        background: #2563eb;
-    }
-    .profile-approved {
-        background-color: #ecfdf5;
-        color: #059669;
-    }
-    .profile-heading {
-        color: #1e3a8a;
-        margin-bottom: 1rem;
-    }
-    @@media (max-width: 576px) {
-        .profile-page .card {
-            padding: 1rem !important;
-        }
-    }
-</style>
+

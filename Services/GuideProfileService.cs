@@ -23,6 +23,7 @@ namespace VietRove.Services
         public async Task<GuideProfileViewModel?> GetProfileViewModelAsync(int userId)
         {
             GuideProfile? profile = await _context.GuideProfiles
+                .Include(g => g.CardType)
                 .FirstOrDefaultAsync(g => g.UserId == userId);
 
             if (profile == null)
@@ -451,6 +452,7 @@ namespace VietRove.Services
             int experienceId)
         {
             GuideProfile? profile = await _context.GuideProfiles
+                .Include(g => g.CardType)
                 .FirstOrDefaultAsync(g => g.UserId == userId);
 
             if (profile == null)

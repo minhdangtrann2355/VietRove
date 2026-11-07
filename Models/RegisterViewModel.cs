@@ -9,7 +9,7 @@ namespace VietRove.Models
 {
     public class RegisterViewModel : IValidatableObject
     {
-        public string Website { get; set; } = string.Empty;
+        public string? Website { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập Email.")]
         [EmailAddress(ErrorMessage = "Email không đúng định dạng.")]

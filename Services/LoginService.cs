@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using VietRove.Data;
 using VietRove.Entities;
 using VietRove.Models;
@@ -80,7 +81,7 @@ namespace VietRove.Services
             else if (user.RoleId == AppRoles.GuideId)
             {
                 roleName = AppRoles.Guide;
-                dashboardController = "Guide";
+                dashboardController = "Home";
             }
             else
             {
@@ -99,7 +100,6 @@ namespace VietRove.Services
                     .FirstOrDefaultAsync(g => g.UserId == user.UserId);
             }
 
-            // ghi nhan lich su dang nhap thanh cong vao csdl
             LoginHistory loginHistory = new LoginHistory
             {
                 UserId = user.UserId,
@@ -117,6 +117,116 @@ namespace VietRove.Services
                 RoleName = roleName,
                 DashboardController = dashboardController
             };
+        }
+
+        public async Task<GuideAccountSettingsViewModel?> GetGuideAccountSettingsAsync(
+            int userId)
+        {
+            User? user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u =>
+                    u.UserId == userId &&
+                    u.RoleId == AppRoles.GuideId);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return new GuideAccountSettingsViewModel
+            {
+                Email = user.Email,
+                CreatedAt = user.CreatedAt
+            };
+        }
+
+        public async Task<string> ChangeGuidePasswordAsync(
+            int userId,
+            GuideAccountSettingsViewModel model)
+        {
+            User? user = await _context.Users
+                .FirstOrDefaultAsync(u =>
+                    u.UserId == userId &&
+                    u.RoleId == AppRoles.GuideId);
+
+            if (user == null)
+            {
+                return "Không tìm thấy tài khoản hội viên.";
+            }
+
+            if (user.Status != 1)
+            {
+                return "Tài khoản hiện không hoạt động.";
+            }
+
+            bool isCurrentPasswordValid = BCrypt.Net.BCrypt.Verify(
+                model.CurrentPassword,
+                user.Password);
+
+            if (isCurrentPasswordValid == false)
+            {
+                return "Mật khẩu hiện tại không chính xác.";
+            }
+
+            if (BCrypt.Net.BCrypt.Verify(model.NewPassword, user.Password))
+            {
+                return "Mật khẩu mới phải khác mật khẩu hiện tại.";
+            }
+
+            string email = user.Email.Trim();
+            string emailName = email;
+
+            int atIndex = email.IndexOf('@');
+
+            if (atIndex >= 0)
+            {
+                emailName = email.Substring(0, atIndex);
+            }
+
+            if (model.NewPassword.Contains(
+                email,
+                StringComparison.OrdinalIgnoreCase))
+            {
+                return "Mật khẩu mới không được chứa email đăng nhập.";
+            }
+
+            if (emailName.Length >= 3 &&
+                model.NewPassword.Contains(
+                    emailName,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return "Mật khẩu mới không được chứa tên tài khoản email.";
+            }
+
+            GuideProfile? guide = await _context.GuideProfiles
+                .FirstOrDefaultAsync(g => g.UserId == userId);
+
+            if (guide != null &&
+                string.IsNullOrWhiteSpace(guide.FullName) == false)
+            {
+                string[] nameParts = guide.FullName.Split(
+                    ' ',
+                    StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string namePart in nameParts)
+                {
+                    if (namePart.Length >= 3 &&
+                        model.NewPassword.Contains(
+                            namePart,
+                            StringComparison.OrdinalIgnoreCase))
+                    {
+                        return "Mật khẩu mới không được chứa các phần họ tên của bạn.";
+                    }
+                }
+            }
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(
+                model.NewPassword,
+                workFactor: 12);
+
+            await _context.SaveChangesAsync();
+
+            return string.Empty;
         }
     }
 }

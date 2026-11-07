@@ -1,9 +1,13 @@
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using VietRove.Models;
 using VietRove.Security;
 using VietRove.Services;
+using VietRove.Services.Interfaces;
 
 namespace VietRove.Controllers
 {
@@ -11,10 +15,14 @@ namespace VietRove.Controllers
     public class GuideController : Controller
     {
         private readonly IGuideProfileService _profileService;
+        private readonly ILoginService _loginService;
 
-        public GuideController(IGuideProfileService profileService)
+        public GuideController(
+            IGuideProfileService profileService,
+            ILoginService loginService)
         {
             _profileService = profileService;
+            _loginService = loginService;
         }
 
         [HttpGet]
@@ -32,6 +40,7 @@ namespace VietRove.Controllers
             }
 
             GuideProfileViewModel? model = await _profileService.GetProfileViewModelAsync(userId);
+
             if (model == null)
             {
                 return NotFound();
@@ -49,6 +58,7 @@ namespace VietRove.Controllers
             }
 
             GuideProfileViewModel? model = await _profileService.GetProfileViewModelAsync(userId);
+
             if (model == null)
             {
                 return NotFound();
@@ -73,6 +83,7 @@ namespace VietRove.Controllers
             }
 
             string resultError = await _profileService.UpdateContactInfoAsync(userId, model);
+
             if (string.IsNullOrEmpty(resultError) == false)
             {
                 TempData["ErrorMessage"] = resultError;
@@ -99,6 +110,7 @@ namespace VietRove.Controllers
             }
 
             string resultError = await _profileService.AddLanguageAsync(userId, model);
+
             if (string.IsNullOrEmpty(resultError) == false)
             {
                 TempData["ErrorMessage"] = resultError;
@@ -119,6 +131,7 @@ namespace VietRove.Controllers
             }
 
             bool isSuccess = await _profileService.DeleteLanguageAsync(userId, id);
+
             if (isSuccess == false)
             {
                 TempData["ErrorMessage"] = "Không thể xóa ngoại ngữ đã chọn.";
@@ -145,6 +158,7 @@ namespace VietRove.Controllers
             }
 
             string resultError = await _profileService.AddExperienceAsync(userId, model);
+
             if (string.IsNullOrEmpty(resultError) == false)
             {
                 TempData["ErrorMessage"] = resultError;
@@ -165,6 +179,7 @@ namespace VietRove.Controllers
             }
 
             bool isSuccess = await _profileService.DeleteExperienceAsync(userId, id);
+
             if (isSuccess == false)
             {
                 TempData["ErrorMessage"] = "Không thể xóa kinh nghiệm đã chọn.";
@@ -176,13 +191,60 @@ namespace VietRove.Controllers
         }
 
         [HttpGet]
-        public IActionResult Contract()
+        public async Task<IActionResult> Settings()
         {
-            return View();
+            if (TryGetCurrentUserId(out int userId) == false)
+            {
+                return Unauthorized();
+            }
+
+            GuideAccountSettingsViewModel? model =
+                await _loginService.GetGuideAccountSettingsAsync(userId);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(
+            GuideAccountSettingsViewModel model)
+        {
+            if (TryGetCurrentUserId(out int userId) == false)
+            {
+                return Unauthorized();
+            }
+
+            if (ModelState.IsValid == false)
+            {
+                TempData["ErrorMessage"] = "Vui lòng kiểm tra lại thông tin mật khẩu.";
+                return RedirectToAction(nameof(Settings));
+            }
+
+            string resultError = await _loginService.ChangeGuidePasswordAsync(
+                userId,
+                model);
+
+            if (string.IsNullOrEmpty(resultError) == false)
+            {
+                TempData["ErrorMessage"] = resultError;
+                return RedirectToAction(nameof(Settings));
+            }
+
+            await HttpContext.SignOutAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme);
+
+            TempData["SuccessMessage"] = "Đổi mật khẩu thành công. Vui lòng đăng nhập lại.";
+
+            return RedirectToAction("Index", "Login");
         }
 
         [HttpGet]
-        public IActionResult Settings()
+        public IActionResult Contract()
         {
             return View();
         }
@@ -192,6 +254,7 @@ namespace VietRove.Controllers
             userId = 0;
 
             Claim? claim = User.FindFirst(ClaimTypes.NameIdentifier);
+
             if (claim == null)
             {
                 return false;
