@@ -27,7 +27,12 @@
 
                 <div class="mb-3">
                     <label asp-for="Password" class="form-label fw-bold small">Mật khẩu</label>
-                    <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" />
+                    <div class="input-group">
+                        <input asp-for="Password" type="password" class="form-control" id="passwordInput" placeholder="Nhập mật khẩu" />
+                         <button class="btn btn-outline-secondary border" type="button" id="togglePassword">
+                            <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                         </button>
+                    </div>
                     <span asp-validation-for="Password" class="text-danger small"></span>
                 </div>
 
@@ -48,4 +53,21 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('passwordInput');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            // Chuyển đổi loại input giữa password và text
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Đổi icon con mắt
+            toggleIcon.classList.toggle('bi-eye');
+            toggleIcon.classList.toggle('bi-eye-slash');
+        });
+    </script> 
 }
+
