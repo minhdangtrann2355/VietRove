@@ -1,0 +1,16 @@
+
+.profile-heading {
+    color: #1e3a8a;
+}
+
+.profile-title {
+    color: #1e3a8a;
+}
+
+.profile-save-button {
+    background-color: #1d4ed8;
+}
+
+.profile-save-button:hover {
+    background-color: #1e40af;
+}

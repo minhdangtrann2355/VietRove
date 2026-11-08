@@ -18,6 +18,8 @@ namespace VietRove.Models.Admin
         public int PendingGuideExperiences { get; set; }
 
         public List<AdminDashboardRecentLoginViewModel> RecentLogins { get; set; } = new();
+        public int TotalArticles { get; set; }
+        public int DraftArticles { get; set; }
     }
 
     public class AdminDashboardRecentLoginViewModel
@@ -28,4 +30,5 @@ namespace VietRove.Models.Admin
 
         public DateTime LoginTime { get; set; }
     }
+    
 }

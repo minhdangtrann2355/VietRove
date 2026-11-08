@@ -1,0 +1,130 @@
+@model VietRove.Models.Guest.ViolationReportCreateViewModel
+
+@{
+    ViewData["Title"] = "Báo cáo hướng dẫn viên";
+
+    if (User.Identity != null &&
+        User.Identity.IsAuthenticated &&
+        User.IsInRole(VietRove.Security.AppRoles.Guide))
+    {
+        Layout = "_GuideLayout";
+    }
+    else
+    {
+        Layout = "_GuestLayout";
+    }
+}
+
+<link rel="stylesheet" href="~/css/Guest/violation-report.css" />
+
+<div class="violation-report-page">
+    <div class="violation-report-container">
+        <div class="violation-report-header">
+            <h2>Báo cáo hướng dẫn viên</h2>
+            <p>
+                Vui lòng cung cấp thông tin và nội dung vi phạm để chúng tôi
+                có thể tiếp nhận và xử lý.
+            </p>
+        </div>
+
+        <div class="violation-report-card">
+            <div class="reported-guide">
+                <span class="guide-label">Hướng dẫn viên được báo cáo</span>
+                <strong>@ViewBag.GuideName</strong>
+            </div>
+
+            <form id="violationReportForm"
+                  asp-controller="GuestViolationReport"
+                  asp-action="Create"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="GuideId" />
+
+                <div class="form-group">
+                    <label asp-for="ReporterName">
+                        Họ và tên người báo cáo <span>*</span>
+                    </label>
+
+                    <input asp-for="ReporterName"
+                           class="form-control"
+                           placeholder="Nhập họ và tên của bạn"
+                           maxlength="150" />
+
+                    <span asp-validation-for="ReporterName"
+                          class="field-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ReporterPhone">
+                        Số điện thoại
+                    </label>
+
+                    <input asp-for="ReporterPhone"
+                           class="form-control"
+                           placeholder="Nhập số điện thoại"
+                           maxlength="20" />
+
+                    <span asp-validation-for="ReporterPhone"
+                          class="field-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Description">
+                        Nội dung báo cáo <span>*</span>
+                    </label>
+
+                    <textarea asp-for="Description"
+                              class="form-control description-input"
+                              placeholder="Mô tả chi tiết nội dung vi phạm..."></textarea>
+
+                    <span asp-validation-for="Description"
+                          class="field-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="EvidenceFiles">
+                        Tệp minh chứng
+                    </label>
+
+                    <input type="file"
+                           id="EvidenceFiles"
+                           name="EvidenceFiles"
+                           class="form-control file-input"
+                           accept=".jpg,.jpeg,.png,.pdf"
+                           multiple />
+
+                    <small class="file-hint">
+                        Hỗ trợ JPG, JPEG, PNG, PDF. Tối đa 10 MB mỗi tệp.
+                        Có thể chọn nhiều tệp.
+                    </small>
+
+                    <div id="selectedFiles" class="selected-files"></div>
+                </div>
+
+                <div id="reportMessage"
+                     class="report-message"
+                     role="alert"
+                     aria-live="polite">
+                </div>
+
+                <div class="form-actions">
+                    <a asp-controller="GuestGuide"
+                       asp-action="GuideProfile"
+                       asp-route-id="@Model.GuideId"
+                       class="btn-back">
+                        Quay lại
+                    </a>
+
+                    <button type="submit" id="btnSubmitReport" class="btn-submit">
+                        Gửi báo cáo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/Guest/violation-report.js" defer></script>

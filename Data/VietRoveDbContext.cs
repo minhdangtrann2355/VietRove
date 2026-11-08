@@ -215,10 +215,6 @@ namespace VietRove.Data
                 .HasDefaultValue(0);
 
             modelBuilder.Entity<Contract>()
-                .Property(c => c.Status)
-                .HasDefaultValue(0);
-
-            modelBuilder.Entity<Contract>()
                 .Property(c => c.CreatedAt)
                 .HasDefaultValueSql("GETDATE()");
 
@@ -308,6 +304,7 @@ namespace VietRove.Data
                 .HasForeignKey(a => a.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+
             // date columns
             modelBuilder.Entity<GuideProfile>()
                 .Property(gp => gp.DateOfBirth)
@@ -337,11 +334,13 @@ namespace VietRove.Data
                 .Property(c => c.EndDate)
                 .HasColumnType("date");
 
+
             // login history index
             modelBuilder.Entity<LoginHistory>()
                 .HasIndex(lh => new { lh.UserId, lh.LoginTime })
                 .IsDescending(false, true)
                 .HasDatabaseName("IX_LoginHistory_UserId_LoginTime");
+
 
             // guide profile indexes
             modelBuilder.Entity<GuideProfile>()
@@ -352,25 +351,48 @@ namespace VietRove.Data
                 .HasIndex(gp => gp.FullName)
                 .HasDatabaseName("IX_GuideProfiles_FullName");
 
+            modelBuilder.Entity<GuideProfile>()
+                .HasIndex(gp => gp.ContactPhone)
+                .IsUnique()
+                .HasFilter("[ContactPhone] IS NOT NULL")
+                .HasDatabaseName("UX_GuideProfiles_ContactPhone");
+
+            modelBuilder.Entity<GuideProfile>()
+                .HasIndex(gp => gp.IdentityNumber)
+                .IsUnique()
+                .HasFilter("[IdentityNumber] IS NOT NULL")
+                .HasDatabaseName("UX_GuideProfiles_IdentityNumber");
+
+            modelBuilder.Entity<GuideProfile>()
+                .HasIndex(gp => gp.CardNumber)
+                .IsUnique()
+                .HasFilter("[CardNumber] IS NOT NULL")
+                .HasDatabaseName("UX_GuideProfiles_CardNumber");
+
+
             // guide experience index
             modelBuilder.Entity<GuideExperience>()
                 .HasIndex(ge => ge.GuideId)
                 .HasDatabaseName("IX_GuideExperiences_GuideId");
+
 
             // guide document index
             modelBuilder.Entity<GuideDocument>()
                 .HasIndex(gd => gd.GuideId)
                 .HasDatabaseName("IX_GuideDocuments_GuideId");
 
+
             // contract index
             modelBuilder.Entity<Contract>()
                 .HasIndex(c => c.GuideId)
                 .HasDatabaseName("IX_Contracts_GuideId");
 
+
             // violation report index
             modelBuilder.Entity<ViolationReport>()
                 .HasIndex(vr => vr.Status)
                 .HasDatabaseName("IX_ViolationReports_Status");
+
 
             // article index
             modelBuilder.Entity<Article>()

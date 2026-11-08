@@ -56,6 +56,38 @@
     {
         competencyReviewActive = "active";
     }
+
+    string guideManagementActive = "";
+
+    if (currentController == "AdminGuideManagement" &&
+        (currentAction == "Index" || currentAction == "Detail"))
+    {
+        guideManagementActive = "active";
+    }
+
+    string categoryManagementActive = "";
+
+    if (currentController == "AdminCategory" &&
+        currentAction == "Index")
+    {
+        categoryManagementActive = "active";
+    }
+    string articleManagementActive = "";
+
+    if (currentController == "AdminArticle" &&
+        (currentAction == "Index" ||
+        currentAction == "Detail" ||
+        currentAction == "Create"))
+    {
+        articleManagementActive = "active";
+    }
+    string violationReportActive = "";
+
+    if (currentController == "AdminViolationReport" &&
+        (currentAction == "Index" || currentAction == "Detail"))
+    {
+        violationReportActive = "active";
+    }
 }
 
 <!DOCTYPE html>
@@ -107,15 +139,17 @@
                         <span>Xét duyệt năng lực</span>
                 </a>
 
-                <div class="admin-menu-disabled"
-                     title="Chức năng đang được xây dựng">
-                    <span>Quản lý hướng dẫn viên</span>
-                </div>
+                <a asp-controller="AdminGuideManagement"
+                    asp-action="Index"
+                    class="admin-menu-link @guideManagementActive">
+                        <span>Quản lý hướng dẫn viên</span>
+                </a>
 
-                <div class="admin-menu-disabled"
-                     title="Chức năng đang được xây dựng">
-                    <span>Báo cáo vi phạm</span>
-                </div>
+                <a asp-controller="AdminViolationReport"
+                    asp-action="Index"
+                    class="admin-menu-link @violationReportActive">
+                        <span>Báo cáo vi phạm</span>
+                </a>
 
                 <div class="admin-menu-label">Theo dõi hoạt động</div>
 
@@ -127,15 +161,17 @@
 
                 <div class="admin-menu-label">Nội dung</div>
 
-                <div class="admin-menu-disabled"
-                     title="Chức năng đang được xây dựng">
-                    <span>Quản lý bài viết</span>
-                </div>
+                <a asp-controller="AdminArticle"
+                    asp-action="Index"
+                    class="admin-menu-link @articleManagementActive">
+                        <span>Quản lý bài viết</span>
+                </a>
 
-                <div class="admin-menu-disabled"
-                     title="Chức năng đang được xây dựng">
-                    <span>Quản lý danh mục</span>
-                </div>
+                <a asp-controller="AdminCategory"
+                    asp-action="Index"
+                    class="admin-menu-link @categoryManagementActive">
+                        <span>Quản lý danh mục</span>
+                </a>
             </div>
 
             <div class="admin-sidebar-footer">
@@ -201,7 +237,7 @@
 
     <partial name="_ScriptsPartial" />
 
-    <script src="~/js/admin.js" asp-append-version="true"></script>
+    <script src="~/js/Admin/admin.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -1,4 +1,5 @@
-﻿using VietRove.Services.Interfaces.FileStorage;
+﻿
+using VietRove.Services.Interfaces.FileStorage;
 
 using System;
 using System.Globalization;
@@ -61,9 +62,6 @@ namespace VietRove.Services.Guide.Contract
                 EndDate = model.EndDate.Date,
                 Fee = model.Fee,
                 PdfFile = null,
-                SignedFile = null,
-                Status = 0,
-                RejectReason = null,
                 CreatedAt = DateTime.Now
             };
 

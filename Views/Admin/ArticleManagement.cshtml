@@ -1,0 +1,96 @@
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Quản lý bài viết";
+}
+
+<link rel="stylesheet" href="~/css/Admin/admin-article-management.css" asp-append-version="true" />
+
+<div class="admin-article-page">
+    <div class="page-header">
+        <div>
+            <h2>Quản lý bài viết</h2>
+            <p>Quản lý tin tức, bài viết trải nghiệm và thông báo trên hệ thống.</p>
+        </div>
+
+        <a asp-controller="AdminArticle"
+           asp-action="Create"
+           class="btn-primary">
+            Thêm bài viết
+        </a>
+    </div>
+
+    <div class="article-filter-section">
+        <div class="filter-item search-item">
+            <label for="articleSearch">Tìm kiếm</label>
+            <input type="text"
+                   id="articleSearch"
+                   maxlength="250"
+                   placeholder="Nhập tiêu đề bài viết..." />
+        </div>
+
+        <div class="filter-item">
+            <label for="articleTypeFilter">Loại bài viết</label>
+            <select id="articleTypeFilter">
+                <option value="">Tất cả loại bài viết</option>
+                <option value="1">Tin tức</option>
+                <option value="2">Trải nghiệm du lịch</option>
+                <option value="3">Thông báo</option>
+            </select>
+        </div>
+
+        <div class="filter-item">
+            <label for="articleStatusFilter">Trạng thái</label>
+            <select id="articleStatusFilter">
+                <option value="">Tất cả trạng thái</option>
+                <option value="0">Bản nháp</option>
+                <option value="1">Đã xuất bản</option>
+                <option value="2">Đã ẩn</option>
+            </select>
+        </div>
+
+        <div class="filter-actions">
+            <button type="button" id="btnSearchArticle" class="btn-primary">
+                Tìm kiếm
+            </button>
+            <button type="button" id="btnResetArticle" class="btn-secondary">
+                Làm mới
+            </button>
+        </div>
+    </div>
+
+    @Html.AntiForgeryToken()
+
+    <div class="article-table-wrapper">
+        <table class="article-table">
+            <thead>
+                <tr>
+                    <th class="col-id">Mã</th>
+                    <th>Tiêu đề</th>
+                    <th class="col-type">Loại bài viết</th>
+                    <th class="col-author">Người tạo</th>
+                    <th class="col-date">Ngày tạo</th>
+                    <th class="col-status">Trạng thái</th>
+                    <th class="col-actions">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="articleTableBody">
+                <tr>
+                    <td colspan="7" class="table-message">
+                        Đang tải dữ liệu...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="article-table-footer">
+        <div id="articleTotalRecords" class="total-records">
+            Tổng số: 0 bài viết
+        </div>
+
+        <div class="pagination" id="articlePagination"></div>
+    </div>
+</div>
+
+<script src="~/js/Admin/admin-article-management.js" asp-append-version="true"></script>

@@ -1,3 +1,4 @@
+
 @{
     ViewData["Title"] = "Quy Định Hội Viên - VietRove";
 }
@@ -5,123 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-
-<style>
-    .hero-banner-large {
-        width: 100%;
-        min-height: 380px;
-        border-radius: 10px;
-        background: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.35)), 
-                    url('https://images.unsplash.com/photo-1609412058473-c199497c3c5d?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D') center/cover no-repeat;
-        margin-bottom: 35px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .page-script-title {
-        font-family: 'Dancing Script', cursive;
-        font-size: 3.2rem;
-        color: #1e3a8a;
-        text-align: center;
-        margin-bottom: 15px;
-        position: relative;
-        padding-bottom: 12px;
-    }
-
-    .page-script-title::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90px;
-        height: 2px;
-        background: #2563eb;
-    }
-
-    .content-article {
-        background: #ffffff;
-        padding: 40px;
-        border-radius: 4px;
-        color: #374151;
-        font-size: 15.5px;
-        line-height: 1.85;
-    }
-
-    .section-heading {
-        color: #1e3a8a;
-        font-weight: 800;
-        font-size: 1.25rem;
-        text-transform: uppercase;
-        margin-top: 30px;
-        margin-bottom: 16px;
-        padding-bottom: 6px;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .section-heading:first-child {
-        margin-top: 0;
-    }
-
-    .rules-list {
-        padding-left: 0;
-        list-style: none;
-        margin-bottom: 35px;
-    }
-
-    .rules-list li {
-        margin-bottom: 16px;
-        text-align: justify;
-    }
-
-    .rules-list strong {
-        color: #1e3a8a;
-        margin-right: 6px;
-    }
-
-    .clean-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 15px;
-        margin-top: 15px;
-        margin-bottom: 25px;
-    }
-
-    .clean-table th {
-        background-color: #f8fafc;
-        color: #1e3a8a;
-        font-weight: 700;
-        padding: 12px 14px;
-        border-bottom: 2px solid #cbd5e1;
-    }
-
-    .clean-table td {
-        padding: 12px 14px;
-        border-bottom: 1px solid #e2e8f0;
-        color: #4b5563;
-    }
-
-    .source-note {
-        font-size: 13.5px;
-        color: #6b7280;
-        font-style: italic;
-        text-align: right;
-        margin-top: 40px;
-        padding-top: 15px;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    @@media (max-width: 768px) {
-        .hero-banner-large {
-            min-height: 250px;
-        }
-        .page-script-title {
-            font-size: 2.3rem;
-        }
-        .content-article {
-            padding: 20px 15px;
-        }
-    }
-</style>
+<link rel="stylesheet" href="~/css/Guest/rules.css" asp-append-version="true" />
 
 <div class="hero-banner-large"></div>
 
@@ -132,7 +17,7 @@
             <h1 class="page-script-title">Quy Định Hội Viên</h1>
 
             <div class="content-article">
-                
+
                 <div class="section-heading">I. Quy định chung đối với hội viên</div>
 
                 <ul class="rules-list">

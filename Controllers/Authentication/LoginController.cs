@@ -8,6 +8,7 @@ using VietRove.Entities;
 using VietRove.Models.Authentication;
 using VietRove.Security;
 using VietRove.Services.Interfaces.Authentication.Login;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace VietRove.Controllers.Authentication
 {
@@ -44,11 +45,32 @@ namespace VietRove.Controllers.Authentication
                 Response.Cookies.Delete("SysAuthMsg");
             }
 
+            if (Request.Query["rateLimited"] == "1")
+            {
+                int retryAfter = 60;
+
+                if (int.TryParse(
+                    Request.Query["retryAfter"],
+                    out int seconds))
+                {
+                    if (seconds > 0)
+                    {
+                        retryAfter = seconds;
+                    }
+                }
+
+                ViewBag.RateLimitMessage =
+                    "Bạn đã đăng nhập quá nhiều lần. Vui lòng thử lại sau "
+                    + retryAfter
+                    + " giây.";
+            }
+
             return View("Login", new LoginViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("LoginPolicy")]
         public async Task<IActionResult> Index(LoginViewModel model)
         {
             if (ModelState.IsValid == false)

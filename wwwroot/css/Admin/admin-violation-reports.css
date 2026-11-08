@@ -1,0 +1,350 @@
+.violation-page {
+    width: 100%;
+}
+
+.violation-page-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.violation-page-heading h2 {
+    margin: 0 0 6px;
+    color: #1e293b;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.violation-page-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.violation-filter {
+    display: grid;
+    grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(140px, 1fr)) auto;
+    gap: 14px;
+    align-items: end;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.violation-filter-search,
+.violation-filter-item {
+    min-width: 0;
+}
+
+.violation-filter label {
+    display: block;
+    margin-bottom: 7px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.violation-filter input,
+.violation-filter select {
+    width: 100%;
+    height: 40px;
+    padding: 8px 11px;
+    color: #334155;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    outline: none;
+    font-size: 13px;
+}
+
+.violation-filter input:focus,
+.violation-filter select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.violation-filter-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.violation-btn-primary,
+.violation-btn-secondary {
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.violation-btn-primary {
+    color: #ffffff;
+    background: #1d4ed8;
+    border: 1px solid #1d4ed8;
+}
+
+.violation-btn-primary:hover {
+    background: #1e40af;
+}
+
+.violation-btn-secondary {
+    color: #334155;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+}
+
+.violation-btn-secondary:hover {
+    background: #f1f5f9;
+}
+
+.violation-table-card {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.violation-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.violation-table-header h3 {
+    margin: 0 0 5px;
+    color: #1e293b;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.violation-table-header span {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.violation-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.violation-table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+}
+
+.violation-table th,
+.violation-table td {
+    padding: 14px 15px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 13px;
+}
+
+.violation-table th {
+    color: #475569;
+    background: #f8fafc;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.violation-table td {
+    color: #334155;
+}
+
+.violation-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.violation-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.violation-table .col-report-id {
+    width: 105px;
+}
+
+.violation-table .col-action {
+    width: 110px;
+    text-align: center;
+}
+
+.violation-table td:last-child {
+    text-align: center;
+}
+
+.violation-report-id {
+    color: #1d4ed8;
+    font-weight: 700;
+}
+
+.violation-evidence-count {
+    color: #475569;
+    white-space: nowrap;
+}
+
+.violation-status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.violation-status-pending {
+    color: #92400e;
+    background: #fef3c7;
+}
+
+.violation-status-processing {
+    color: #1d4ed8;
+    background: #dbeafe;
+}
+
+.violation-status-resolved {
+    color: #166534;
+    background: #dcfce7;
+}
+
+.violation-status-invalid {
+    color: #475569;
+    background: #e2e8f0;
+}
+
+.violation-detail-link {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 72px;
+    height: 32px;
+    padding: 0 10px;
+    color: #1d4ed8;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.violation-detail-link:hover {
+    color: #1e40af;
+    background: #dbeafe;
+}
+
+.violation-table-message {
+    height: 100px;
+    text-align: center !important;
+    color: #64748b !important;
+}
+
+.violation-table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+#reportPaginationInfo {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.violation-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.violation-page-btn {
+    min-width: 34px;
+    height: 34px;
+    padding: 0 9px;
+    color: #475569;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.violation-page-btn:hover:not(:disabled) {
+    color: #1d4ed8;
+    background: #eff6ff;
+    border-color: #93c5fd;
+}
+
+.violation-page-btn.active {
+    color: #ffffff;
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+.violation-page-btn:disabled {
+    color: #94a3b8;
+    background: #f8fafc;
+    cursor: not-allowed;
+}
+
+@media (max-width: 1200px) {
+    .violation-filter {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .violation-filter-search {
+        grid-column: 1 / -1;
+    }
+
+    .violation-filter-actions {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 576px) {
+    .violation-page-heading h2 {
+        font-size: 19px;
+    }
+
+    .violation-filter {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+
+    .violation-filter-search,
+    .violation-filter-actions {
+        grid-column: auto;
+    }
+
+    .violation-filter-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .violation-table-header {
+        padding: 15px;
+    }
+
+    .violation-table-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+    }
+
+    .violation-pagination {
+        width: 100%;
+    }
+}

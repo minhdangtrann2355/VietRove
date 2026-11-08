@@ -1,0 +1,337 @@
+@model VietRove.Models.Admin.AdminViolationReportDetailViewModel
+
+@{
+    ViewData["Title"] = "Chi tiết báo cáo vi phạm";
+
+    string statusText = "Không xác định";
+    string statusClass = "status-unknown";
+
+    if (Model.Status == 0)
+    {
+        statusText = "Chờ xử lý";
+        statusClass = "status-pending";
+    }
+    else if (Model.Status == 1)
+    {
+        statusText = "Đang xử lý";
+        statusClass = "status-processing";
+    }
+    else if (Model.Status == 2)
+    {
+        statusText = "Đã xử lý";
+        statusClass = "status-resolved";
+    }
+    else if (Model.Status == 3)
+    {
+        statusText = "Không vi phạm";
+        statusClass = "status-rejected";
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Admin/admin-violation-report-detail.css"
+          asp-append-version="true" />
+}
+
+<div class="violation-detail-page"
+     id="violationReportDetailPage"
+     data-update-url="@Url.Action("UpdateStatus", "AdminViolationReport", new { id = Model.ReportId })">
+
+    <div class="detail-heading">
+        <div>
+            <a class="detail-back-link"
+               href="@Url.Action("Index", "AdminViolationReport")">
+                Quay lại danh sách
+            </a>
+
+            <h2>Chi tiết báo cáo vi phạm #@Model.ReportId</h2>
+            <p>Xem nội dung, minh chứng và thực hiện xét duyệt báo cáo.</p>
+        </div>
+
+        <span class="detail-status @statusClass">@statusText</span>
+    </div>
+
+    <section class="detail-card">
+        <div class="detail-card-heading">
+            <h3>Thông tin báo cáo</h3>
+        </div>
+
+        <div class="detail-info-grid">
+            <div class="detail-info-item">
+                <span>Người báo cáo</span>
+                <strong>@Model.ReporterName</strong>
+            </div>
+
+            <div class="detail-info-item">
+                <span>Số điện thoại</span>
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.ReporterPhone)
+                        ? "Chưa cung cấp"
+                        : Model.ReporterPhone)
+                </strong>
+            </div>
+
+            <div class="detail-info-item">
+                <span>Ngày gửi</span>
+                <strong>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</strong>
+            </div>
+
+            <div class="detail-info-item">
+                <span>Ngày xử lý</span>
+                <strong>
+                    @if (Model.ResolvedAt.HasValue)
+                    {
+                        @Model.ResolvedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                    }
+                    else
+                    {
+                        <text>Chưa xử lý</text>
+                    }
+                </strong>
+            </div>
+        </div>
+
+        <div class="detail-description">
+            <span>Nội dung báo cáo</span>
+            <p>@Model.Description</p>
+        </div>
+    </section>
+
+    <section class="detail-card">
+        <div class="detail-card-heading">
+            <h3>Thông tin hướng dẫn viên</h3>
+        </div>
+
+        <div class="detail-info-grid">
+            <div class="detail-info-item">
+                <span>Họ và tên</span>
+                <strong>@Model.GuideName</strong>
+            </div>
+
+            <div class="detail-info-item">
+                <span>Email</span>
+                <strong>@Model.GuideEmail</strong>
+            </div>
+
+            <div class="detail-info-item">
+                <span>Số điện thoại</span>
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.GuidePhone)
+                        ? "Chưa cập nhật"
+                        : Model.GuidePhone)
+                </strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="detail-card">
+        <div class="detail-card-heading">
+            <div>
+                <h3>Minh chứng đính kèm</h3>
+                <p>@Model.Evidence.Count tệp minh chứng</p>
+            </div>
+        </div>
+
+        @if (Model.Evidence.Count == 0)
+        {
+            <div class="detail-empty">
+                Báo cáo không có tệp minh chứng.
+            </div>
+        }
+        else
+        {
+            <div class="evidence-list">
+                @foreach (var evidence in Model.Evidence)
+                {
+                    string fileName = evidence.OriginalFileName;
+
+                    if (string.IsNullOrWhiteSpace(fileName))
+                    {
+                        fileName = "Minh chứng " + evidence.EvidenceId;
+                    }
+
+                    string previewUrl = Url.Action(
+                        "PreviewEvidence",
+                        "AdminViolationReport",
+                        new
+                        {
+                            reportId = Model.ReportId,
+                            evidenceId = evidence.EvidenceId
+                        });
+
+                    string downloadUrl = Url.Action(
+                        "DownloadEvidence",
+                        "AdminViolationReport",
+                        new
+                        {
+                            reportId = Model.ReportId,
+                            evidenceId = evidence.EvidenceId
+                        });
+
+                    <div class="evidence-item">
+                        <div class="evidence-info">
+                            <strong title="@fileName">@fileName</strong>
+                            <span>
+                                Tải lên:
+                                @evidence.UploadedAt.ToString("dd/MM/yyyy HH:mm")
+                            </span>
+                        </div>
+
+                        <div class="evidence-preview">
+                            @if (evidence.Extension == ".jpg" ||
+                                 evidence.Extension == ".jpeg" ||
+                                 evidence.Extension == ".png")
+                            {
+                                <a href="@previewUrl"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    <img src="@previewUrl"
+                                         alt="Minh chứng báo cáo"
+                                         loading="lazy" />
+                                </a>
+                            }
+                            else if (evidence.Extension == ".pdf")
+                            {
+                                <a class="evidence-pdf-link"
+                                   href="@previewUrl"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    Xem tài liệu PDF
+                                </a>
+                            }
+                        </div>
+
+                        <a class="evidence-download"
+                           href="@downloadUrl">
+                            Tải xuống
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
+    <section class="detail-card">
+        <div class="detail-card-heading">
+            <h3>Lịch sử xử lý</h3>
+        </div>
+
+        @if (Model.Actions.Count == 0)
+        {
+            <div class="detail-empty">
+                Báo cáo chưa có lịch sử xử lý.
+            </div>
+        }
+        else
+        {
+            <div class="action-history">
+                @foreach (var action in Model.Actions)
+                {
+                    string actionText = "Thao tác không xác định";
+
+                    if (action.ActionType == 0)
+                    {
+                        actionText = "Chuyển sang chờ xử lý";
+                    }
+                    else if (action.ActionType == 1)
+                    {
+                        actionText = "Chuyển sang đang xử lý";
+                    }
+                    else if (action.ActionType == 2)
+                    {
+                        actionText = "Xác nhận vi phạm";
+                    }
+                    else if (action.ActionType == 3)
+                    {
+                        actionText = "Xác nhận không vi phạm";
+                    }
+
+                    <div class="action-history-item">
+                        <div class="action-history-content">
+                            <strong>@actionText</strong>
+                            <span>
+                                Người thực hiện: @action.AdminEmail
+                            </span>
+
+                            @if (string.IsNullOrWhiteSpace(action.Note) == false)
+                            {
+                                <p>@action.Note</p>
+                            }
+
+                            <small>
+                                @action.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                            </small>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
+    <section class="detail-card review-card">
+        <div class="detail-card-heading">
+            <div>
+                <h3>Xét duyệt báo cáo</h3>
+                <p>
+                    Xác nhận vi phạm sẽ khóa tài khoản của hướng dẫn viên.
+                </p>
+            </div>
+        </div>
+
+        <form id="adminAntiForgeryForm">
+            @Html.AntiForgeryToken()
+        </form>
+
+        <div class="review-form">
+            <div class="review-field">
+                <label for="reviewStatus">Trạng thái xử lý</label>
+                <select id="reviewStatus">
+                    <option value="0">Chờ xử lý</option>
+                    <option value="1">Đang xử lý</option>
+                    <option value="2">Đã xử lý - Xác nhận vi phạm</option>
+                    <option value="3">Không vi phạm</option>
+                </select>
+            </div>
+
+            <div class="review-field">
+                <label for="reviewNote">Ghi chú / Lý do xử lý</label>
+                <textarea id="reviewNote"
+                          rows="4"
+                          maxlength="1000"
+                          placeholder="Nhập ghi chú xử lý. Nếu xác nhận vi phạm, bắt buộc nhập lý do khóa tài khoản Guide."></textarea>
+                <small id="reviewNoteHint">
+                    Tối đa 1000 ký tự. Khi xác nhận vi phạm, tối đa 500 ký tự.
+                </small>
+            </div>
+
+            <div class="review-warning" id="reviewWarning" hidden>
+                Khi xác nhận vi phạm, tài khoản Guide sẽ bị khóa. Hãy kiểm tra kỹ thông tin trước khi thực hiện.
+            </div>
+
+            <div class="review-message"
+                 id="reviewMessage"
+                 role="alert"
+                 aria-live="polite">
+            </div>
+
+            <div class="review-actions">
+                <button type="button"
+                        id="btnUpdateViolationStatus"
+                        class="detail-btn-primary">
+                    Lưu kết quả xét duyệt
+                </button>
+
+                <a class="detail-btn-secondary"
+                   href="@Url.Action("Index", "AdminViolationReport")">
+                    Quay lại danh sách
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script src="~/js/Admin/admin-violation-report-detail.js"
+            asp-append-version="true"></script>
+}

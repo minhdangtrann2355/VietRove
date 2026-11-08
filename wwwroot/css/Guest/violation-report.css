@@ -1,0 +1,248 @@
+.violation-report-page {
+    min-height: 70vh;
+    padding: 45px 20px;
+    background: #f8fafc;
+}
+
+.violation-report-container {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.violation-report-header {
+    margin-bottom: 25px;
+}
+
+.violation-report-header h2 {
+    margin: 0 0 10px;
+    color: #1e293b;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.violation-report-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.violation-report-card {
+    padding: 30px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+}
+
+.reported-guide {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 25px;
+    padding: 15px 18px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+}
+
+.guide-label {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.reported-guide strong {
+    color: #1d4ed8;
+    font-size: 16px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.form-group label span {
+    color: #dc2626;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    padding: 11px 13px;
+    color: #1e293b;
+    font-size: 14px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.form-control::placeholder {
+    color: #94a3b8;
+}
+
+.description-input {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.file-input {
+    padding: 9px;
+    cursor: pointer;
+}
+
+.file-hint {
+    display: block;
+    margin-top: 8px;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.selected-files {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 12px;
+}
+
+.selected-file-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    color: #334155;
+    font-size: 13px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    overflow-wrap: anywhere;
+}
+
+.selected-file-size {
+    flex-shrink: 0;
+    color: #64748b;
+}
+
+.field-error {
+    display: block;
+    margin-top: 6px;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+.report-message {
+    display: none;
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    border-radius: 7px;
+}
+
+.report-message.error {
+    display: block;
+    color: #b91c1c;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.report-message.success {
+    display: block;
+    color: #166534;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.btn-back,
+.btn-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    min-height: 42px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-back {
+    color: #475569;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+}
+
+.btn-back:hover {
+    color: #1e293b;
+    background: #f1f5f9;
+}
+
+.btn-submit {
+    color: #ffffff;
+    background: #1d4ed8;
+    border: 1px solid #1d4ed8;
+}
+
+.btn-submit:hover {
+    background: #1e40af;
+    border-color: #1e40af;
+}
+
+.btn-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+@media (max-width: 576px) {
+    .violation-report-page {
+        padding: 25px 12px;
+    }
+
+    .violation-report-header h2 {
+        font-size: 22px;
+    }
+
+    .violation-report-card {
+        padding: 20px 16px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn-back,
+    .btn-submit {
+        width: 100%;
+    }
+
+    .selected-file-item {
+        flex-direction: column;
+        gap: 4px;
+    }
+}

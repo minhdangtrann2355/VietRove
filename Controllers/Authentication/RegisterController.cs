@@ -42,6 +42,81 @@ namespace VietRove.Controllers.Authentication
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CheckDuplicate(string field, string value)
+        {
+            if (string.IsNullOrWhiteSpace(field))
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Trường cần kiểm tra không hợp lệ."
+                });
+            }
+
+            if (field != "Email" &&
+                field != "Phone" &&
+                field != "IdCard" &&
+                field != "CardNumber")
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Trường kiểm tra không được hỗ trợ."
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return Json(new
+                {
+                    success = true,
+                    isDuplicate = false,
+                    message = ""
+                });
+            }
+
+            value = value.Trim();
+
+            if (field == "Email")
+            {
+                value = value.ToLowerInvariant();
+            }
+
+            bool isDuplicate =
+                await _registerService.IsDuplicateAsync(field, value);
+
+            string message = string.Empty;
+
+            if (isDuplicate)
+            {
+                if (field == "Email")
+                {
+                    message = "Email này đã được đăng ký trên hệ thống.";
+                }
+                else if (field == "Phone")
+                {
+                    message = "Số điện thoại này đã được sử dụng.";
+                }
+                else if (field == "IdCard")
+                {
+                    message = "Số CCCD/CMND này đã được sử dụng.";
+                }
+                else if (field == "CardNumber")
+                {
+                    message = "Số thẻ hướng dẫn viên này đã được sử dụng.";
+                }
+            }
+
+            return Json(new
+            {
+                success = true,
+                isDuplicate = isDuplicate,
+                message = message
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         [RequestSizeLimit(50 * 1024 * 1024)]
         [RequestFormLimits(MultipartBodyLengthLimit = 50 * 1024 * 1024)]
         public async Task<IActionResult> Index(RegisterViewModel model)
@@ -96,10 +171,19 @@ namespace VietRove.Controllers.Authentication
                 model.CardNumber = model.CardNumber.Trim();
             }
 
-            bool isInternationalCard = string.Equals(
-                model.CardType,
-                "Hướng dẫn viên quốc tế",
-                StringComparison.OrdinalIgnoreCase);
+            bool isInternationalCard = false;
+
+            if (string.IsNullOrWhiteSpace(model.CardType) == false)
+            {
+                string cleanCard = model.CardType.Trim().ToLowerInvariant();
+
+                if (cleanCard.Contains("quốc tế") ||
+                    cleanCard.Contains("quoc te") ||
+                    cleanCard.Contains("qu?c t?"))
+                {
+                    isInternationalCard = true;
+                }
+            }
 
             // khong yeu cau ngoai ngu voi huong dan vien noi dia
             if (isInternationalCard == false)

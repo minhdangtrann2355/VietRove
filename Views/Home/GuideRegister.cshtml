@@ -1,3 +1,4 @@
+
 @{
     ViewData["Title"] = "Hướng Dẫn Đăng Ký Hội Viên - VietRove";
 }
@@ -5,115 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-
-<style>
-    .hero-banner-large {
-        width: 100%;
-        min-height: 380px;
-        border-radius: 10px;
-        background: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.35)), 
-                    url('https://images.unsplash.com/photo-1504457047772-27faf1c00561?q=80&w=1247&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D') center/cover no-repeat;
-        margin-bottom: 35px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .page-script-title {
-        font-family: 'Dancing Script', cursive;
-        font-size: 3.2rem;
-        color: #1e3a8a;
-        text-align: center;
-        margin-bottom: 15px;
-        position: relative;
-        padding-bottom: 12px;
-    }
-
-    .page-script-title::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90px;
-        height: 2px;
-        background: #2563eb;
-    }
-
-    .content-article {
-        background: #ffffff;
-        padding: 40px;
-        border-radius: 4px;
-        color: #374151;
-        font-size: 15.5px;
-        line-height: 1.85;
-    }
-
-    .section-heading {
-        color: #1e3a8a;
-        font-weight: 800;
-        font-size: 1.25rem;
-        text-transform: uppercase;
-        margin-top: 30px;
-        margin-bottom: 16px;
-        padding-bottom: 6px;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .section-heading:first-child {
-        margin-top: 0;
-    }
-
-    .doc-list, .step-list {
-        padding-left: 20px;
-        margin-bottom: 30px;
-    }
-
-    .doc-list li, .step-list li {
-        margin-bottom: 14px;
-        text-align: justify;
-    }
-
-    .step-list strong {
-        color: #1e3a8a;
-    }
-
-    .btn-register-cta {
-        display: inline-block;
-        background-color: #1d4ed8;
-        color: #ffffff !important;
-        font-size: 15px;
-        font-weight: 600;
-        padding: 12px 32px;
-        border-radius: 6px;
-        text-decoration: none;
-        transition: background-color 0.2s;
-    }
-
-    .btn-register-cta:hover {
-        background-color: #1e40af;
-    }
-
-    .source-note {
-        font-size: 13.5px;
-        color: #6b7280;
-        font-style: italic;
-        text-align: right;
-        margin-top: 40px;
-        padding-top: 15px;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    @@media (max-width: 768px) {
-        .hero-banner-large {
-            min-height: 250px;
-        }
-        .page-script-title {
-            font-size: 2.3rem;
-        }
-        .content-article {
-            padding: 20px 15px;
-        }
-    }
-</style>
+<link rel="stylesheet" href="~/css/Guest/guide-register.css" asp-append-version="true" />
 
 <div class="hero-banner-large"></div>
 
@@ -125,7 +18,9 @@
 
             <div class="content-article">
 
-                <div class="section-heading">Các giấy tờ cần chuẩn bị khi đăng ký gia nhập Hội viên</div>
+                <div class="section-heading">
+                    Các giấy tờ cần chuẩn bị khi đăng ký gia nhập Hội viên
+                </div>
 
                 <ul class="doc-list">
                     <li>Bản sao / Ảnh chụp Thẻ hướng dẫn viên du lịch còn hạn sử dụng.</li>
@@ -134,7 +29,7 @@
                     <li>Bản scan Văn bằng / Chứng chỉ ngoại ngữ (bắt buộc đối với Hướng dẫn viên đăng ký Thẻ Quốc tế).</li>
                 </ul>
 
-                <p class="small text-muted mb-4">
+                <p class="register-note small text-muted mb-4">
                     * Lưu ý: Các tệp giấy tờ tải lên hỗ trợ định dạng JPG, JPEG, PNG, PDF; dung lượng tối đa 10MB cho mỗi tệp.
                 </p>
 
@@ -167,7 +62,7 @@
                     </li>
                 </ol>
 
-                <div class="text-center my-4">
+                <div class="register-action text-center my-4">
                     <a asp-controller="Register" asp-action="Index" class="btn-register-cta">
                         ĐĂNG KÝ HỘI VIÊN NGAY
                     </a>

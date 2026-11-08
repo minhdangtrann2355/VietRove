@@ -1,0 +1,348 @@
+
+@model VietRove.Models.Admin.AdminGuideManagementDetailViewModel
+
+@functions {
+    public string GetValue(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return "Chưa cập nhật";
+        }
+
+        return value;
+    }
+
+    public string GetDate(DateTime? value)
+    {
+        if (value.HasValue == false)
+        {
+            return "Chưa cập nhật";
+        }
+
+        return value.Value.ToString("dd/MM/yyyy");
+    }
+
+    public string GetProfileStatusText(int? status)
+    {
+        if (status.HasValue == false)
+        {
+            return "Chưa có hồ sơ";
+        }
+
+        switch (status.Value)
+        {
+            case 0:
+                return "Chờ duyệt";
+            case 1:
+                return "Đã duyệt";
+            case 2:
+                return "Bị từ chối";
+            case 3:
+                return "Đã khóa";
+            case 4:
+                return "Yêu cầu chỉnh sửa";
+            default:
+                return "Không xác định";
+        }
+    }
+
+    public string GetVerificationStatusText(int status)
+    {
+        switch (status)
+        {
+            case 0:
+                return "Chờ xác thực";
+            case 1:
+                return "Đã xác thực";
+            case 2:
+                return "Bị từ chối";
+            default:
+                return "Không xác định";
+        }
+    }
+}
+
+<div class="container-fluid py-4 guide-management-detail">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">Chi tiết hướng dẫn viên</h3>
+            <p class="text-muted mb-0">
+                Thông tin tài khoản và hồ sơ hướng dẫn viên.
+            </p>
+        </div>
+
+        <a asp-controller="AdminGuideManagement"
+           asp-action="Index"
+           class="btn btn-outline-primary">
+            Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body p-3 p-md-4">
+            <h5 class="fw-bold mb-3">Thông tin tài khoản</h5>
+
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <div class="detail-label">Mã tài khoản</div>
+                    <div class="detail-value">@Model.UserId</div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="detail-label">Email đăng nhập</div>
+                    <div class="detail-value">@Model.Email</div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="detail-label">Ngày tạo tài khoản</div>
+                    <div class="detail-value">
+                        @Model.AccountCreatedAt.ToString("dd/MM/yyyy HH:mm")
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="detail-label">Trạng thái tài khoản</div>
+                    <div class="detail-value">
+                        @if (Model.AccountStatus == 1)
+                        {
+                            <span class="guide-status-badge status-approved">
+                                Đang hoạt động
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="guide-status-badge status-rejected">
+                                Đã khóa
+                            </span>
+                        }
+                    </div>
+                </div>
+
+                @if (Model.AccountStatus == 0 &&
+                     string.IsNullOrWhiteSpace(Model.LockReason) == false)
+                {
+                    <div class="col-12">
+                        <div class="detail-label">Lý do khóa tài khoản</div>
+                        <div class="detail-value">@Model.LockReason</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (Model.GuideId.HasValue == false)
+    {
+        <div class="alert alert-info">
+            Tài khoản này chưa có hồ sơ hướng dẫn viên.
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-3 mb-4">
+            <div class="card-body p-3 p-md-4">
+                <h5 class="fw-bold mb-3">Thông tin hồ sơ</h5>
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="detail-label">Họ và tên</div>
+                        <div class="detail-value">@Model.FullName</div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="detail-label">Trạng thái hồ sơ</div>
+                        <div class="detail-value">
+                            <span class="guide-status-badge status-pending">
+                                @GetProfileStatusText(Model.ProfileStatus)
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="detail-label">Giới tính</div>
+                        <div class="detail-value">@GetValue(Model.Gender)</div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="detail-label">Ngày sinh</div>
+                        <div class="detail-value">@GetDate(Model.DateOfBirth)</div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="detail-label">Số điện thoại</div>
+                        <div class="detail-value">@GetValue(Model.ContactPhone)</div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="detail-label">Email liên hệ</div>
+                        <div class="detail-value">@GetValue(Model.ContactEmail)</div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="detail-label">Địa chỉ</div>
+                        <div class="detail-value">@GetValue(Model.Address)</div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="detail-label">Loại thẻ hướng dẫn viên</div>
+                        <div class="detail-value">@GetValue(Model.CardTypeName)</div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="detail-label">Số năm kinh nghiệm</div>
+                        <div class="detail-value">
+                            @if (Model.ExperienceYears.HasValue)
+                            {
+                                @Model.ExperienceYears.Value
+                                <span> năm</span>
+                            }
+                            else
+                            {
+                                <span>Chưa cập nhật</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="detail-label">Khu vực hoạt động</div>
+                        <div class="detail-value">
+                            @if (Model.Provinces.Count > 0)
+                            {
+                                @string.Join(", ", Model.Provinces)
+                            }
+                            else
+                            {
+                                <span>Chưa cập nhật</span>
+                            }
+                        </div>
+                    </div>
+
+                    @if (string.IsNullOrWhiteSpace(Model.RejectReason) == false)
+                    {
+                        <div class="col-12">
+                            <div class="detail-label">Lý do xử lý hồ sơ</div>
+                            <div class="detail-value">@Model.RejectReason</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-3 mb-4">
+            <div class="card-body p-3 p-md-4">
+                <h5 class="fw-bold mb-3">Ngôn ngữ</h5>
+
+                @if (Model.Languages.Count == 0)
+                {
+                    <p class="text-muted mb-0">Chưa có thông tin ngôn ngữ.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ngôn ngữ</th>
+                                    <th>Minh chứng</th>
+                                    <th>Trạng thái xác thực</th>
+                                    <th>Lý do</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var language in Model.Languages)
+                                {
+                                    <tr>
+                                        <td>@language.LanguageName</td>
+                                        <td>
+                                            @if (language.HasCertificate)
+                                            {
+                                                <span>Có chứng chỉ</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Không có</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @GetVerificationStatusText(language.VerificationStatus)
+                                        </td>
+                                        <td>@GetValue(language.VerificationReason)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-body p-3 p-md-4">
+                <h5 class="fw-bold mb-3">Kinh nghiệm</h5>
+
+                @if (Model.Experiences.Count == 0)
+                {
+                    <p class="text-muted mb-0">Chưa có thông tin kinh nghiệm.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tiêu đề</th>
+                                    <th>Thời gian</th>
+                                    <th>Minh chứng</th>
+                                    <th>Trạng thái xác thực</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var experience in Model.Experiences)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="fw-semibold">
+                                                @experience.Title
+                                            </div>
+
+                                            @if (string.IsNullOrWhiteSpace(experience.Description) == false)
+                                            {
+                                                <div class="text-muted small mt-1">
+                                                    @experience.Description
+                                                </div>
+                                            }
+                                        </td>
+                                        <td>
+                                            @GetDate(experience.StartDate)
+                                            <span> - </span>
+                                            @GetDate(experience.EndDate)
+                                        </td>
+                                        <td>
+                                            @if (experience.HasEvidence)
+                                            {
+                                                <span>Có minh chứng</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Không có</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @GetVerificationStatusText(experience.VerificationStatus)
+
+                                            @if (string.IsNullOrWhiteSpace(experience.VerificationReason) == false)
+                                            {
+                                                <div class="text-muted small mt-1">
+                                                    @experience.VerificationReason
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,204 @@
+
+.admin-article-create-page {
+    width: 100%;
+    padding: 24px;
+    color: #1f2937;
+}
+
+.admin-article-create-page .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.admin-article-create-page .page-header h2 {
+    margin: 0 0 6px;
+    color: #1e3a8a;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.admin-article-create-page .page-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.admin-article-create-page .article-form-card {
+    width: 100%;
+    max-width: 1000px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.admin-article-create-page .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 22px;
+}
+
+.admin-article-create-page .form-group label {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.admin-article-create-page .required {
+    color: #dc2626;
+}
+
+.admin-article-create-page .form-group input[type="text"],
+.admin-article-create-page .form-group select,
+.admin-article-create-page .form-group textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    outline: none;
+    background: #fff;
+    color: #1f2937;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.admin-article-create-page .form-group input[type="text"],
+.admin-article-create-page .form-group select {
+    min-height: 42px;
+}
+
+.admin-article-create-page .form-group textarea {
+    min-height: 260px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.admin-article-create-page .form-group input:focus,
+.admin-article-create-page .form-group select:focus,
+.admin-article-create-page .form-group textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+
+.admin-article-create-page .form-group input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 6px;
+    background: #f8fafc;
+    font-size: 13px;
+}
+
+.admin-article-create-page .field-hint {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.admin-article-create-page .field-error {
+    min-height: 16px;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+.admin-article-create-page .thumbnail-preview {
+    display: none;
+    width: 100%;
+    max-width: 360px;
+    margin-top: 8px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+}
+
+.admin-article-create-page .thumbnail-preview img {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    background: #f8fafc;
+}
+
+.admin-article-create-page .article-form-note {
+    padding: 12px 14px;
+    margin-bottom: 22px;
+    border-left: 3px solid #2563eb;
+    background: #eff6ff;
+    color: #1e40af;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.admin-article-create-page .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 18px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.admin-article-create-page .btn-primary,
+.admin-article-create-page .btn-secondary {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 40px;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.admin-article-create-page .btn-primary {
+    border: 1px solid #1d4ed8;
+    background: #1d4ed8;
+    color: #fff;
+}
+
+.admin-article-create-page .btn-primary:hover {
+    background: #1e40af;
+}
+
+.admin-article-create-page .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.admin-article-create-page .btn-secondary {
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: #334155;
+}
+
+.admin-article-create-page .btn-secondary:hover {
+    background: #f1f5f9;
+}
+
+@media (max-width: 640px) {
+    .admin-article-create-page {
+        padding: 16px;
+    }
+
+    .admin-article-create-page .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-article-create-page .article-form-card {
+        padding: 16px;
+    }
+
+    .admin-article-create-page .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .admin-article-create-page .form-actions .btn-primary,
+    .admin-article-create-page .form-actions .btn-secondary {
+        width: 100%;
+    }
+}

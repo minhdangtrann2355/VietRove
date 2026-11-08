@@ -1,0 +1,225 @@
+
+@model VietRove.Models.Admin.AdminArticleDetailViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Chi tiết bài viết";
+
+    string statusText = "Không xác định";
+
+    if (Model.Status == 0)
+    {
+        statusText = "Bản nháp";
+    }
+    else if (Model.Status == 1)
+    {
+        statusText = "Đã xuất bản";
+    }
+    else if (Model.Status == 2)
+    {
+        statusText = "Đã ẩn";
+    }
+
+    string typeText = "Không xác định";
+
+    if (Model.ArticleType == 1)
+    {
+        typeText = "Tin tức";
+    }
+    else if (Model.ArticleType == 2)
+    {
+        typeText = "Trải nghiệm du lịch";
+    }
+    else if (Model.ArticleType == 3)
+    {
+        typeText = "Thông báo";
+    }
+}
+
+<link rel="stylesheet"
+      href="~/css/Admin/admin-article-detail.css"
+      asp-append-version="true" />
+
+<div class="admin-article-detail-page">
+    <div class="page-header">
+        <div>
+            <h2>Chi tiết bài viết</h2>
+            <p>Xem và cập nhật thông tin bài viết.</p>
+        </div>
+
+        <a asp-controller="AdminArticle"
+           asp-action="Index"
+           class="btn-secondary">
+            Quay lại
+        </a>
+    </div>
+
+    <div class="article-detail-card">
+        <div class="article-detail-info">
+            <div class="info-item">
+                <span>Mã bài viết</span>
+                <strong>@Model.ArticleId</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Người tạo</span>
+                <strong>@Model.AuthorName</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Ngày tạo</span>
+                <strong>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Cập nhật lần cuối</span>
+                <strong>
+                    @if (Model.UpdatedAt.HasValue)
+                    {
+                        @Model.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                    }
+                    else
+                    {
+                        <text>Chưa cập nhật</text>
+                    }
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span>Ngày xuất bản</span>
+                <strong>
+                    @if (Model.PublishedAt.HasValue)
+                    {
+                        @Model.PublishedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                    }
+                    else
+                    {
+                        <text>Chưa xuất bản</text>
+                    }
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span>Trạng thái</span>
+                <strong>@statusText</strong>
+            </div>
+        </div>
+
+        <div class="article-status-section">
+            <label for="articleStatus">Thay đổi trạng thái</label>
+
+            <div class="status-control">
+                <select id="articleStatus">
+                    <option value="0" selected="@(Model.Status == 0)">Bản nháp</option>
+                    <option value="1" selected="@(Model.Status == 1)">Đã xuất bản</option>
+                    <option value="2" selected="@(Model.Status == 2)">Đã ẩn</option>
+                </select>
+
+                <button type="button"
+                        id="btnChangeArticleStatus"
+                        class="btn-primary">
+                    Cập nhật trạng thái
+                </button>
+            </div>
+
+            <span id="statusMessage" class="field-message"></span>
+        </div>
+
+        <form id="articleUpdateForm" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="ArticleId" value="@Model.ArticleId" />
+
+            <div class="form-group">
+                <label for="Title">
+                    Tiêu đề <span class="required">*</span>
+                </label>
+
+                <input type="text"
+                       id="Title"
+                       name="Title"
+                       value="@Model.Title"
+                       maxlength="250"
+                       required />
+
+                <span class="field-error" id="titleError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="ArticleType">
+                    Loại bài viết <span class="required">*</span>
+                </label>
+
+                <select id="ArticleType" name="ArticleType" required>
+                    <option value="1" selected="@(Model.ArticleType == 1)">Tin tức</option>
+                    <option value="2" selected="@(Model.ArticleType == 2)">Trải nghiệm du lịch</option>
+                    <option value="3" selected="@(Model.ArticleType == 3)">Thông báo</option>
+                </select>
+
+                <span class="field-error" id="typeError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="Content">
+                    Nội dung <span class="required">*</span>
+                </label>
+
+                <textarea id="Content"
+                          name="Content"
+                          rows="14"
+                          required>@Model.Content</textarea>
+
+                <span class="field-error" id="contentError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="Thumbnail">Thay thế ảnh đại diện</label>
+
+                <input type="file"
+                       id="Thumbnail"
+                       name="Thumbnail"
+                       accept=".jpg,.jpeg,.png,image/jpeg,image/png" />
+
+                <small class="field-hint">
+                    Để trống nếu không muốn thay ảnh. Chỉ chấp nhận JPG, JPEG hoặc PNG, tối đa 10MB.
+                </small>
+
+                <span class="field-error" id="thumbnailError"></span>
+
+                @if (string.IsNullOrWhiteSpace(Model.Thumbnail) == false)
+                {
+                    <div id="thumbnailPreview" class="thumbnail-preview">
+                        <img id="thumbnailPreviewImage"
+                            src="@Url.Action("Thumbnail", "AdminArticle", new { articleId = Model.ArticleId })"
+                            alt="Ảnh bài viết hiện tại" />
+                    </div>
+                }
+                else
+                {
+                    <div id="thumbnailPreview" class="thumbnail-preview" style="display: none;">
+                        <img id="thumbnailPreviewImage"
+                            src=""
+                            alt="Ảnh xem trước" />
+                    </div>
+                }
+            </div>
+
+            <div class="form-actions">
+                <a asp-controller="AdminArticle"
+                   asp-action="Index"
+                   class="btn-secondary">
+                    Hủy
+                </a>
+
+                <button type="submit"
+                        id="btnUpdateArticle"
+                        class="btn-primary">
+                    Lưu thay đổi
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/js/Admin/admin-article-detail.js"
+        asp-append-version="true"></script>

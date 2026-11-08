@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using VietRove.Data;
 using VietRove.Models.Admin;
 using VietRove.Security;
@@ -24,6 +25,12 @@ namespace VietRove.Services.Admin
 
             model.TotalGuides = await _context.Users
                 .CountAsync(user => user.RoleId == AppRoles.GuideId);
+
+            model.TotalArticles = await _context.Articles
+                .CountAsync();
+
+            model.DraftArticles = await _context.Articles
+                .CountAsync(article => article.Status == 0);
 
             model.PendingGuideProfiles = await _context.GuideProfiles
                 .CountAsync(profile => profile.Status == 0);

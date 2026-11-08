@@ -1,46 +1,21 @@
 ﻿
 @model VietRove.Models.Guide.GuideProfileViewModel
 
-<style>
-    .profile-avatar, .profile-avatar-fallback {
-        width: 130px;
-        height: 130px;
-        object-fit: cover;
-    }
-
-    .profile-avatar-fallback {
-        font-size: 42px;
-        background: #2563eb;
-    }
-
-    .profile-approved {
-        background-color: #ecfdf5;
-        color: #059669;
-    }
-
-    .profile-heading {
-        color: #1e3a8a;
-        margin-bottom: 1rem;
-    }
-
-    @@media (max-width: 576px) {
-        .profile-page .card {
-            padding: 1rem !important;
-        }
-    }
-</style>
-
 @{
     ViewData["Title"] = "Hồ sơ cá nhân";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Guide/guide-profile.css" asp-append-version="true" />
 }
 
 <div class="profile-page">
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
         <div>
-            <h2 class="fw-bold mb-1" style="color: #1e3a8a;">HỒ SƠ HỘI VIÊN</h2>
+            <h2 class="fw-bold mb-1 profile-title">HỒ SƠ HỘI VIÊN</h2>
             <p class="text-muted mb-0">Thông tin hồ sơ và năng lực hành nghề của bạn.</p>
         </div>
-        <a asp-controller="Guide" asp-action="EditProfile" class="btn text-white fw-bold" style="background-color: #1d4ed8;">Chỉnh sửa hồ sơ</a>
+        <a asp-controller="GuideProfile" asp-action="EditProfile" class="btn text-white fw-bold profile-edit-button">Chỉnh sửa hồ sơ</a>
     </div>
 
     @if (TempData["SuccessMessage"] != null)
@@ -58,7 +33,7 @@
             <div class="card border-0 shadow-sm p-4 text-center h-100">
                 @if (string.IsNullOrWhiteSpace(Model.Profile.Avatar) == false)
                 {
-                    <img src="@Url.Action("GetAvatar", "Home", new { fileName = Model.Profile.Avatar })" alt="@Model.Profile.FullName" class="rounded-circle mx-auto mb-3 profile-avatar" />
+                    <img src="@Url.Action("GetAvatar", "GuideProfile", new { fileName = Model.Profile.Avatar })" alt="@Model.Profile.FullName" class="rounded-circle mx-auto mb-3 profile-avatar" />
                 }
                 else
                 {

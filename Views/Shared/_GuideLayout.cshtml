@@ -51,7 +51,7 @@
     string avatarUrl = "";
     if (string.IsNullOrEmpty(avatar) == false)
     {
-        string? url = Url.Action("GetAvatar", "Home", new { fileName = avatar });
+        string? url = Url.Action("GetAvatar", "GuideProfile", new { fileName = avatar });
 
         if (url != null && string.IsNullOrEmpty(url) == false)
         {
@@ -182,21 +182,21 @@
                         {
                             <li>
                                 <a class="dropdown-item dropdown-item-custom"
-                                   asp-controller="Guide"
+                                   asp-controller="GuideProfile"
                                    asp-action="Profile">
                                     Hồ sơ cá nhân
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item dropdown-item-custom"
-                                   asp-controller="Guide"
+                                   asp-controller="GuideContract"
                                    asp-action="Contract">
                                     Tạo hợp đồng thỏa thuận
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item dropdown-item-custom"
-                                   asp-controller="Guide"
+                                   asp-controller="GuideSettings"
                                    asp-action="Settings">
                                     Cài đặt tài khoản / Bảo mật
                                 </a>

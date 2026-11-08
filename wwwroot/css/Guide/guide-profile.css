@@ -1,0 +1,40 @@
+
+.profile-avatar,
+.profile-avatar-fallback {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+}
+
+.profile-avatar-fallback {
+    font-size: 42px;
+    background: #2563eb;
+}
+
+.profile-approved {
+    background-color: #ecfdf5;
+    color: #059669;
+}
+
+.profile-heading {
+    color: #1e3a8a;
+    margin-bottom: 1rem;
+}
+
+.profile-title {
+    color: #1e3a8a;
+}
+
+.profile-edit-button {
+    background-color: #1d4ed8;
+}
+
+.profile-edit-button:hover {
+    background-color: #1e40af;
+}
+
+@media (max-width: 576px) {
+    .profile-page .card {
+        padding: 1rem !important;
+    }
+}

@@ -110,6 +110,14 @@ namespace VietRove.Services.Guide.Profile
                 ActivityProvinceName = activityProvinceName
             };
         }
+        public async Task<string?> GetAvatarFileNameAsync(int userId)
+        {
+            return await _context.GuideProfiles
+                .AsNoTracking()
+                .Where(g => g.UserId == userId)
+                .Select(g => g.Avatar)
+                .FirstOrDefaultAsync();
+        }
 
         public async Task<string> UpdateContactInfoAsync(
             int userId,

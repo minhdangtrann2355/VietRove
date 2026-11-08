@@ -1,4 +1,5 @@
-﻿@model VietRove.Models.Admin.AdminDashboardViewModel
+﻿
+@model VietRove.Models.Admin.AdminDashboardViewModel
 
 @{
     ViewData["Title"] = "Bảng điều khiển Admin";
@@ -32,9 +33,9 @@
             </div>
         </div>
 
-        <div class="row g-3">
+        <div class="row row-cols-2 row-cols-xl-5 g-3">
 
-            <div class="col-6 col-xl-3">
+            <div class="col">
                 <div class="dashboard-stat-card">
                     <span class="dashboard-stat-label">Tổng tài khoản</span>
                     <strong class="dashboard-stat-value">
@@ -46,7 +47,7 @@
                 </div>
             </div>
 
-            <div class="col-6 col-xl-3">
+            <div class="col">
                 <div class="dashboard-stat-card">
                     <span class="dashboard-stat-label">Hướng dẫn viên</span>
                     <strong class="dashboard-stat-value">
@@ -58,7 +59,19 @@
                 </div>
             </div>
 
-            <div class="col-6 col-xl-3">
+            <div class="col">
+                <div class="dashboard-stat-card">
+                    <span class="dashboard-stat-label">Tổng bài viết</span>
+                    <strong class="dashboard-stat-value">
+                        @Model.TotalArticles
+                    </strong>
+                    <span class="dashboard-stat-note">
+                        Bài viết trong hệ thống
+                    </span>
+                </div>
+            </div>
+
+            <div class="col">
                 <div class="dashboard-stat-card">
                     <span class="dashboard-stat-label">Hồ sơ chờ xét duyệt</span>
                     <strong class="dashboard-stat-value">
@@ -70,7 +83,7 @@
                 </div>
             </div>
 
-            <div class="col-6 col-xl-3">
+            <div class="col">
                 <div class="dashboard-stat-card">
                     <span class="dashboard-stat-label">Báo cáo chưa xử lý</span>
                     <strong class="dashboard-stat-value">
@@ -126,6 +139,19 @@
 
                             <span class="dashboard-task-count">
                                 @pendingCompetencies
+                            </span>
+                        </div>
+
+                        <div class="dashboard-task">
+                            <div>
+                                <strong>Bài viết chưa xuất bản</strong>
+                                <p>
+                                    Các bài viết đang ở trạng thái bản nháp.
+                                </p>
+                            </div>
+
+                            <span class="dashboard-task-count">
+                                @Model.DraftArticles
                             </span>
                         </div>
 

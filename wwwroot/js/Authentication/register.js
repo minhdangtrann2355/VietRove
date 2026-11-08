@@ -15,6 +15,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const INTERNATIONAL_CARD = 'Hướng dẫn viên quốc tế';
     const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
+    const duplicateFields = [
+        'Email',
+        'Phone',
+        'IdCard',
+        'CardNumber'
+    ];
+
+    const duplicateCheckUrl = form.dataset.checkUrl;
+    const duplicateCheckVersions = {};
+
     let isSubmitting = false;
 
     function isInternationalCard() {
@@ -23,11 +33,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const val = cardTypeSelect.value.trim().toLowerCase();
+
         if (val.length === 0) {
             return false;
         }
 
-        if (val.indexOf('quốc tế') !== -1 || val.indexOf('quoc te') !== -1 || val.indexOf('qu?c t?') !== -1) {
+        if (val.indexOf('quốc tế') !== -1 ||
+            val.indexOf('quoc te') !== -1 ||
+            val.indexOf('qu?c t?') !== -1) {
             return true;
         }
 
@@ -118,6 +131,124 @@ document.addEventListener('DOMContentLoaded', function () {
         if (error !== null) {
             error.textContent = message;
         }
+    }
+
+    function clearFieldError(fieldName) {
+        const field = form.querySelector('[name="' + fieldName + '"]');
+        const error = form.querySelector(
+            '[data-valmsg-for="' + fieldName + '"]'
+        );
+
+        if (field !== null) {
+            field.classList.remove('input-validation-error');
+        }
+
+        if (error !== null) {
+            error.textContent = '';
+        }
+    }
+
+    async function checkDuplicateField(fieldName) {
+        const field = form.querySelector('[name="' + fieldName + '"]');
+
+        if (field === null) {
+            return true;
+        }
+
+        const value = field.value.trim();
+
+        if (value === '') {
+            clearFieldError(fieldName);
+            return true;
+        }
+
+        if (duplicateCheckUrl === undefined || duplicateCheckUrl === '') {
+            showClientError(
+                fieldName,
+                'Không thể kiểm tra dữ liệu. Vui lòng thử lại.'
+            );
+
+            return false;
+        }
+
+        const token = form.querySelector(
+            'input[name="__RequestVerificationToken"]'
+        );
+
+        if (token === null) {
+            showClientError(
+                fieldName,
+                'Không thể xác thực yêu cầu. Vui lòng tải lại trang.'
+            );
+
+            return false;
+        }
+
+        if (duplicateCheckVersions[fieldName] === undefined) {
+            duplicateCheckVersions[fieldName] = 0;
+        }
+
+        duplicateCheckVersions[fieldName]++;
+
+        const currentVersion = duplicateCheckVersions[fieldName];
+
+        const body = new URLSearchParams();
+        body.append('field', fieldName);
+        body.append('value', value);
+        body.append('__RequestVerificationToken', token.value);
+
+        try {
+            const response = await fetch(duplicateCheckUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: body.toString()
+            });
+
+            const result = await response.json();
+
+            if (response.ok === false || result.success !== true) {
+                throw new Error('Duplicate check failed.');
+            }
+
+            if (duplicateCheckVersions[fieldName] !== currentVersion ||
+                field.value.trim() !== value) {
+                return true;
+            }
+
+            if (result.isDuplicate === true) {
+                showClientError(fieldName, result.message);
+                return false;
+            }
+
+            clearFieldError(fieldName);
+            return true;
+        } catch (error) {
+            if (duplicateCheckVersions[fieldName] === currentVersion &&
+                field.value.trim() === value) {
+
+                showClientError(
+                    fieldName,
+                    'Không thể kiểm tra dữ liệu. Vui lòng thử lại.'
+                );
+            }
+
+            return false;
+        }
+    }
+
+    async function checkAllDuplicateFields() {
+        const results = await Promise.all(
+            duplicateFields.map(function (fieldName) {
+                return checkDuplicateField(fieldName);
+            })
+        );
+
+        return results.every(function (result) {
+            return result === true;
+        });
     }
 
     function showServerErrors(errors) {
@@ -681,6 +812,54 @@ document.addEventListener('DOMContentLoaded', function () {
         return isValid;
     }
 
+    // kiem tra trung lap khi roi khoi truong
+    duplicateFields.forEach(function (fieldName) {
+        const field = form.querySelector('[name="' + fieldName + '"]');
+
+        if (field === null) {
+            return;
+        }
+
+        field.addEventListener('blur', async function () {
+            if (isSubmitting === true) {
+                return;
+            }
+
+            if (fieldName === 'Email') {
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (field.value.trim() !== '' &&
+                    emailPattern.test(field.value.trim()) === false) {
+                    return;
+                }
+            }
+
+            if (fieldName === 'Phone' &&
+                field.value.trim() !== '' &&
+                /^0\d{9}$/.test(field.value.trim()) === false) {
+                return;
+            }
+
+            if (fieldName === 'IdCard' &&
+                field.value.trim() !== '' &&
+                /^\d{12}$/.test(field.value.trim()) === false) {
+                return;
+            }
+
+            await checkDuplicateField(fieldName);
+        });
+
+        field.addEventListener('input', function () {
+            if (duplicateCheckVersions[fieldName] === undefined) {
+                duplicateCheckVersions[fieldName] = 0;
+            }
+
+            duplicateCheckVersions[fieldName]++;
+
+            clearFieldError(fieldName);
+        });
+    });
+
     if (cardTypeSelect !== null) {
         cardTypeSelect.addEventListener('change', function () {
             clearErrors();
@@ -740,17 +919,27 @@ document.addEventListener('DOMContentLoaded', function () {
         if (submitBtn !== null) {
             submitBtn.disabled = true;
             originalText = submitBtn.innerText;
-            submitBtn.innerText = 'Đang xử lý hồ sơ...';
-        }
-
-        const formData = new FormData(form);
-
-        if (isInternationalCard() === false) {
-            formData.delete('LanguageIds');
-            formData.delete('LanguageCertificates');
+            submitBtn.innerText = 'Đang kiểm tra thông tin...';
         }
 
         try {
+            const duplicateValid = await checkAllDuplicateFields();
+
+            if (duplicateValid === false) {
+                return;
+            }
+
+            if (submitBtn !== null) {
+                submitBtn.innerText = 'Đang xử lý hồ sơ...';
+            }
+
+            const formData = new FormData(form);
+
+            if (isInternationalCard() === false) {
+                formData.delete('LanguageIds');
+                formData.delete('LanguageCertificates');
+            }
+
             const response = await fetch(form.action, {
                 method: 'POST',
                 body: formData,

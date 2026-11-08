@@ -1,0 +1,82 @@
+
+.guide-management-page,
+.guide-management-detail {
+    min-width: 0;
+}
+
+.guide-management-table {
+    min-width: 950px;
+}
+
+.guide-management-table th,
+.guide-management-table td {
+    vertical-align: middle;
+}
+
+.guide-status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-approved {
+    color: #166534;
+    background: #dcfce7;
+}
+
+.status-rejected {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+.status-pending {
+    color: #92400e;
+    background: #fef3c7;
+}
+
+.status-warning {
+    color: #1d4ed8;
+    background: #dbeafe;
+}
+
+.status-unknown {
+    color: #475569;
+    background: #e2e8f0;
+}
+
+.guide-action-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.detail-label {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.detail-value {
+    color: #1e293b;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+.guide-management-detail .table {
+    min-width: 650px;
+}
+
+@media (max-width: 767.98px) {
+    .guide-management-page,
+    .guide-management-detail {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .guide-action-group {
+        min-width: 125px;
+    }
+}

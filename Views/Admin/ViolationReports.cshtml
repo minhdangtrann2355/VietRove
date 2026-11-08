@@ -1,0 +1,113 @@
+@{
+    ViewData["Title"] = "Quản lý báo cáo vi phạm";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Admin/admin-violation-reports.css"
+          asp-append-version="true" />
+}
+
+<div class="violation-page"
+     id="violationReportPage"
+     data-search-url="@Url.Action("Search", "AdminViolationReport")"
+     data-detail-url="@Url.Action("Detail", "AdminViolationReport")">
+
+    <div class="violation-page-heading">
+        <div>
+            <h2>Danh sách báo cáo vi phạm</h2>
+            <p>Tra cứu và theo dõi các báo cáo vi phạm liên quan đến hướng dẫn viên.</p>
+        </div>
+    </div>
+
+    <div class="violation-filter">
+        <div class="violation-filter-search">
+            <label for="reportSearch">Tìm kiếm</label>
+            <input type="text"
+                   id="reportSearch"
+                   maxlength="254"
+                   placeholder="Tên người báo cáo, nội dung hoặc tên HDV..." />
+        </div>
+
+        <div class="violation-filter-item">
+            <label for="reportStatus">Trạng thái</label>
+            <select id="reportStatus">
+                <option value="">Tất cả trạng thái</option>
+                <option value="0">Chờ xử lý</option>
+                <option value="1">Đang xử lý</option>
+                <option value="2">Đã xử lý</option>
+                <option value="3">Không vi phạm</option>
+            </select>
+        </div>
+
+        <div class="violation-filter-item">
+            <label for="reportFromDate">Từ ngày</label>
+            <input type="date" id="reportFromDate" />
+        </div>
+
+        <div class="violation-filter-item">
+            <label for="reportToDate">Đến ngày</label>
+            <input type="date" id="reportToDate" />
+        </div>
+
+        <div class="violation-filter-actions">
+            <button type="button"
+                    id="btnSearchReports"
+                    class="violation-btn-primary">
+                Tìm kiếm
+            </button>
+
+            <button type="button"
+                    id="btnResetReports"
+                    class="violation-btn-secondary">
+                Làm mới
+            </button>
+        </div>
+    </div>
+
+    <div class="violation-table-card">
+        <div class="violation-table-header">
+            <div>
+                <h3>Báo cáo vi phạm</h3>
+                <span id="reportTotalText">Đang tải dữ liệu...</span>
+            </div>
+        </div>
+
+        <div class="violation-table-wrapper">
+            <table class="violation-table">
+                <thead>
+                    <tr>
+                        <th class="col-report-id">Mã báo cáo</th>
+                        <th>Người báo cáo</th>
+                        <th>Hướng dẫn viên</th>
+                        <th>Ngày gửi</th>
+                        <th>Minh chứng</th>
+                        <th>Trạng thái</th>
+                        <th class="col-action">Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody id="reportTableBody">
+                    <tr>
+                        <td colspan="7" class="violation-table-message">
+                            Đang tải dữ liệu...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="violation-table-footer">
+            <div id="reportPaginationInfo"></div>
+
+            <div class="violation-pagination"
+                 id="reportPagination">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Admin/admin-violation-reports.js"
+            asp-append-version="true"></script>
+}

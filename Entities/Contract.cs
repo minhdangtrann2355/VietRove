@@ -1,3 +1,4 @@
+
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -29,14 +30,6 @@ public class Contract
 
     [MaxLength(500)]
     public string? PdfFile { get; set; }
-
-    [MaxLength(500)]
-    public string? SignedFile { get; set; }
-
-    public int Status { get; set; } = 0;
-
-    [MaxLength(1000)]
-    public string? RejectReason { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

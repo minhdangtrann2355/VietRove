@@ -1,0 +1,73 @@
+
+@model VietRove.Entities.Article
+
+@{
+    ViewData["Title"] = Model.Title;
+
+    string articleTypeText = "Tin tức";
+
+    if (Model.ArticleType == 2)
+    {
+        articleTypeText = "Trải nghiệm du lịch";
+    }
+    else if (Model.ArticleType == 3)
+    {
+        articleTypeText = "Thông báo";
+    }
+
+    string publishedAtText = Model.CreatedAt.ToString("dd/MM/yyyy HH:mm");
+
+    if (Model.PublishedAt.HasValue)
+    {
+        publishedAtText = Model.PublishedAt.Value.ToString("dd/MM/yyyy HH:mm");
+    }
+}
+
+<link rel="stylesheet" href="~/css/Guest/article-detail.css" asp-append-version="true" />
+
+<div class="container py-5">
+    <div class="article-detail-container">
+
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="article-back-link">
+            Quay lại trang chủ
+        </a>
+
+        <div class="article-detail-header">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <span class="article-type-badge">
+                    @articleTypeText
+                </span>
+
+                <span class="article-published-date">
+                    @publishedAtText
+                </span>
+            </div>
+
+            <h1 class="article-detail-title">
+                @Model.Title
+            </h1>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Thumbnail))
+        {
+            <img src="@Url.Action("ArticleThumbnail", "GuestArticle", new { articleId = Model.ArticleId })"
+                 alt="@Model.Title"
+                 class="article-detail-thumbnail" />
+        }
+
+        <div class="article-detail-content">
+            @Model.Content
+        </div>
+
+        <div class="mt-5 pt-4 border-top">
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn btn-primary px-4">
+                Quay lại trang chủ
+            </a>
+        </div>
+
+    </div>
+</div>

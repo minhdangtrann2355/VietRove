@@ -1,0 +1,124 @@
+
+/* hero banner */
+.hero-banner-large {
+    width: 100%;
+    min-height: 380px;
+    margin-bottom: 35px;
+    border-radius: 10px;
+    background:
+        linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.35)),
+        url('https://images.unsplash.com/photo-1504457047772-27faf1c00561?q=80&w=1247&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D') center/cover no-repeat;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* page title */
+.page-script-title {
+    position: relative;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    color: #1e3a8a;
+    font-family: 'Dancing Script', cursive;
+    font-size: 3.2rem;
+    text-align: center;
+}
+
+.page-script-title::after {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 90px;
+    height: 2px;
+    background-color: #2563eb;
+    content: "";
+    transform: translateX(-50%);
+}
+
+/* article content */
+.content-article {
+    padding: 40px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #374151;
+    font-size: 15.5px;
+    line-height: 1.85;
+}
+
+/* section heading */
+.section-heading {
+    margin-top: 30px;
+    margin-bottom: 16px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #1e3a8a;
+    font-size: 1.25rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.section-heading:first-child {
+    margin-top: 0;
+}
+
+/* document and step lists */
+.doc-list,
+.step-list {
+    margin-bottom: 30px;
+    padding-left: 20px;
+}
+
+.doc-list li,
+.step-list li {
+    margin-bottom: 14px;
+    text-align: justify;
+}
+
+.step-list strong {
+    color: #1e3a8a;
+}
+
+.register-note {
+    line-height: 1.6;
+}
+
+/* register button */
+.btn-register-cta {
+    display: inline-block;
+    padding: 12px 32px;
+    border-radius: 6px;
+    background-color: #1d4ed8;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn-register-cta:hover {
+    background-color: #1e40af;
+    color: #ffffff;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+    .hero-banner-large {
+        min-height: 250px;
+    }
+
+    .page-script-title {
+        font-size: 2.3rem;
+    }
+
+    .content-article {
+        padding: 20px 15px;
+    }
+
+    .section-heading {
+        font-size: 1.1rem;
+    }
+
+    .btn-register-cta {
+        width: 100%;
+        max-width: 300px;
+        padding: 12px 20px;
+    }
+}

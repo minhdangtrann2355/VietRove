@@ -1,0 +1,119 @@
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Thêm bài viết";
+}
+
+<link rel="stylesheet"
+      href="~/css/Admin/admin-article-create.css"
+      asp-append-version="true" />
+
+<div class="admin-article-create-page">
+    <div class="page-header">
+        <div>
+            <h2>Thêm bài viết</h2>
+            <p>Nhập thông tin để tạo bài viết mới.</p>
+        </div>
+
+        <a asp-controller="AdminArticle"
+           asp-action="Index"
+           class="btn-secondary">
+            Quay lại
+        </a>
+    </div>
+
+    <form id="articleCreateForm"
+          enctype="multipart/form-data">
+
+        @Html.AntiForgeryToken()
+
+        <div class="article-form-card">
+            <div class="form-group">
+                <label for="Title">
+                    Tiêu đề <span class="required">*</span>
+                </label>
+
+                <input type="text"
+                       id="Title"
+                       name="Title"
+                       maxlength="250"
+                       required
+                       placeholder="Nhập tiêu đề bài viết..." />
+
+                <span class="field-error" id="titleError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="ArticleType">
+                    Loại bài viết <span class="required">*</span>
+                </label>
+
+                <select id="ArticleType"
+                        name="ArticleType"
+                        required>
+                    <option value="">-- Chọn loại bài viết --</option>
+                    <option value="1">Tin tức</option>
+                    <option value="2">Trải nghiệm du lịch</option>
+                    <option value="3">Thông báo</option>
+                </select>
+
+                <span class="field-error" id="typeError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="Content">
+                    Nội dung <span class="required">*</span>
+                </label>
+
+                <textarea id="Content"
+                          name="Content"
+                          rows="14"
+                          required
+                          placeholder="Nhập nội dung bài viết..."></textarea>
+
+                <span class="field-error" id="contentError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="Thumbnail">Ảnh đại diện</label>
+
+                <input type="file"
+                       id="Thumbnail"
+                       name="Thumbnail"
+                       accept=".jpg,.jpeg,.png,image/jpeg,image/png" />
+
+                <small class="field-hint">
+                    Chỉ chấp nhận JPG, JPEG hoặc PNG. Dung lượng tối đa 10MB.
+                </small>
+
+                <span class="field-error" id="thumbnailError"></span>
+
+                <div id="thumbnailPreview" class="thumbnail-preview">
+                    <img id="thumbnailPreviewImage"
+                         src=""
+                         alt="Ảnh xem trước" />
+                </div>
+            </div>
+
+            <div class="article-form-note">
+                Bài viết sau khi tạo sẽ ở trạng thái Bản nháp.
+                Admin có thể xuất bản sau khi hoàn tất nội dung.
+            </div>
+
+            <div class="form-actions">
+                <a asp-controller="AdminArticle"
+                   asp-action="Index"
+                   class="btn-secondary">
+                    Hủy
+                </a>
+
+                <button type="submit" id="btnCreateArticle" class="btn-primary">
+                    Tạo bài viết
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="~/js/Admin/admin-article-create.js"
+        asp-append-version="true"></script>

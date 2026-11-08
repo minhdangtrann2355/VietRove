@@ -17,7 +17,7 @@
     <div class="contract-page">
         <div class="contract-heading">
             <h2>Hợp đồng thỏa thuận dịch vụ hướng dẫn du lịch</h2>
-            <p>Tạo hợp đồng, tải bản PDF và gửi bản đã ký để Admin xét duyệt.</p>
+            <p>Tạo hợp đồng và tải bản PDF về thiết bị.</p>
         </div>
 
         @if (TempData["ContractMessage"] != null)
@@ -37,7 +37,7 @@
         <section class="contract-section">
             <h3>Tạo hợp đồng mới</h3>
 
-            <form asp-controller="Guide"
+            <form asp-controller="GuideContract"
                   asp-action="CreateContract"
                   method="post">
 
@@ -153,7 +153,6 @@
                                 <th>Công ty</th>
                                 <th>Thời gian</th>
                                 <th>Chi phí</th>
-                                <th>Trạng thái</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
@@ -171,20 +170,6 @@
                                     </td>
                                     <td>@contract.Fee.ToString("N0") VNĐ</td>
                                     <td>
-                                        @if (contract.Status == 0)
-                                        {
-                                            <span class="badge bg-warning text-dark">Chờ duyệt</span>
-                                        }
-                                        else if (contract.Status == 1)
-                                        {
-                                            <span class="badge bg-success">Đã duyệt</span>
-                                        }
-                                        else if (contract.Status == 2)
-                                        {
-                                            <span class="badge bg-danger">Từ chối</span>
-                                        }
-                                    </td>
-                                    <td>
                                         @if (!string.IsNullOrWhiteSpace(contract.PdfFile))
                                         {
                                             <a asp-action="DownloadContractPdf"
@@ -193,49 +178,8 @@
                                                 Tải PDF
                                             </a>
                                         }
-
-                                        @if (contract.Status == 0)
-                                        {
-                                            <form asp-action="UploadSignedContract"
-                                                  asp-route-id="@contract.ContractId"
-                                                  method="post"
-                                                  enctype="multipart/form-data"
-                                                  class="mt-2">
-
-                                                @Html.AntiForgeryToken()
-
-                                                <input type="file"
-                                                       name="signedPdf"
-                                                       accept=".pdf,application/pdf"
-                                                       class="form-control form-control-sm mb-2"
-                                                       required />
-
-                                                <button type="submit"
-                                                        class="btn btn-sm btn-primary">
-                                                    Gửi bản đã ký
-                                                </button>
-                                            </form>
-                                        }
-
-                                        @if (!string.IsNullOrWhiteSpace(contract.SignedFile))
-                                        {
-                                            <span class="text-success d-block mt-2">
-                                                Đã tải lên bản ký
-                                            </span>
-                                        }
                                     </td>
                                 </tr>
-
-                                @if (contract.Status == 2 &&
-                                     !string.IsNullOrWhiteSpace(contract.RejectReason))
-                                {
-                                    <tr>
-                                        <td colspan="6">
-                                            <strong>Lý do từ chối:</strong>
-                                            @contract.RejectReason
-                                        </td>
-                                    </tr>
-                                }
                             }
                         </tbody>
                     </table>

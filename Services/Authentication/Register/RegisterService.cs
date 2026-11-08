@@ -34,6 +34,44 @@ namespace VietRove.Services.Authentication.Register
             _fileStorageService = fileStorageService;
         }
 
+        public async Task<bool> IsDuplicateAsync(string field, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return false;
+            }
+
+            string cleanValue = value.Trim();
+
+            if (field == "Email")
+            {
+                cleanValue = cleanValue.ToLowerInvariant();
+
+                return await _context.Users
+                    .AnyAsync(u => u.Email == cleanValue);
+            }
+
+            if (field == "Phone")
+            {
+                return await _context.GuideProfiles
+                    .AnyAsync(g => g.ContactPhone == cleanValue);
+            }
+
+            if (field == "IdCard")
+            {
+                return await _context.GuideProfiles
+                    .AnyAsync(g => g.IdentityNumber == cleanValue);
+            }
+
+            if (field == "CardNumber")
+            {
+                return await _context.GuideProfiles
+                    .AnyAsync(g => g.CardNumber == cleanValue);
+            }
+
+            return false;
+        }
+
         public async Task<(bool Success, string Message, string? Field)> RegisterAsync(
             RegisterViewModel model)
         {
@@ -82,12 +120,37 @@ namespace VietRove.Services.Authentication.Register
                 model.CardType = model.CardType.Trim();
                 model.CardNumber = model.CardNumber.Trim();
 
-                bool emailExists = await _context.Users
-                    .AnyAsync(u => u.Email == model.Email);
-
-                if (emailExists)
+                // kiem tra thong tin trung lap
+                if (await IsDuplicateAsync("Email", model.Email))
                 {
-                    return (false, "Email này đã được đăng ký trên hệ thống.", "Email");
+                    return (
+                        false,
+                        "Email này đã được đăng ký trên hệ thống.",
+                        "Email");
+                }
+
+                if (await IsDuplicateAsync("Phone", model.Phone))
+                {
+                    return (
+                        false,
+                        "Số điện thoại này đã được sử dụng.",
+                        "Phone");
+                }
+
+                if (await IsDuplicateAsync("IdCard", model.IdCard))
+                {
+                    return (
+                        false,
+                        "Số CCCD/CMND này đã được sử dụng.",
+                        "IdCard");
+                }
+
+                if (await IsDuplicateAsync("CardNumber", model.CardNumber))
+                {
+                    return (
+                        false,
+                        "Số thẻ hướng dẫn viên này đã được sử dụng.",
+                        "CardNumber");
                 }
 
                 VietRove.Entities.Category? cardType = await _context.Categories
@@ -427,7 +490,7 @@ namespace VietRove.Services.Authentication.Register
             if (clean.Contains("quoc te") ||
                 clean.Contains("quốc tế") ||
                 clean.Contains("qu?c t?") ||
-                string.Equals(clean, "hướng dẫn viên quốc tế", StringComparison.OrdinalIgnoreCase))
+                string.Equals(clean, InternationalCardName, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }

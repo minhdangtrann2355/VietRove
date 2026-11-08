@@ -1,0 +1,123 @@
+
+/* hero banner */
+.hero-banner-large {
+    width: 100%;
+    min-height: 380px;
+    margin-bottom: 35px;
+    border-radius: 10px;
+    background:
+        linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.35)),
+        url('https://plus.unsplash.com/premium_photo-1719955781545-c60219441bfc?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D') center / cover no-repeat;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* page title */
+.page-script-title {
+    position: relative;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    color: #1e3a8a;
+    font-family: 'Dancing Script', cursive;
+    font-size: 3.2rem;
+    text-align: center;
+}
+
+.page-script-title::after {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 90px;
+    height: 2px;
+    background-color: #2563eb;
+    content: "";
+    transform: translateX(-50%);
+}
+
+/* article content */
+.content-article {
+    padding: 40px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #374151;
+    font-size: 15px;
+    line-height: 1.85;
+    text-align: justify;
+}
+
+/* legal header */
+.legal-header {
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+.legal-header h5 {
+    margin-bottom: 4px;
+    color: #1f2937;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.legal-header p {
+    margin-bottom: 15px;
+    color: #4b5563;
+}
+
+.legal-main-title {
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+    color: #1e3a8a;
+    font-weight: 700;
+}
+
+.legal-association-title {
+    margin-bottom: 0.5rem;
+    color: #0d6efd !important;
+    font-weight: 700;
+}
+
+/* chapter and article headings */
+.chapter-heading {
+    margin-top: 35px;
+    margin-bottom: 16px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #1e3a8a;
+    font-size: 1.25rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.article-heading {
+    margin-top: 20px;
+    margin-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 15.5px;
+    font-weight: 700;
+}
+
+/* source */
+.source-note {
+    margin-top: 40px;
+    padding-top: 15px;
+    border-top: 1px solid #e5e7eb;
+    color: #6b7280;
+    font-size: 13.5px;
+    font-style: italic;
+    text-align: right;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+    .hero-banner-large {
+        min-height: 250px;
+    }
+
+    .page-script-title {
+        font-size: 2.3rem;
+    }
+
+    .content-article {
+        padding: 20px 15px;
+    }
+}

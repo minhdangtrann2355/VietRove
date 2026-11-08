@@ -1,0 +1,151 @@
+
+@{
+    ViewData["Title"] = "Quản lý danh mục";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Admin/admin-category-management.css" asp-append-version="true" />
+}
+
+<div class="category-management"
+     id="categoryManagement"
+     data-search-url="@Url.Action("Search", "AdminCategory")"
+     data-create-url="@Url.Action("Create", "AdminCategory")"
+     data-update-url="@Url.Action("Update", "AdminCategory")"
+     data-toggle-url="@Url.Action("ToggleStatus", "AdminCategory")">
+
+    <div class="category-header">
+        <div>
+            <h2>Quản lý danh mục</h2>
+            <p>Quản lý tỉnh/thành phố, ngôn ngữ và loại thẻ hướng dẫn viên.</p>
+        </div>
+
+        <button type="button" class="category-btn category-btn-primary" id="btnOpenCreate">
+            Thêm danh mục
+        </button>
+    </div>
+
+    <div class="category-filter">
+        <div class="category-filter-group">
+            <label for="searchCategory">Tìm kiếm</label>
+            <input type="text"
+                   id="searchCategory"
+                   maxlength="150"
+                   placeholder="Nhập tên danh mục..." />
+        </div>
+
+        <div class="category-filter-group">
+            <label for="filterCategoryType">Loại danh mục</label>
+            <select id="filterCategoryType">
+                <option value="">Tất cả loại danh mục</option>
+                <option value="Province">Tỉnh/thành phố</option>
+                <option value="Language">Ngôn ngữ</option>
+                <option value="CardType">Loại thẻ hướng dẫn viên</option>
+            </select>
+        </div>
+
+        <button type="button" class="category-btn category-btn-secondary" id="btnResetFilter">
+            Làm mới
+        </button>
+    </div>
+
+    <div class="category-table-wrapper">
+        <table class="category-table">
+            <thead>
+                <tr>
+                    <th class="category-col-id">Mã</th>
+                    <th>Tên danh mục</th>
+                    <th>Loại danh mục</th>
+                    <th>Trạng thái</th>
+                    <th class="category-col-action">Thao tác</th>
+                </tr>
+            </thead>
+
+            <tbody id="categoryTableBody">
+                <tr>
+                    <td colspan="5" class="category-empty">
+                        Đang tải dữ liệu...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="category-table-footer">
+        <div id="categoryResultInfo" class="category-result-info">
+            Đang tải dữ liệu...
+        </div>
+
+        <div class="category-pagination" id="categoryPagination"></div>
+    </div>
+
+    <div class="category-modal" id="categoryModal" aria-hidden="true">
+        <div class="category-modal-overlay" id="categoryModalOverlay"></div>
+
+        <div class="category-modal-content" role="dialog" aria-modal="true"
+             aria-labelledby="categoryModalTitle">
+
+            <div class="category-modal-header">
+                <h3 id="categoryModalTitle">Thêm danh mục</h3>
+                <button type="button" class="category-modal-close" id="btnCloseModal"
+                        aria-label="Đóng">
+                    &times;
+                </button>
+            </div>
+
+            <form id="categoryForm">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" id="categoryId" name="categoryId" />
+
+                <div class="category-form-group">
+                    <label for="categoryName">
+                        Tên danh mục <span class="category-required">*</span>
+                    </label>
+
+                    <input type="text"
+                           id="categoryName"
+                           name="CategoryName"
+                           maxlength="150"
+                           placeholder="Nhập tên danh mục..."
+                           required />
+
+                    <span class="category-field-error" id="categoryNameError"></span>
+                </div>
+
+                <div class="category-form-group" id="categoryTypeGroup">
+                    <label for="categoryType">
+                        Loại danh mục <span class="category-required">*</span>
+                    </label>
+
+                    <select id="categoryType" name="CategoryType" required>
+                        <option value="">-- Chọn loại danh mục --</option>
+                        <option value="Province">Tỉnh/thành phố</option>
+                        <option value="Language">Ngôn ngữ</option>
+                        <option value="CardType">Loại thẻ hướng dẫn viên</option>
+                    </select>
+
+                    <span class="category-field-error" id="categoryTypeError"></span>
+                </div>
+
+                <div class="category-modal-actions">
+                    <button type="button" class="category-btn category-btn-secondary"
+                            id="btnCancelModal">
+                        Hủy
+                    </button>
+
+                    <button type="submit" class="category-btn category-btn-primary"
+                            id="btnSaveCategory">
+                        Lưu danh mục
+                    </button>
+                </div>
+
+                <div class="category-form-message" id="categoryFormMessage"></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Admin/admin-category-management.js" asp-append-version="true"></script>
+}

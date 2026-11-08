@@ -15,14 +15,18 @@
     }
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/Guide/guide-edit-profile.css" asp-append-version="true" />
+}
+
 <div class="profile-page">
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
         <div>
-            <h2 class="fw-bold mb-1" style="color: #1e3a8a;">CHỈNH SỬA HỒ SƠ</h2>
+            <h2 class="fw-bold mb-1 profile-title">CHỈNH SỬA HỒ SƠ</h2>
             <p class="text-muted mb-0">Cập nhật thông tin liên hệ và bổ sung năng lực hành nghề.</p>
         </div>
 
-        <a asp-controller="Guide" asp-action="Profile" class="btn btn-light border">Quay lại hồ sơ</a>
+        <a asp-controller="GuideProfile" asp-action="Profile" class="btn btn-light border">Quay lại hồ sơ</a>
     </div>
 
     @if (TempData["SuccessMessage"] != null)
@@ -41,7 +45,7 @@
             <h5 class="fw-bold profile-heading mb-0">Thông tin liên hệ</h5>
         </div>
 
-        <form asp-controller="Guide" asp-action="UpdateContact" method="post" enctype="multipart/form-data">
+        <form asp-controller="GuideProfile" asp-action="UpdateContact" method="post" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
 
             <div class="row g-3">
@@ -86,7 +90,7 @@
                 </div>
 
                 <div class="col-12 mt-3">
-                    <button type="submit" class="btn text-white fw-bold" style="background-color: #1d4ed8;">Lưu thông tin liên hệ</button>
+                    <button type="submit" class="btn text-white fw-bold profile-save-button">Lưu thông tin liên hệ</button>
                 </div>
             </div>
         </form>
@@ -129,7 +133,7 @@
                                     </div>
                                 </div>
 
-                                <form asp-controller="Guide" asp-action="DeleteLanguage" asp-route-id="@language.GuideLanguageId" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc muốn xóa ngoại ngữ này?');">
+                                <form asp-controller="GuideProfile" asp-action="DeleteLanguage" asp-route-id="@language.GuideLanguageId" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc muốn xóa ngoại ngữ này?');">
                                     @Html.AntiForgeryToken()
                                     <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
                                 </form>
@@ -164,7 +168,7 @@
         <div class="border rounded p-3 bg-white">
             <h6 class="fw-bold mb-3 text-primary">+ Thêm ngoại ngữ mới</h6>
 
-            <form asp-controller="Guide" asp-action="AddLanguage" method="post" enctype="multipart/form-data">
+            <form asp-controller="GuideProfile" asp-action="AddLanguage" method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
 
                 <div class="row g-3 align-items-end">
@@ -228,7 +232,7 @@
                                         }
                                     </div>
 
-                                    <form asp-controller="Guide" asp-action="DeleteExperience" asp-route-id="@experience.ExperienceId" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc muốn xóa kinh nghiệm này?');">
+                                    <form asp-controller="GuideProfile" asp-action="DeleteExperience" asp-route-id="@experience.ExperienceId" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc muốn xóa kinh nghiệm này?');">
                                         @Html.AntiForgeryToken()
                                         <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
                                     </form>
@@ -292,7 +296,7 @@
         <div class="border rounded p-3 bg-white">
             <h6 class="fw-bold mb-3 text-primary">+ Thêm kinh nghiệm mới</h6>
 
-            <form asp-controller="Guide" asp-action="AddExperience" method="post" enctype="multipart/form-data">
+            <form asp-controller="GuideProfile" asp-action="AddExperience" method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
 
                 <div class="row g-3">
@@ -329,9 +333,3 @@
         </div>
     </div>
 </div>
-
-<style>
-    .profile-heading {
-        color: #1e3a8a;
-    }
-</style>

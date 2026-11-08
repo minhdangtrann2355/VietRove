@@ -1,8 +1,11 @@
 ﻿@model VietRove.Models.Guide.GuideProfileViewModel
+
 @{
     ViewData["Title"] = "Hồ sơ hướng dẫn viên";
+
     string provinceName = "Đang cập nhật";
     List<string> languages = new List<string>();
+
     foreach (var category in Model.SelectedCategories)
     {
         if (category.CategoryType == "Province")
@@ -16,49 +19,81 @@
     }
 }
 
-<div class="mb-4 text-center">
-    <h2 class="fw-bold" style="color: #1e3a8a;">HỒ SƠ HƯỚNG DẪN VIÊN</h2>
-    <p class="text-muted small">Thông tin công khai của hội viên đã được Hiệp hội xác thực</p>
+<link rel="stylesheet" href="~/css/Guest/guide-profile.css" asp-append-version="true" />
+
+<div class="guide-profile-heading">
+    <h2>HỒ SƠ HƯỚNG DẪN VIÊN</h2>
+    <p>Thông tin công khai của hội viên đã được Hiệp hội xác thực</p>
 </div>
 
 <div class="row justify-content-center">
     <div class="col-lg-9">
-        <div class="card border-0 shadow-sm p-4">
+        <div class="card border-0 shadow-sm p-4 guide-profile-card">
             <div class="row align-items-center g-4">
                 <div class="col-md-4 text-center">
                     @if (string.IsNullOrWhiteSpace(Model.Profile.Avatar) == false)
                     {
-                        <img src="@Url.Action("GetAvatar", "Home", new { fileName = Model.Profile.Avatar })" alt="@Model.Profile.FullName" class="rounded-circle shadow-sm" style="width: 150px; height: 150px; object-fit: cover;" />
+                        <img src="@Url.Action("GetAvatar", "GuestGuide", new { fileName = Model.Profile.Avatar })"
+                             alt="@Model.Profile.FullName"
+                             class="guide-profile-avatar rounded-circle shadow-sm" />
                     }
                     else
                     {
-                        <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center text-white fw-bold" style="width: 150px; height: 150px; font-size: 48px; background: #2563eb;">
+                        <div class="guide-profile-avatar-placeholder rounded-circle mx-auto">
                             @Model.Profile.FullName.Substring(0, 1)
                         </div>
                     }
                 </div>
+
                 <div class="col-md-8">
                     <h3 class="fw-bold mb-2">@Model.Profile.FullName</h3>
-                    <span class="badge rounded-pill mb-3" style="background-color: #ecfdf5; color: #059669;">✓ Đã xác thực</span>
-                    <p class="mb-1"><strong>Mã thẻ:</strong> @Model.Profile.CardNumber</p>
-                    <p class="mb-1"><strong>Loại thẻ:</strong>
-                    @if (Model.Profile.CardType != null)
-                    {
-                        @Model.Profile.CardType.CategoryName
-                    }
-                    else
-                    {
-                        <span>Chưa cập nhật</span>
-                    }
+
+                    <span class="guide-verified-badge rounded-pill mb-3">
+                        Đã xác thực
+                    </span>
+
+                    <p class="mb-1">
+                        <strong>Mã thẻ:</strong> @Model.Profile.CardNumber
                     </p>
-                    <p class="mb-1"><strong>Kinh nghiệm:</strong> @Model.Profile.ExperienceYears năm</p>
-                    <p class="mb-0"><strong>Email liên hệ:</strong> <a href="mailto:@Model.Profile.ContactEmail">@Model.Profile.ContactEmail</a></p>
+
+                    <p class="mb-1">
+                        <strong>Loại thẻ:</strong>
+                        @if (Model.Profile.CardType != null)
+                        {
+                            @Model.Profile.CardType.CategoryName
+                        }
+                        else
+                        {
+                            <span>Chưa cập nhật</span>
+                        }
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Kinh nghiệm:</strong> @Model.Profile.ExperienceYears năm
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Email liên hệ:</strong>
+                        <a href="mailto:@Model.Profile.ContactEmail">
+                            @Model.Profile.ContactEmail
+                        </a>
+                    </p>
                 </div>
             </div>
+
             <hr class="my-4" />
+
             <div class="row g-3">
-                <div class="col-md-6"><strong>Tỉnh thành hoạt động:</strong><br />@provinceName</div>
-                <div class="col-md-6"><strong>Ngoại ngữ:</strong><br />
+                <div class="col-md-6">
+                    <strong>Tỉnh thành hoạt động:</strong>
+                    <br />
+                    @provinceName
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Ngoại ngữ:</strong>
+                    <br />
+
                     @if (languages.Count > 0)
                     {
                         @string.Join(", ", languages)
@@ -68,15 +103,24 @@
                         <span>Đang cập nhật</span>
                     }
                 </div>
-                <div class="col-12"><strong>Địa chỉ liên hệ:</strong><br />@Model.Profile.Address</div>
+
+                <div class="col-12">
+                    <strong>Địa chỉ liên hệ:</strong>
+                    <br />
+                    @Model.Profile.Address
+                </div>
             </div>
+
             <div class="border-top mt-4 pt-4">
-                <h5 class="fw-bold mb-3" style="color: #1e3a8a;">Kinh nghiệm dẫn tour</h5>
+                <h5 class="guide-section-title fw-bold mb-3">
+                    Kinh nghiệm dẫn tour
+                </h5>
+
                 @if (Model.GuideExperiences.Count > 0)
                 {
                     foreach (var experience in Model.GuideExperiences)
                     {
-                        <div class="border rounded p-3 mb-3">
+                        <div class="guide-experience-item border rounded p-3 mb-3">
                             <h6 class="fw-bold mb-1">@experience.Title</h6>
                             <p class="mb-0 small">@experience.Description</p>
                         </div>
@@ -84,11 +128,23 @@
                 }
                 else
                 {
-                    <p class="text-muted small mb-0">Hướng dẫn viên chưa công khai kinh nghiệm dẫn tour chi tiết.</p>
+                    <p class="text-muted small mb-0">
+                        Hướng dẫn viên chưa công khai kinh nghiệm dẫn tour chi tiết.
+                    </p>
                 }
             </div>
-            <div class="alert alert-light border mt-4 mb-0 small">
+
+            <div class="guide-privacy-notice alert alert-light border mt-4 mb-0 small">
                 Hệ thống không công khai CCCD, ảnh giấy tờ, chứng chỉ gốc và các thông tin nhạy cảm khác.
+            </div>
+
+            <div class="guide-report-action">
+                <a asp-controller="GuestViolationReport"
+                   asp-action="Create"
+                   asp-route-guideId="@Model.Profile.GuideId"
+                   class="btn-report-guide">
+                    Báo cáo hướng dẫn viên
+                </a>
             </div>
         </div>
     </div>

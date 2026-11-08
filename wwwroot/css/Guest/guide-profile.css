@@ -1,0 +1,126 @@
+/* page heading */
+.guide-profile-heading {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.guide-profile-heading h2 {
+    color: #1e3a8a;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.guide-profile-heading p {
+    margin-bottom: 0;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+/* profile card */
+.guide-profile-card {
+    border-radius: 10px;
+}
+
+/* avatar */
+.guide-profile-avatar {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.guide-profile-avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+    background-color: #2563eb;
+    color: #ffffff;
+    font-size: 48px;
+    font-weight: 700;
+}
+
+/* verification */
+.guide-verified-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #ecfdf5;
+    color: #059669;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* section */
+.guide-section-title {
+    color: #1e3a8a;
+}
+
+.guide-experience-item {
+    background-color: #ffffff;
+    border-color: #e5e7eb !important;
+}
+
+/* privacy notice */
+.guide-privacy-notice {
+    color: #4b5563;
+}
+
+/* report button */
+.guide-report-action {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.btn-report-guide {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 18px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    background-color: #1d4ed8;
+    border: 1px solid #1d4ed8;
+    border-radius: 7px;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-report-guide:hover {
+    color: #ffffff;
+    background-color: #1e40af;
+    border-color: #1e40af;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+    .guide-profile-card {
+        padding: 20px !important;
+    }
+
+    .guide-profile-heading h2 {
+        font-size: 1.3rem;
+    }
+
+    .guide-profile-avatar,
+    .guide-profile-avatar-placeholder {
+        width: 130px;
+        height: 130px;
+    }
+
+    .guide-profile-avatar-placeholder {
+        font-size: 42px;
+    }
+}
+
+@media (max-width: 576px) {
+    .guide-report-action {
+        justify-content: stretch;
+    }
+
+    .btn-report-guide {
+        width: 100%;
+    }
+}

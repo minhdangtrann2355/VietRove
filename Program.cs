@@ -1,11 +1,14 @@
-﻿using QuestPDF.Drawing;
+﻿
+using QuestPDF.Drawing;
 using QuestPDF.Infrastructure;
 using System.IO;
 using System.Globalization;
 using System.Security.Claims;
+using System.Threading.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.RateLimiting;
 using VietRove.Data;
 using VietRove.Entities;
 using VietRove.Security;
@@ -23,9 +26,11 @@ using VietRove.Services.Interfaces.Category;
 using VietRove.Services.Interfaces.FileStorage;
 using VietRove.Services.Interfaces.Guide.Contract;
 using VietRove.Services.Interfaces.Guide.Profile;
-
+using VietRove.Services.Guest;
+using VietRove.Services.Interfaces.Guest;
 
 QuestPDF.Settings.License = LicenseType.Community;
+
 var builder = WebApplication.CreateBuilder(args);
 
 string fontDirectory = Path.Combine(
@@ -36,13 +41,114 @@ string fontDirectory = Path.Combine(
 
 if (Directory.Exists(fontDirectory) == false)
 {
-    throw new DirectoryNotFoundException("Khong tim thay thu muc font: " + fontDirectory);
+    throw new DirectoryNotFoundException(
+        "Khong tim thay thu muc font: " + fontDirectory);
 }
 
 FontManager.RegisterFontsFromDirectory(fontDirectory);
 
 // add services to the container
 builder.Services.AddControllersWithViews();
+
+// rate limit
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // gioi han dang nhap
+    options.AddPolicy("LoginPolicy", httpContext =>
+    {
+        string ipAddress = "unknown";
+
+        if (httpContext.Connection.RemoteIpAddress != null)
+        {
+            ipAddress = httpContext.Connection.RemoteIpAddress.ToString();
+        }
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: ipAddress,
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            });
+    });
+
+    // gioi han gui bao cao vi pham
+    options.AddPolicy("ViolationReportPolicy", httpContext =>
+    {
+        string ipAddress = "unknown";
+
+        if (httpContext.Connection.RemoteIpAddress != null)
+        {
+            ipAddress = httpContext.Connection.RemoteIpAddress.ToString();
+        }
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: ipAddress,
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(10),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            });
+    });
+
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        int retryAfter = 60;
+
+        if (context.Lease.TryGetMetadata(
+            MetadataName.RetryAfter,
+            out TimeSpan retryTime))
+        {
+            retryAfter = (int)Math.Ceiling(
+                retryTime.TotalSeconds);
+        }
+
+        if (retryAfter < 1)
+        {
+            retryAfter = 1;
+        }
+
+        context.HttpContext.Response.Headers.RetryAfter =
+            retryAfter.ToString();
+
+        EnableRateLimitingAttribute? rateLimitAttribute =
+            context.HttpContext.GetEndpoint()?.Metadata
+                .GetMetadata<EnableRateLimitingAttribute>();
+
+        // phan hoi khi vuot gioi han gui bao cao
+        if (rateLimitAttribute != null &&
+            rateLimitAttribute.PolicyName == "ViolationReportPolicy")
+        {
+            context.HttpContext.Response.StatusCode =
+                StatusCodes.Status429TooManyRequests;
+
+            await context.HttpContext.Response.WriteAsJsonAsync(
+                new
+                {
+                    success = false,
+                    message = "Bạn đã gửi quá nhiều báo cáo. Vui lòng thử lại sau.",
+                    retryAfter = retryAfter
+                },
+                cancellationToken);
+
+            return;
+        }
+
+        // phan hoi khi vuot gioi han dang nhap
+        string loginUrl =
+            context.HttpContext.Request.PathBase
+            + "/Login/Index?rateLimited=1&retryAfter="
+            + retryAfter;
+
+        context.HttpContext.Response.Redirect(loginUrl);
+    };
+});
 
 // authentication
 builder.Services
@@ -293,12 +399,16 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IGuideProfileService, GuideProfileService>();
-builder.Services.AddScoped<IAdminLoginHistoryService,AdminLoginHistoryService>();
+builder.Services.AddScoped<IAdminLoginHistoryService, AdminLoginHistoryService>();
 builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 builder.Services.AddScoped<IAdminGuideReviewService, AdminGuideReviewService>();
 builder.Services.AddScoped<IContractService, ContractService>();
 builder.Services.AddScoped<IAdminCompetencyReviewService, AdminCompetencyReviewService>();
-
+builder.Services.AddScoped<IAdminGuideManagementService, AdminGuideManagementService>();
+builder.Services.AddScoped<IAdminCategoryService, AdminCategoryService>();
+builder.Services.AddScoped<IAdminArticleService, AdminArticleService>();
+builder.Services.AddScoped<IGuestViolationReportService, GuestViolationReportService>();
+builder.Services.AddScoped<IAdminViolationReportService, AdminViolationReportService>();
 
 // bootstrap admin password
 string bootstrapAdminPassword = string.Empty;
@@ -368,6 +478,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();

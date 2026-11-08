@@ -5,6 +5,7 @@ namespace VietRove.Services.Interfaces.Guide.Profile
     public interface IGuideProfileService
     {
         Task<GuideProfileViewModel?> GetProfileViewModelAsync(int userId);
+        Task<string?> GetAvatarFileNameAsync(int userId);
         Task<string> UpdateContactInfoAsync(int userId, GuideContactEditModel model);
         Task<string> AddLanguageAsync(int userId, GuideLanguageAddModel model);
         Task<bool> DeleteLanguageAsync(int userId, int guideLanguageId);
